@@ -8,7 +8,7 @@ import Breadcrumbs, { Props as BreadcrumbsProps } from './Breadcrumbs';
 
 interface Props extends BreadcrumbsProps {
   action?: ReactNode;
-  heading: string;
+  heading?: string;
   moreLink?: string | string[];
 }
 

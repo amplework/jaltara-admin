@@ -9,7 +9,9 @@ type Props = {
   filterVillage: string;
   onFilterName: (value: string) => void;
   onFilterVillage: (value: string) => void;
-  onSearch:VoidFunction;
+  onSearch: VoidFunction;
+  placeholderText: string;
+  placeholderTextSecond: string;
 };
 
 export default function UserTableToolbar({
@@ -18,6 +20,8 @@ export default function UserTableToolbar({
   onFilterName,
   onFilterVillage,
   onSearch,
+  placeholderText,
+  placeholderTextSecond,
 }: Props) {
   return (
     <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 3 }}>
@@ -25,15 +29,20 @@ export default function UserTableToolbar({
         fullWidth
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="User Name..."
+        placeholder={placeholderText}
       />
       <TextField
         fullWidth
         value={filterVillage}
         onChange={(event) => onFilterVillage(event.target.value)}
-        placeholder="Village Name..."
+        placeholder={placeholderTextSecond}
       />
-      <Button variant="contained" fullWidth startIcon={<Iconify icon={'mdi:search'} />} onClick={onSearch} >
+      <Button
+        variant="contained"
+        fullWidth
+        startIcon={<Iconify icon={'mdi:search'} />}
+        onClick={onSearch}
+      >
         Search
       </Button>
     </Stack>

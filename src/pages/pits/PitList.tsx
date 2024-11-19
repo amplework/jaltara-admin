@@ -1,5 +1,5 @@
 import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -26,7 +26,7 @@ import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
 // @types
-import { UserManager } from '../../@types/user';
+import { UserItem, UserManager } from '../../@types/user';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -42,10 +42,14 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
+import { getUsersList } from 'src/redux/slices/user';
+import { dispatch, useSelector } from 'src/redux/store';
+import { getPitsList } from 'src/redux/slices/pits';
+import { PitItem } from 'src/@types/pits';
+import PitTableRow from 'src/sections/@dashboard/user/list/PitTableRow';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
   'all',
@@ -61,17 +65,15 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'village', label: 'Village', align: 'left' },
+  { id: 'number of pits', label: 'Number Of Pits', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function WellList() {
+export default function PitList() {
   const {
     dense,
     page,
@@ -95,78 +97,89 @@ export default function WellList() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
-  const [filterRole, setFilterRole] = useState('all');
+  const [filterVillage, setFilterVillage] = useState('');
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
+  const {pitListData} = useSelector((state) => state.pits)
+  
+  console.log("pitListData",pitListData);
+
+  useEffect(()=>{
+    getPitsList()
+  },[])
+
+  const onSearch = () => {
+    getPitsList(filterName, filterVillage)
+  }
+
   const handleFilterName = (filterName: string) => {
     setFilterName(filterName);
-    setPage(0);
   };
 
-  const handleFilterRole = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterRole(event.target.value);
+  const handleFilterRole = (filterVillage: string) => {
+    setFilterVillage(filterVillage);
   };
 
-  const handleDeleteRow = (id: string) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-  };
+  // const handleDeleteRow = (id: string) => {
+  //   const deleteRow = tableData.filter((row) => row.id !== id);
+  //   setSelected([]);
+  //   setTableData(deleteRow);
+  // };
 
-  const handleDeleteRows = (selected: string[]) => {
-    const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-    setSelected([]);
-    setTableData(deleteRows);
-  };
+  // const handleDeleteRows = (selected: string[]) => {
+  //   const deleteRows = tableData.filter((row) => !selected.includes(row.id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
+  // };
 
   const handleEditRow = (id: string) => {
     navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
 
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
-  });
+  // let dataFiltered = applySortFilter({
+  //   userListData,
+  //   comparator: getComparator(order, orderBy),
+  //   filterName,
+  //   filterRole,
+  //   filterStatus,
+  // });
 
   const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
+    (!pitListData?.length && !!filterName) ||
+    (!pitListData?.length && !!filterVillage) ||
+    (!pitListData?.length && !!filterName) ||
+    (!pitListData?.length && !!filterStatus);
 
   return (
-    <Page title="Well: List">
+    <Page title="Pits List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Well List"
+          heading="Pits List"
           links={[
             // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Well', href: PATH_DASHBOARD.user.root },
-            { name: 'List' },
+            { href: PATH_DASHBOARD.user.root },
           ]}
-          // action={
-          //   <Button
-          //     variant="contained"
-          //     component={RouterLink}
-          //     to={PATH_DASHBOARD.user.new}
-          //     startIcon={<Iconify icon={'eva:plus-fill'} />}
-          //   >
-          //     New Well
-          //   </Button>
-          // }
+          action={
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to={PATH_DASHBOARD.user.new}
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+            >
+              New Pit
+            </Button>
+          }
         />
 
         <Card>
-          <Tabs
+          {/* <Tabs
             allowScrollButtonsMobile
             variant="scrollable"
             scrollButtons="auto"
@@ -177,78 +190,74 @@ export default function WellList() {
             {STATUS_OPTIONS.map((tab) => (
               <Tab disableRipple key={tab} label={tab} value={tab} />
             ))}
-          </Tabs>
+          </Tabs> */}
 
-          <Divider />
+          {/* <Divider /> */}
 
-          {/* <UserTableToolbar
+          <UserTableToolbar
             filterName={filterName}
-            filterRole={filterRole}
+            filterVillage={filterVillage}
             onFilterName={handleFilterName}
-            onFilterRole={handleFilterRole}
-            optionsRole={ROLE_OPTIONS}
-          /> */}
+            onFilterVillage={handleFilterRole}
+            onSearch={onSearch}
+            placeholderText={"Search by sevak name"}
+            placeholderTextSecond={"Search by stage name"}
+          />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {selected.length > 0 && (
+              {/* {selected.length > 0 && (
                 <TableSelectedActions
                   dense={dense}
                   numSelected={selected.length}
-                  rowCount={tableData.length}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
-                  actions={
-                    <Tooltip title="Delete">
-                      <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                        <Iconify icon={'eva:trash-2-outline'} />
-                      </IconButton>
-                    </Tooltip>
-                  }
+                  rowCount={userListData?.length || 0}
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
+                  // actions={
+                  //   <Tooltip title="Delete">
+                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
+                  //       <Iconify icon={'eva:trash-2-outline'} />
+                  //     </IconButton>
+                  //   </Tooltip>
+                  // }
                 />
-              )}
+              )} */}
 
               <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={pitListData?.length}
                   numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                  // onSort={onSort}
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row.id)
+                  //   )
+                  // }
                 />
 
-                {/* <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
+                <TableBody>
+                  {pitListData?.length ? pitListData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row : PitItem) => (
+                      <PitTableRow
+                        key={row.userData.id}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.name)}
+                        selected={selected.includes(row.userData.id)}
+                        onSelectRow={() => onSelectRow(row.userData.id)}
+                        // onDeleteRow={() => handleDeleteRow(row.id)}
+                        onEditRow={() => handleEditRow(row.userData.name)}
                       />
-                    ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
+                    )) : null}
 
                   <TableNoData isNotFound={isNotFound} />
-                </TableBody> */}
+                </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -257,7 +266,7 @@ export default function WellList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={dataFiltered.length}
+              count={pitListData?.length ? pitListData.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}
@@ -285,15 +294,15 @@ function applySortFilter({
   filterStatus,
   filterRole,
 }: {
-  tableData: UserManager[];
+  tableData: UserItem[];
   comparator: (a: any, b: any) => number;
   filterName: string;
   filterStatus: string;
   filterRole: string;
 }) {
-  const stabilizedThis = tableData.map((el, index) => [el, index] as const);
+  const stabilizedThis = tableData.map((el:any, index:any) => [el, index] as const);
 
-  stabilizedThis.sort((a, b) => {
+  stabilizedThis.sort((a:any, b:any) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];

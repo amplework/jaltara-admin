@@ -1,25 +1,23 @@
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Avatar, Checkbox, TableRow, TableCell, Typography } from '@mui/material';
 // @types
-import { UserItem } from '../../../../@types/user';
 // components
-import Label from '../../../../components/Label';
-import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
+import { CropItem } from 'src/@types/crops';
+import _ from 'lodash';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: UserItem | null;
+  row: CropItem | null;
   selected: boolean;
   onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow?: VoidFunction;
 };
 
-export default function UserTableRow({
+export default function CropTableRow({
   row,
   selected,
   onEditRow,
@@ -28,7 +26,7 @@ export default function UserTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { name, village, phone, status } = row || {};
+  const { name, status } = row || {};
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -38,28 +36,15 @@ export default function UserTableRow({
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={''} sx={{ mr: 2 }} />
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {name}
+          {_.capitalize(name) || 'N/A'}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {phone}
-        </Typography>
-      </TableCell>
-      
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {village?.name}
-        </Typography>
-      </TableCell>
-      
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {status}
+          {_.capitalize(status) || 'N/A'}
         </Typography>
       </TableCell>
     </TableRow>

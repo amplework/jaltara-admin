@@ -13,7 +13,7 @@ import {
 
 type TLink = {
   href?: string;
-  name: string;
+  name?: string;
   icon?: ReactElement;
 };
 
