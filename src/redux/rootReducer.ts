@@ -2,8 +2,11 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
-import userReducer from './slices/user'
-import pitsReducer from './slices/pits'
+import userReducer from './slices/user';
+import pitsReducer from './slices/pits';
+import cropsReducer from './slices/crops';
+import equipmentsReducer from './slices/equipment';
+
 
 // ----------------------------------------------------------------------
 
@@ -23,8 +26,10 @@ const productPersistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
-  pits: pitsReducer
-
+  pits: pitsReducer,
+  crops: cropsReducer,
+  equipments: equipmentsReducer,
+  
 });
 
 export { rootPersistConfig, rootReducer };

@@ -47,7 +47,11 @@ const navConfig = [
   {
     subheader: '',
     items: [
-      // USER
+      // {
+      //   title: 'dashboard',
+      //   path: PATH_DASHBOARD.dashboard,
+      //   icon: ICONS.user,
+      // },
       {
         title: 'users',
         path: PATH_DASHBOARD.user.list,
@@ -60,6 +64,31 @@ const navConfig = [
       },
       {
         title: 'wells',
+        path: PATH_DASHBOARD.wells.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'village',
+        path: PATH_DASHBOARD.wells.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'equipment',
+        path: PATH_DASHBOARD.equipments.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'farmers',
+        path: PATH_DASHBOARD.wells.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'crops',
+        path: PATH_DASHBOARD.crops.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'farmer challenge',
         path: PATH_DASHBOARD.wells.list,
         icon: ICONS.user,
       },

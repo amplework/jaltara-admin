@@ -29,7 +29,7 @@ export default function PitTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { userData } = row ||{};
+  const { userData, pitCount } = row || {};
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -51,6 +51,19 @@ export default function PitTableRow({
           {userData?.village.name}
         </Typography>
       </TableCell>
+      
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {pitCount}
+        </Typography>
+      </TableCell>
+      
+      {/* <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {pitCount}
+        </Typography>
+      </TableCell> */}
+  
     </TableRow>
   );
 }

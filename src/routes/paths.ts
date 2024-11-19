@@ -36,6 +36,9 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   
   permissionDenied: path('/permission-denied'),
+  // dashboard: {
+  //   root: path('/dashboard'),
+  // },
   user: {
     root: path( '/user'),
     new: path('/user/new'),
@@ -50,6 +53,12 @@ export const PATH_DASHBOARD = {
   },
   pits: {
     list: path('/pit/list'),
+  },
+  crops: {
+    list: path('/crop/list'),
+  },
+  equipments: {
+    list: path('/equipment/list'),
   },
 };
 

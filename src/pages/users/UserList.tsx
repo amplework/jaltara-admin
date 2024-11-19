@@ -44,9 +44,6 @@ import {
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
 import { getUsersList } from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
-import { getPitsList } from 'src/redux/slices/pits';
-import { PitItem } from 'src/@types/pits';
-import PitTableRow from 'src/sections/@dashboard/user/list/PitTableRow';
 
 // ----------------------------------------------------------------------
 
@@ -68,12 +65,14 @@ const ROLE_OPTIONS = [
 const TABLE_HEAD = [
   { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
+  { id: 'status', label: 'status', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function PitList() {
+export default function UserList() {
   const {
     dense,
     page,
@@ -105,14 +104,16 @@ export default function PitList() {
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
-  const {pitListData} = useSelector((state) => state.pits)
+  const { userListData } = useSelector((state) => state.user);
 
+  console.log('userListData', userListData);
+  
   useEffect(()=>{
-    getPitsList()
+    getUsersList()
   },[])
 
   const onSearch = () => {
-    getPitsList(filterName, filterVillage)
+    getUsersList(filterName, filterVillage)
   }
 
   const handleFilterName = (filterName: string) => {
@@ -150,18 +151,18 @@ export default function PitList() {
   const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
-    (!pitListData?.length && !!filterName) ||
-    (!pitListData?.length && !!filterVillage) ||
-    (!pitListData?.length && !!filterStatus);
+    (!userListData?.length && !!filterName) ||
+    (!userListData?.length && !!filterVillage) ||
+    (!userListData?.length && !!filterStatus);
 
   return (
-    <Page title="Pits List">
+    <Page title="Users List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Pits List"
+          heading="Users List"
           links={[
             // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Pits List', href: PATH_DASHBOARD.user.root },
+            { href: PATH_DASHBOARD.user.root },
           ]}
           action={
             <Button
@@ -170,34 +171,21 @@ export default function PitList() {
               to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              New Pit
+              New User
             </Button>
           }
         />
 
         <Card>
-          <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-
-          <Divider />
-
           <UserTableToolbar
             filterName={filterName}
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
-            onSearch={onSearch}
-          />
+            onSearch={onSearch}   
+            placeholderText={"Search by sevak name"}
+            placeholderTextSecond={"Search by village name"}
+            />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -227,7 +215,7 @@ export default function PitList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={pitListData?.length}
+                  rowCount={userListData?.length}
                   numSelected={selected.length}
                   // onSort={onSort}
                   // onSelectAllRows={(checked) =>
@@ -239,15 +227,15 @@ export default function PitList() {
                 />
 
                 <TableBody>
-                  {pitListData?.length ? pitListData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row : PitItem) => (
-                      <PitTableRow
-                        key={row.userData.id}
+                  {userListData?.length ? userListData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <UserTableRow
+                        key={row.id}
                         row={row}
-                        selected={selected.includes(row.userData.id)}
-                        onSelectRow={() => onSelectRow(row.userData.id)}
+                        selected={selected.includes(row.id)}
+                        onSelectRow={() => onSelectRow(row.id)}
                         // onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.userData.name)}
+                        onEditRow={() => handleEditRow(row.name)}
                       />
                     )) : null}
 
@@ -266,7 +254,7 @@ export default function PitList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={pitListData?.length ? pitListData.length : 0}
+              count={userListData?.length ? userListData.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}

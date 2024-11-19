@@ -14,6 +14,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import EquipmentList from 'src/pages/equipments/EquipmentList';
 
 // ----------------------------------------------------------------------
 
@@ -91,11 +92,24 @@ export default function Router() {
             { path: 'list', element: <PitList /> },
             // { path: 'new', element: <UserCreate /> },
           ],
-        },        {
+        },
+        {
           path: 'well',
           children: [
             { path: 'list', element: <WellList /> },
             // { path: 'new', element: <UserCreate /> },
+          ],
+        },
+        {
+          path: 'crop',
+          children: [
+            { path: 'list', element: <CropList /> },
+          ],
+        },
+        {
+          path: 'equipment',
+          children: [
+            { path: 'list', element: <EquipmentList /> },
           ],
         },
         // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
@@ -209,13 +223,15 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // DASHBOARD
 // USER
-const UserProfile = Loadable(lazy(() => import('../pages/user/UserProfile')));
+const UserProfile = Loadable(lazy(() => import('../pages/users/UserProfile')));
 
-const UserList = Loadable(lazy(() => import('../pages/user/UserList')));
-const PitList = Loadable(lazy(() => import('../pages/pit/PitList')));
-const WellList = Loadable(lazy(() => import('../pages/well/WellList')));
+const UserList = Loadable(lazy(() => import('../pages/users/UserList')));
+const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
+const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
+const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
 
-const UserCreate = Loadable(lazy(() => import('../pages/user/UserCreate')));
+
+const UserCreate = Loadable(lazy(() => import('../pages/users/UserCreate')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
