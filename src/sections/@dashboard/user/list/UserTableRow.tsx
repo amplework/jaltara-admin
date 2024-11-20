@@ -8,6 +8,8 @@ import { UserItem } from '../../../../@types/user';
 import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import palette from 'src/theme/palette';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -17,6 +19,7 @@ type Props = {
   onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow?: VoidFunction;
+  onhandleEditDetails?: (id: any) => void
 };
 
 export default function UserTableRow({
@@ -25,18 +28,17 @@ export default function UserTableRow({
   onEditRow,
   onSelectRow,
   onDeleteRow,
+  onhandleEditDetails
 }: Props) {
   const theme = useTheme();
 
-  const { name, village, phone, status } = row || {};
-
-  const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
+  const { name, village, phone, status, id } = row || {};
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
+      {/* <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+      </TableCell> */}
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar alt={name} src={''} sx={{ mr: 2 }} />
@@ -50,17 +52,27 @@ export default function UserTableRow({
           {phone}
         </Typography>
       </TableCell>
-      
+
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {village?.name}
         </Typography>
       </TableCell>
-      
+
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {status}
         </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Box onClick={() => onhandleEditDetails && onhandleEditDetails(id)} sx={{ cursor: "pointer" }}>
+          <Iconify icon={"fluent-color:edit-16"} width="64" height="64" />
+        </Box>
+      </TableCell>
+
+      <TableCell>
+        <Iconify icon={"icon-park:delete"} sx={{ color: theme.palette.error.dark }} width="64" height="64" />
       </TableCell>
     </TableRow>
   );

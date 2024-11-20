@@ -44,30 +44,14 @@ import {
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
 import { getUsersList } from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
-
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
-
-const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
-
 const TABLE_HEAD = [
-  { id: '' },
+  // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
   { id: 'status', label: 'status', align: 'left' },
+  { id: 'edit', label: 'edit', align: 'left' },
+  { id: 'delete', label: 'delete', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -104,13 +88,12 @@ export default function UserList() {
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
-  const { userListData } = useSelector((state) => state.user);
 
-  console.log('userListData', userListData);
-  
-  useEffect(()=>{
+  useEffect(() => {
     getUsersList()
-  },[])
+  }, [])
+
+  const { userListData, statesList } = useSelector((state) => state.user);
 
   const onSearch = () => {
     getUsersList(filterName, filterVillage)
@@ -155,21 +138,26 @@ export default function UserList() {
     (!userListData?.length && !!filterVillage) ||
     (!userListData?.length && !!filterStatus);
 
+  const handleAddUser = () => {
+    navigate(PATH_DASHBOARD.user.create())
+  }
+  const onhandleEditDetails = (id: string) => {
+    navigate(PATH_DASHBOARD.user.create(id))
+  }
+
   return (
     <Page title="Users List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Users List"
           links={[
-            // { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { href: PATH_DASHBOARD.user.root },
           ]}
           action={
             <Button
               variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={handleAddUser}
             >
               New User
             </Button>
@@ -182,10 +170,10 @@ export default function UserList() {
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
-            onSearch={onSearch}   
+            onSearch={onSearch}
             placeholderText={"Search by sevak name"}
             placeholderTextSecond={"Search by village name"}
-            />
+          />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -217,13 +205,13 @@ export default function UserList() {
                   headLabel={TABLE_HEAD}
                   rowCount={userListData?.length}
                   numSelected={selected.length}
-                  // onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
+                // onSort={onSort}
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row.id)
+                //   )
+                // }
                 />
 
                 <TableBody>
@@ -236,6 +224,7 @@ export default function UserList() {
                         onSelectRow={() => onSelectRow(row.id)}
                         // onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.name)}
+                        onhandleEditDetails={onhandleEditDetails}
                       />
                     )) : null}
 
@@ -288,9 +277,9 @@ function applySortFilter({
   filterStatus: string;
   filterRole: string;
 }) {
-  const stabilizedThis = tableData.map((el:any, index:any) => [el, index] as const);
+  const stabilizedThis = tableData.map((el: any, index: any) => [el, index] as const);
 
-  stabilizedThis.sort((a:any, b:any) => {
+  stabilizedThis.sort((a: any, b: any) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];

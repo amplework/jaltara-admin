@@ -97,8 +97,6 @@ export default function CropList() {
 
   const { cropListData } = useSelector((state) => state.crops);
 
-  console.log('cropListData', cropListData);
-
   useEffect(() => {
     getCropsList();
   }, []);

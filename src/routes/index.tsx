@@ -80,7 +80,7 @@ export default function Router() {
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
             // { path: 'profile', element: <UserProfile /> },
             { path: 'list', element: <UserList /> },
-            // { path: 'new', element: <UserCreate /> },
+            { path: 'user-create/:id', element: <UserCreate /> },
             // { path: 'cards', element: <UserCards /> },
             // { path: ':name/edit', element: <UserCreate /> },
             // { path: 'account', element: <UserAccount /> },
@@ -224,7 +224,6 @@ const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 // DASHBOARD
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/users/UserProfile')));
-
 const UserList = Loadable(lazy(() => import('../pages/users/UserList')));
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));

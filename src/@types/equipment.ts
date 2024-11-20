@@ -4,6 +4,7 @@ export type EquipmentItem = {
   equipment: string;
   created: string;
   modified: string;
+  status:string
 };
 
 export type EquipmentList = {

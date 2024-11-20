@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------
 
 function path(root: string, sublink?: string) {
-  return `${root}${sublink || ""}`;
+  return `${root}${sublink || ''}`;
 }
 
 const ROOTS_AUTH = '/auth';
@@ -23,10 +23,10 @@ export const PATH_AUTH = {
 export const PATH_PAGE = {
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
- 
+
   about: '/about-us',
   contact: '/contact-us',
-  
+
   page403: '/403',
   page404: '/404',
   page500: '/500',
@@ -34,14 +34,17 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  
+
   permissionDenied: path('/permission-denied'),
   // dashboard: {
   //   root: path('/dashboard'),
   // },
   user: {
-    root: path( '/user'),
+    root: path('/user'),
     new: path('/user/new'),
+    create:(id?:string)=> path(`/user/user-create/${id}`),
+    // create: path(`/user/user-create`),
+
     list: path('/user/list'),
     cards: path('/user/cards'),
     profile: path('/user/profile'),

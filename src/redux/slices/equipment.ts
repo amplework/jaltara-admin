@@ -56,7 +56,6 @@ export function getEquipmentsList(name?:string,equipment?:string) {
   }
   try {
     axios.get('/equipment', {params : payload}).then((response) => {
-      console.log("***********************",response.data)
       if (response?.status === 200 && response?.data?.statusCode === 200) {
         dispatch(slice.actions.getEquipments(response?.data));
         return response.data;

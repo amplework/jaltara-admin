@@ -71,6 +71,7 @@ export type UserManager = {
   isVerified: boolean;
   status: string;
   role: string;
+  states?: any;
 };
 
 export type UserData = {
@@ -129,27 +130,105 @@ export type UserPost = {
 
 export type UserItem = {
   id: string;
+  name: string;
+  phone: string;
+  status: string;
+  language: string;
+  location: {
+    lat: 0;
+    lng: 0;
+  };
+  created: string;
+  modified: string;
+  villageId: string;
+  village: {
+    id: string;
     name: string;
-    phone: string;
-    status: string;
-    language: string;
-    location: {
-      lat: 0;
-      lng: 0;
-    };
-    created: string;
-    modified: string;
-    villageId: string;
-    village: {
-      id: string;
-      name: string;
-      entityType: string;
-      parentId: string;
-    }
-}
+    entityType: string;
+    parentId: string;
+  };
+};
 
+export type StatesList = {
+  id: string;
+  name: string;
+  entityType: string;
+};
+
+export type CildEntitiesType = {
+  id: string;
+  name: string;
+  entityType: string;
+  parentId?: string;
+};
+type DistrictListData = {
+  mainEntity: StatesList;
+  childEntities: CildEntitiesType[] | null;
+};
+type TalukListData = {
+  mainEntity: CildEntitiesType;
+  childEntities: CildEntitiesType[] | null;
+};
+
+type VillageListData = {
+  mainEntity: CildEntitiesType;
+  childEntities: CildEntitiesType[] | null;
+};
 export type UserList = {
   isLoading: boolean;
   error: string | null;
   userListData: UserItem[] | null;
+  statesList: StatesList[] | null;
+  districtList: DistrictListData;
+  talukList: TalukListData;
+  villageList: VillageListData;
+  usersDetails: UsersDetails;
+};
+
+export type CreateUserType = {
+  name: string;
+  phoneNumber: string;
+  status: string;
+  language: string;
+  selectStates: string;
+  selectDistrict: string;
+  selectTaluk: string;
+  selectVillage: string;
+};
+
+type Location = {
+  lat: number;
+  lng: number;
+};
+
+type Parent = {
+  id: string;
+  name: string;
+  entityType: string;
+};
+
+type UsersDetails = {
+  id: string;
+  name: string;
+  phone: string;
+  status: string;
+  language: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  created: string;
+  modified: string;
+  villageId: string;
+  checkUpperGeo: {
+    id: string;
+    name: string;
+    entityType: string;
+    parentId: string;
+    parents: {
+      id: any;
+      name: any;
+      entityType: any;
+    }[];
+  };
 };

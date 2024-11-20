@@ -26,19 +26,29 @@ export default function EquipmentTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { name } = row || {};
+  const { name,equipment,status } = row || {};
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
+      {/* <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+      </TableCell> */}
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {_.capitalize(name) || 'N/A'}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {_.capitalize(equipment) || 'N/A'}
+        </Typography>
+      </TableCell>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {_.capitalize(status) || 'N/A'}
         </Typography>
       </TableCell>
     </TableRow>

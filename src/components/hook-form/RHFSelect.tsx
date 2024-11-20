@@ -8,11 +8,13 @@ import { TextField, TextFieldProps } from '@mui/material';
 type IProps = {
   name: string;
   children: React.ReactNode;
+  onChange?: any;
+
 };
 
 type Props = IProps & TextFieldProps;
 
-export default function RHFSelect({ name, children, ...other }: Props) {
+export default function RHFSelect({ name, children, onChange, ...other }: Props) {
   const { control } = useFormContext();
 
   return (
@@ -26,7 +28,13 @@ export default function RHFSelect({ name, children, ...other }: Props) {
           fullWidth
           SelectProps={{ native: true }}
           error={!!error}
-          helperText={error?.message}
+          onChange={(event) => {
+            const value = event.target.value;
+            field.onChange(value); 
+            if (onChange) {
+              onChange(value); 
+            }
+          }}          helperText={error?.message}
           {...other}
         >
           {children}

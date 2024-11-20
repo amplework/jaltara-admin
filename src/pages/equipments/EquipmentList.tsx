@@ -13,13 +13,14 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
+  Divider,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, {  } from '../../hooks/useTable';
+import useTable, { } from '../../hooks/useTable';
 // @types
 import { UserItem } from '../../@types/user';
 // _mock_
@@ -56,7 +57,7 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: '' },
+  // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'equipment', label: 'Equipment', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
@@ -92,7 +93,7 @@ export default function EquipmentList() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [filterEquipment, setFilterVillage] = useState('');
+  const [filterVillage, setFilterVillage] = useState('');
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
@@ -153,7 +154,6 @@ export default function EquipmentList() {
         <HeaderBreadcrumbs
           heading="Equipments List"
           links={[
-            // { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { href: PATH_DASHBOARD.user.root },
           ]}
           action={
@@ -169,20 +169,15 @@ export default function EquipmentList() {
         />
 
         <Card>
-          {/* <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs> */}
-
-          {/* <Divider /> */}
+          <UserTableToolbar
+            filterName={filterName}
+            filterVillage={filterVillage}
+            onFilterName={handleFilterName}
+            onFilterVillage={handleFilterRole}
+            onSearch={onSearch}
+            placeholderText={"Search by names"}
+            placeholderTextSecond={"Search by equipments"}
+          />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -214,28 +209,28 @@ export default function EquipmentList() {
                   headLabel={TABLE_HEAD}
                   rowCount={equipmentListData?.length}
                   numSelected={selected.length}
-                  // onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
+                // onSort={onSort}
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row.id)
+                //   )
+                // }
                 />
 
                 <TableBody>
                   {equipmentListData?.length
                     ? equipmentListData
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row: EquipmentItem) => (
-                          <EquipmentTableRow
-                            key={row.id}
-                            row={row}
-                            selected={selected.includes(row.id)}
-                            onSelectRow={() => onSelectRow(row.id)}
-                            onEditRow={() => handleEditRow(row.name)}
-                          />
-                        ))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row: EquipmentItem) => (
+                        <EquipmentTableRow
+                          key={row.id}
+                          row={row}
+                          selected={selected.includes(row.id)}
+                          onSelectRow={() => onSelectRow(row.id)}
+                          onEditRow={() => handleEditRow(row.name)}
+                        />
+                      ))
                     : null}
 
                   <TableNoData isNotFound={isNotFound} />
