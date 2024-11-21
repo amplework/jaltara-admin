@@ -124,9 +124,6 @@ export default function UserCreate() {
   //     entityType === type ? checkUpperGeo?.name : parents.find((item: any) => item?.entityType === type)?.name || "";
   //   console.log('state', findEntityName("state"));
   //   console.log('District', findEntityName("district"));
-  //   console.log('taluk', findEntityName("taluk"));
-  //   console.log('village', findEntityName("village"));
-
   //   setValue("name", usersDetails?.name || "");
   //   setValue("phoneNumber", usersDetails?.phone || "");
   //   setValue("language", usersDetails?.language || "");
