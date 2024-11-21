@@ -186,26 +186,7 @@ export default function EquipmentList() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {/* {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={userListData?.length || 0}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
-                  // actions={
-                  //   <Tooltip title="Delete">
-                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  //       <Iconify icon={'eva:trash-2-outline'} />
-                  //     </IconButton>
-                  //   </Tooltip>
-                  // }
-                />
-              )} */}
+
 
               <Table size={'medium'}>
                 <TableHeadCustom
