@@ -19,7 +19,8 @@ type Props = {
   onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow?: VoidFunction;
-  onhandleEditDetails?: (id: any) => void
+  onhandleEditDetails?: (id: any) => void,
+  onhandleDeleteRow?:(id: any) => void,
 };
 
 export default function UserTableRow({
@@ -28,7 +29,8 @@ export default function UserTableRow({
   onEditRow,
   onSelectRow,
   onDeleteRow,
-  onhandleEditDetails
+  onhandleEditDetails,
+  onhandleDeleteRow
 }: Props) {
   const theme = useTheme();
 
@@ -72,7 +74,7 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell>
-        <Iconify icon={"icon-park:delete"} sx={{ color: theme.palette.error.dark }} width="64" height="64" />
+        <Iconify icon={"icon-park:delete"} sx={{ color: theme.palette.error.dark }} width="64" height="64" onClick={() => onhandleDeleteRow && onhandleDeleteRow(id)}/>
       </TableCell>
     </TableRow>
   );

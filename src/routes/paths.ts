@@ -40,16 +40,19 @@ export const PATH_DASHBOARD = {
   //   root: path('/dashboard'),
   // },
   user: {
-    root: path('/user'),
-    new: path('/user/new'),
-    create:(id?:string)=> path(`/user/user-create/${id}`),
+    root: path('/sevek'),
+    new: path('/sevek/new'),
+    create:(id?:string)=> path(`/sevek/sevek-create/${id}`),
     // create: path(`/user/user-create`),
 
-    list: path('/user/list'),
+    list: path('/sevek/list'),
     cards: path('/user/cards'),
     profile: path('/user/profile'),
     account: path('/user/account'),
     edit: (name: string) => path(`/user/${name}/edit`),
+  },
+  farmers:{
+    list: path('/farmer/list')
   },
   wells: {
     list: path('/well/list'),

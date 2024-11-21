@@ -112,6 +112,56 @@ const slice = createSlice({
     getUserDetails(state, action) {
       state.isLoading = false;
       state.usersDetails = action.payload;
+      // if (state.usersDetails) {
+      //   const statesEntityType: any =
+      //     state.usersDetails?.checkUpperGeo?.entityType === 'state' &&
+      //     state.usersDetails?.checkUpperGeo?.entityType
+      //       ? state.usersDetails?.checkUpperGeo?.name
+      //       : state.usersDetails?.checkUpperGeo?.parents?.find(
+      //           (item: any) => item?.entityType === 'state'
+      //         );
+      //   state.statesList = statesEntityType;
+
+      //   const selectDistrictType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
+      //     (item: any) => item?.entityType === 'district'
+      //   );
+      //   state.districtList = selectDistrictType;
+
+      //   const selectTalukType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
+      //     (item: any) => item?.entityType === 'taluk'
+      //   );
+      //   state.talukList = selectTalukType;
+
+      //   const selectVillageType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
+      //     (item: any) => item?.entityType === 'village'
+      //   );
+      //   state.villageList = selectVillageType;
+      // }
+    },
+    // empty user details
+    emptyUserDetails(state, action) {
+      state.isLoading = false;
+      state.usersDetails = {
+        id: '',
+        name: '',
+        phone: '',
+        status: '',
+        language: '',
+        location: {
+          lat: 0,
+          lng: 0,
+        },
+        created: '',
+        modified: '',
+        villageId: '',
+        checkUpperGeo: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+          parents: [],
+        },
+      };
     },
   },
 });
@@ -127,6 +177,7 @@ export const {
   setTalukList,
   setVillageList,
   getUserDetails,
+  emptyUserDetails,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -221,7 +272,7 @@ export function getUsersDetails(id?: any) {
     dispatch(slice.actions.startLoading());
     try {
       return await axios.get(`/sevak-details/${id}`).then((res) => {
-        dispatch(slice.actions.getUserDetails(res?.data?.data))
+        dispatch(slice.actions.getUserDetails(res?.data?.data));
         return res;
       });
     } catch (error) {

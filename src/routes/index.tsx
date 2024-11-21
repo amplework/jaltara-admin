@@ -75,15 +75,22 @@ export default function Router() {
       ),
       children: [
         {
-          path: 'user',
+          path: 'sevek',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
             // { path: 'profile', element: <UserProfile /> },
             { path: 'list', element: <UserList /> },
-            { path: 'user-create/:id', element: <UserCreate /> },
+            { path: 'sevek-create/:id', element: <UserCreate /> },
             // { path: 'cards', element: <UserCards /> },
             // { path: ':name/edit', element: <UserCreate /> },
             // { path: 'account', element: <UserAccount /> },
+          ],
+        },
+        {
+          path: 'farmer',
+          children: [
+            { path: 'list', element: <FarmersList /> },
+            // { path: 'new', element: <UserCreate /> },
           ],
         },
         {
@@ -93,6 +100,7 @@ export default function Router() {
             // { path: 'new', element: <UserCreate /> },
           ],
         },
+
         {
           path: 'well',
           children: [
@@ -228,7 +236,8 @@ const UserList = Loadable(lazy(() => import('../pages/users/UserList')));
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
 const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
-
+// farmer
+const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
 
 const UserCreate = Loadable(lazy(() => import('../pages/users/UserCreate')));
 

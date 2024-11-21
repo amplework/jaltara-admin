@@ -42,7 +42,7 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { emptyUserDetails, getUsersList } from 'src/redux/slices/user';
+import { getUsersList } from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
 const TABLE_HEAD = [
   // { id: '' },
@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function FarmersList() {
   const {
     dense,
     page,
@@ -107,29 +107,9 @@ export default function UserList() {
     setFilterVillage(filterVillage);
   };
 
-  // const handleDeleteRow = (id: string) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
-
-  // const handleDeleteRows = (selected: string[]) => {
-  //   const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  // };
-
   const handleEditRow = (id: string) => {
     navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
-
-  // let dataFiltered = applySortFilter({
-  //   userListData,
-  //   comparator: getComparator(order, orderBy),
-  //   filterName,
-  //   filterRole,
-  //   filterStatus,
-  // });
 
   const denseHeight = dense ? 52 : 72;
 
@@ -139,7 +119,6 @@ export default function UserList() {
     (!userListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
-    // dispatch(emptyUserDetails())
     navigate(PATH_DASHBOARD.user.create())
   }
   const onhandleEditDetails = (id: string) => {
@@ -150,10 +129,10 @@ export default function UserList() {
   }
 
   return (
-    <Page title="Seveks List">
+    <Page title="Farmer List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Seveks List"
+          heading="Farmer List"
           links={[
             { href: PATH_DASHBOARD.user.root },
           ]}

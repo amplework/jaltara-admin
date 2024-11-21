@@ -56,8 +56,8 @@ export default function UserCreate() {
 
 
   const { statesList, districtList, talukList, villageList, usersDetails } = useSelector((state) => state.user);
+  console.log('state', statesList, 'district', districtList, 'taluk', talukList, 'village', villageList);
   console.log('usersDetails', usersDetails);
-
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -72,16 +72,16 @@ export default function UserCreate() {
 
   const defaultValues = useMemo(
     () => ({
-      name: '',
-      phoneNumber: '',
-      status: '',
-      language: '',
+      name: usersDetails?.name || '',
+      phoneNumber: usersDetails?.phone || '',
+      status: usersDetails?.status || '',
+      language: usersDetails?.status || '',
       selectStates: '',
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: ''
     }),
-    []
+    [usersDetails]
   );
 
   const methods = useForm<CreateUserType>({
@@ -98,10 +98,11 @@ export default function UserCreate() {
   } = methods;
 
   useEffect(() => {
-    const statesEntityType = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'state')
-    const selectDistrictType = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'district')
-    const selectTalukType = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'taluk')
-    const selectVillageType = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'village')
+    const statesEntityType: any = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'state')
+  
+    const selectDistrictType: any = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'district')
+    const selectTalukType: any = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'taluk')
+    const selectVillageType: any = usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === 'village')
 
     setValue("name", usersDetails?.name || "");
     setValue("phoneNumber", usersDetails?.phone || "");
@@ -111,7 +112,8 @@ export default function UserCreate() {
     setValue("selectDistrict", usersDetails?.checkUpperGeo?.entityType === 'district' && usersDetails?.checkUpperGeo?.entityType ? usersDetails?.checkUpperGeo?.name : selectDistrictType?.name || "");
     setValue("selectTaluk", usersDetails?.checkUpperGeo?.entityType === 'taluk' && usersDetails?.checkUpperGeo?.entityType ? usersDetails?.checkUpperGeo?.name : selectTalukType?.name || "");
     setValue("selectVillage", usersDetails?.checkUpperGeo?.entityType === 'village' && usersDetails?.checkUpperGeo?.entityType ? usersDetails?.checkUpperGeo?.name : selectVillageType?.name || "");
-  }, [usersDetails,setValue]);
+  }, [usersDetails, setValue]);
+
 
   // useEffect(() => {
   //   const checkUpperGeo = usersDetails?.checkUpperGeo;
@@ -151,7 +153,6 @@ export default function UserCreate() {
           });
           navigate(PATH_DASHBOARD.user.list);
           reset();
-
         }
       })
     } catch (error) {
@@ -186,14 +187,14 @@ export default function UserCreate() {
   }
 
   return (
-    <Page title="User: Create a new user">
+    <Page title="User: Create a new sevek">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Create a new user' : 'Edit user details'}
+          heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'User', href: PATH_DASHBOARD.user.list },
-            { name: !isEdit ? 'New user' : 'Edit user' },
+            { name: !isEdit ? 'New sevek' : 'Edit sevek' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -238,26 +239,31 @@ export default function UserCreate() {
                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                   }}
                 >
+
                   <RHFSelect name="selectStates" label="States" placeholder="States" onChange={(event: any) => handleStatesSelect(event)}>
                     <option value="" />
-                    {statesList?.map((option) => (
-                      <option key={option?.id} value={option?.name}>
-                        {option?.name}
-                      </option>
-                    ))}
+                    {statesList?.map((option) => {
+                      return (
+                        <option key={option?.id} value={option?.name}>
+                          {option?.name}
+                        </option>
+                      )
+                    })}
                   </RHFSelect>
                   <RHFSelect name="selectDistrict" label="District" placeholder="District" onChange={(event: any) => handleDistrictSelect(event)}>
                     <option value="" />
-                    {districtList?.childEntities?.map((option) => (
-                      <option key={option.id} value={option.name}>
-                        {option?.name}
-                      </option>
-                    ))}
+                    {districtList?.childEntities?.map((option) => {
+                      return (
+                        <option key={option?.id} value={option?.name}>
+                          {option?.name}
+                        </option>
+                      )
+                    })}
                   </RHFSelect>
                   <RHFSelect name="selectTaluk" label="Taluk" placeholder="Taluk" onChange={(event: any) => handleTalukSelect(event)}>
                     <option value="" />
                     {talukList?.childEntities?.map((option) => (
-                      <option key={option.id} value={option.name}>
+                      <option key={option.id} value={option?.name}>
                         {option?.name}
                       </option>
                     ))}
@@ -265,7 +271,7 @@ export default function UserCreate() {
                   <RHFSelect name="selectVillage" label="Village" placeholder="Village" onChange={(event: any) => handleVillageSelect(event)}>
                     <option value="" />
                     {villageList?.childEntities?.map((option) => (
-                      <option key={option.id} value={option.name}>
+                      <option key={option.id} value={option?.name}>
                         {option?.name}
                       </option>
                     ))}
@@ -274,7 +280,7 @@ export default function UserCreate() {
 
                 <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    {!isEdit ? 'Create User' : 'Edit User'}
+                    {!isEdit ? 'Create sevek' : 'Edit sevek'}
                   </LoadingButton>
                 </Stack>
               </Card>

@@ -53,8 +53,13 @@ const navConfig = [
       //   icon: ICONS.user,
       // },
       {
-        title: 'users',
+        title: 'sevek',
         path: PATH_DASHBOARD.user.list,
+        icon: ICONS.user,
+      },
+      {
+        title: 'farmers',
+        path: PATH_DASHBOARD.farmers.list,
         icon: ICONS.user,
       },
       {
@@ -77,11 +82,7 @@ const navConfig = [
         path: PATH_DASHBOARD.equipments.list,
         icon: ICONS.user,
       },
-      {
-        title: 'farmers',
-        path: PATH_DASHBOARD.wells.list,
-        icon: ICONS.user,
-      },
+
       {
         title: 'crops',
         path: PATH_DASHBOARD.crops.list,
