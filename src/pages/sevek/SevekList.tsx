@@ -139,10 +139,12 @@ export default function UserList() {
     (!userListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
+    dispatch(emptyUserDetails(null))
     navigate(PATH_DASHBOARD.sevek.create)
   }
   
   const onhandleEditDetails = (id: string) => {
+    dispatch(emptyUserDetails(null))
     navigate(PATH_DASHBOARD.sevek.edit(id))
   }
   const onhandleDeleteRow=(id:string)=>{

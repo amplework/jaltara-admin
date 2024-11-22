@@ -6,8 +6,7 @@ import userReducer from './slices/user';
 import pitsReducer from './slices/pits';
 import cropsReducer from './slices/crops';
 import equipmentsReducer from './slices/equipment';
-
-
+import farmerReducer from './slices/farmers';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -29,7 +28,7 @@ const rootReducer = combineReducers({
   pits: pitsReducer,
   crops: cropsReducer,
   equipments: equipmentsReducer,
-  
+  farmer: farmerReducer,
 });
 
 export { rootPersistConfig, rootReducer };

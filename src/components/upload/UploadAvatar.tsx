@@ -85,7 +85,6 @@ export default function UploadAvatar({ error, file, helperText, sx, ...other }: 
             <Image
               alt="avatar"
               src={typeof file === 'string' ? file : file.preview}
-              sx={{ zIndex: 8 }}
             />
           )}
 

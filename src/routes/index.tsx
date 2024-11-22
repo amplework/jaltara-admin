@@ -91,6 +91,7 @@ export default function Router() {
           path: 'farmer',
           children: [
             { path: 'list', element: <FarmersList /> },
+            {path:'farmer-create',element:<FarmerCreate/>}
             // { path: 'new', element: <UserCreate /> },
           ],
         },
@@ -239,6 +240,7 @@ const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
 
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
+const FarmerCreate=Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

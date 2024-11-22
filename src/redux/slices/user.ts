@@ -4,7 +4,7 @@ import { EventInput } from '@fullcalendar/common';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
-import { UserList } from 'src/@types/user';
+import { CildEntitiesType, UserList } from 'src/@types/user';
 
 // ----------------------------------------------------------------------
 
@@ -112,31 +112,12 @@ const slice = createSlice({
     getUserDetails(state, action) {
       state.isLoading = false;
       state.usersDetails = action.payload;
-      // if (state.usersDetails) {
-      //   const statesEntityType: any =
-      //     state.usersDetails?.checkUpperGeo?.entityType === 'state' &&
-      //     state.usersDetails?.checkUpperGeo?.entityType
-      //       ? state.usersDetails?.checkUpperGeo?.name
-      //       : state.usersDetails?.checkUpperGeo?.parents?.find(
-      //           (item: any) => item?.entityType === 'state'
-      //         );
-      //   state.statesList = statesEntityType;
-
-      //   const selectDistrictType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
-      //     (item: any) => item?.entityType === 'district'
-      //   );
-      //   state.districtList = selectDistrictType;
-
-      //   const selectTalukType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
-      //     (item: any) => item?.entityType === 'taluk'
-      //   );
-      //   state.talukList = selectTalukType;
-
-      //   const selectVillageType: any = state.usersDetails?.checkUpperGeo?.parents?.find(
-      //     (item: any) => item?.entityType === 'village'
-      //   );
-      //   state.villageList = selectVillageType;
-      // }
+    },
+    //empty village list
+    emptyVillageList(state, action) {
+      state.isLoading = false;
+      state.villageList.mainEntity = {} as CildEntitiesType;
+      state.villageList.childEntities = [];
     },
     // empty user details
     emptyUserDetails(state, action) {
@@ -178,6 +159,7 @@ export const {
   setVillageList,
   getUserDetails,
   emptyUserDetails,
+  emptyVillageList,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -243,6 +225,8 @@ export function getVillageList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
     axios.get(`/geographic-entities/${id}`).then((response) => {
+      console.log('response', response);
+
       if (response?.status === 200) {
         dispatch(slice.actions.setVillageList(response?.data?.data));
       }
@@ -257,6 +241,20 @@ export function addEditUsers(payload?: any) {
     dispatch(slice.actions.startLoading());
     try {
       return await axios.post(`/users`, payload).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+export function editUsersDetails(payload?: any, id?: string) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.patch(`/sevak-update/${id}`, payload).then((res) => {
         return res;
       });
     } catch (error) {

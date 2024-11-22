@@ -49,6 +49,7 @@ export const PATH_DASHBOARD = {
   },
   farmers: {
     list: path('/farmer/list'),
+    new:path('/farmer/farmer-create')
   },
   wells: {
     list: path('/well/list'),

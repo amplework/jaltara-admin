@@ -17,7 +17,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, RHFSelect, RHFSelectDropdown, RHFSwitch, RHFTextField } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFSelect,
+  RHFSelectDropdown,
+  RHFSwitch,
+  RHFTextField,
+  RHFUploadAvatar,
+} from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -34,6 +41,9 @@ import {
 import { dispatch, useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
+import { RHFDatePicker } from 'src/components/hook-form/RHFDatePicker';
+import { FarmerDetailsType } from 'src/@types/farmer';
+import { addNewFarmer, editNewFarmer } from 'src/redux/slices/farmers';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -46,7 +56,16 @@ const languageList = [
   { id: 'english', label: 'English', name: 'english' },
 ];
 
-export default function SevekCreate() {
+const content = [
+  '(i) telling us where to dig',
+  '(ii) collecting rocks/stones',
+  '(iii) filling the pit?*',
+];
+const content2 = [
+  'Do you agree to participate and do your shramdaan for your family’s benefits - which also includes:',
+];
+
+export default function FarmerCreate() {
   const { themeStretch } = useSettings();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -67,37 +86,43 @@ export default function SevekCreate() {
   const { statesList, districtList, talukList, villageList, usersDetails } = useSelector(
     (state) => state.user
   );
-  // console.log('44444444', talukList);
-  // console.log('55555555', villageList);
 
-  const NewUserSchema = Yup.object().shape({
+  const NewFarmerSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
-    phoneNumber: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
-    status: Yup.string().required('Status is required'),
+    phone: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
+    // status: Yup.string().required('Status is required'),
+    land: Yup.string().required('Land(arces) is required'),
+    familyMemberNumber: Yup.string().required('Family Count is required'),
     language: Yup.string().required('Language is required'),
+    farmAvailableDate: Yup.string().required('Report period date is required').nullable(),
     selectStates: Yup.string().required('States is required'),
     // selectDistrict: Yup.string().required('District is required'),
-    selectDistrict: Yup.string(),
-    selectTaluk: Yup.string(),
-    selectVillage: Yup.string(),
+    selectDistrict: Yup.string().required('District is required'),
+    selectTaluk: Yup.string().required('Taluk is required'),
+    selectVillage: Yup.string().required('Village is required'),
+    isParticipate: Yup.boolean().required('Participate is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: '',
-      phoneNumber: '',
+      phone: '',
+      land: '',
+      familyMemberNumber: '',
+      farmAvailableDate: '',
       status: '',
       language: '',
       selectStates: '',
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: '',
+      isParticipate: true,
     }),
     [usersDetails]
   );
 
-  const methods = useForm<CreateUserType>({
-    resolver: yupResolver(NewUserSchema),
+  const methods = useForm<FarmerDetailsType>({
+    resolver: yupResolver(NewFarmerSchema),
     defaultValues,
   });
 
@@ -108,6 +133,7 @@ export default function SevekCreate() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
   const getAssignVillageData = (value: string) => {
     return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
   };
@@ -129,9 +155,10 @@ export default function SevekCreate() {
     const isVillage = usersDetails?.checkUpperGeo?.entityType === 'village';
     const isTaluk = usersDetails?.checkUpperGeo?.entityType === 'taluk';
     setValue('name', usersDetails?.name);
-    setValue('phoneNumber', usersDetails?.phone);
+    setValue('phone', usersDetails?.phone);
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
+
     let isDistrictData;
 
     if (usersDetails && stateIdData?.id) {
@@ -170,21 +197,29 @@ export default function SevekCreate() {
     }
   };
 
-  const onSubmit = async (data: CreateUserType) => {
+  const onSubmit = async (data: FarmerDetailsType) => {
     try {
       let previousState: any = {
         name: usersDetails?.name,
         phone: usersDetails?.phone,
         language: usersDetails?.language,
-        status: usersDetails?.status,
+        // familyMemberNumber:usersDetails?.familyMemberNumber,
+        // date:usersDetails?.date,
+        // land:usersDetails?.land,
+        // status: usersDetails?.status,
       };
 
       let payload: any = {
         name: data?.name,
-        phone: data?.phoneNumber,
+        phone: data?.phone,
         language: data?.language,
-        status: data?.status,
+        // status: data?.status,
         villageId: state?.villageId,
+        familyMemberNumber: Number(data.familyMemberNumber),
+        farmAvailableDate: data?.farmAvailableDate,
+        land: Number(data?.land),
+        status: data?.status,
+        isParticipate: data?.isParticipate,
       };
 
       Object.keys(payload).forEach((key) => {
@@ -192,26 +227,27 @@ export default function SevekCreate() {
           delete payload[key];
         }
       });
-      console.log('payload', payload);
 
       if (id) {
-        dispatch(editUsersDetails(payload, id)).then((res: any) => {
-          if (res?.data?.statusCode === 200) {
+        dispatch(editNewFarmer(payload, id)).then((res: any) => {
+          if (res?.data?.statusCode === 201) {
             enqueueSnackbar(res?.data?.message, {
               variant: 'success',
             });
-            navigate(PATH_DASHBOARD.sevek.list);
-            reset();
+            navigate(PATH_DASHBOARD.farmers.list);
           }
         });
       } else {
-        dispatch(addEditUsers(payload)).then((res: any) => {
-          if (res?.data?.statusCode === 200) {
+        dispatch(addNewFarmer(payload)).then((res: any) => {
+          if (res?.data?.statusCode === 201) {
             enqueueSnackbar(res?.data?.message, {
               variant: 'success',
             });
-            navigate(PATH_DASHBOARD.sevek.list);
-            reset();
+            navigate(PATH_DASHBOARD.farmers.list);
+          } else {
+            enqueueSnackbar(res?.data?.message, {
+              variant: 'success',
+            });
           }
         });
       }
@@ -219,6 +255,7 @@ export default function SevekCreate() {
       console.error(error);
     }
   };
+
   const handleStatesSelect = (id: any) => {
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
@@ -245,20 +282,20 @@ export default function SevekCreate() {
   };
 
   return (
-    <Page title="Create sevek">
+    <Page title="Create farmer">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           // heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
-          heading={!id ? 'Create a new sevek' : 'Edit sevek details'}
+          heading={!id ? 'Create a new Farmer' : 'Edit Farmer details'}
           links={[
-            { name: 'Sevek List', href: PATH_DASHBOARD.sevek.list },
+            { name: 'Farmer List', href: PATH_DASHBOARD.sevek.list },
             // { name: !isEdit ? 'New sevek' : 'Edit sevek' },
-            { name: !id ? 'Create a new sevek' : 'Edit sevek' },
+            { name: !id ? 'Create a new farmer' : 'Edit farmer' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Box
                   sx={{
@@ -268,24 +305,72 @@ export default function SevekCreate() {
                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                   }}
                 >
-                  <RHFTextField name="name" label="Full Name" />
-                  <RHFTextField name="phoneNumber" label="Phone Number" />
-                  <RHFSelectDropdown
-                    name="status"
-                    label={'Select Status'}
-                    placeholder={'Status'}
-                    options={statusList}
-                  />
+                  <RHFTextField name="name" label="Farmer Name" />
+                  <RHFTextField name="phone" label="Phone Number" />
+                  <RHFTextField name="land" label="Land (arces)" />
+                  <RHFTextField name="familyMemberNumber" label="Family Count" />
+                  <RHFDatePicker name="farmAvailableDate" label="Farm Available Date" />
                   <RHFSelectDropdown
                     name="language"
                     label={'Select Language'}
                     placeholder={'Language'}
                     options={languageList}
                   />
-                  
+                  <Box width="100%">
+                    <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box display="flex" flexWrap="wrap" flex="1">
+                        {content2?.map((text, index) => (
+                          <Typography
+                            key={index}
+                            variant="subtitle2"
+                            sx={{
+                              mb: 0.5,
+                              width: '100%',
+                              flexShrink: 0,
+                            }}
+                          >
+                            {text}
+                          </Typography>
+                        ))}
+                      </Box>
+                      <RHFSwitch
+                        name="isParticipate"
+                        labelPlacement="end"
+                        label=""
+                        sx={{
+                          mx: 0,
+                          justifyContent: 'flex-end',
+                          flexShrink: 0,
+                          '& .MuiSwitch-switchBase': {
+                            color: '#ccc',
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#a2a',
+                          },
+                          '& .MuiSwitch-track': {
+                            backgroundColor: '#ddd',
+                            opacity: 1,
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#a2a',
+                          },
+                        }}
+                      />
+                    </Box>
+
+                    {content?.map((text, index) => (
+                      <Typography
+                        key={index}
+                        variant={index === 0 ? 'subtitle2' : 'body2'}
+                        sx={{ mb: 0.5 }}
+                      >
+                        {text}
+                      </Typography>
+                    ))}
+                  </Box>
                 </Box>
                 <Typography variant="h4" py={2}>
-                  Assign village
+                  Select village
                 </Typography>
                 <Box
                   sx={{

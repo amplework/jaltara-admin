@@ -15,7 +15,7 @@ import { PitItem } from 'src/@types/pits';
 type Props = {
   row: PitItem | null;
   selected: boolean;
-  onEditRow: VoidFunction;
+  // onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow?: VoidFunction;
 };
@@ -23,7 +23,7 @@ type Props = {
 export default function PitTableRow({
   row,
   selected,
-  onEditRow,
+  // onEditRow,
   onSelectRow,
   onDeleteRow,
 }: Props) {

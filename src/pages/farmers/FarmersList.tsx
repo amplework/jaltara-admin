@@ -1,20 +1,14 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Tab,
-  Tabs,
   Card,
   Table,
   Switch,
   Button,
-  Tooltip,
-  Divider,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   TablePagination,
   FormControlLabel,
@@ -24,9 +18,9 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
+import useTable, {  } from '../../hooks/useTable';
 // @types
-import { UserItem, UserManager } from '../../@types/user';
+import { UserItem } from '../../@types/user';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -36,25 +30,24 @@ import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import {
   TableNoData,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedActions,
 } from '../../components/table';
 // sections
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { getUsersList } from 'src/redux/slices/user';
-import { dispatch, useSelector } from 'src/redux/store';
+import { UserTableToolbar } from '../../sections/@dashboard/user/list';
+import { useSelector } from 'src/redux/store';
+import { getFarmerList } from 'src/redux/slices/farmers';
+import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
 const TABLE_HEAD = [
   // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'phone', label: 'Phone', align: 'left' },
+  { id: 'land', label: 'Land (acres)', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
-  { id: 'status', label: 'status', align: 'left' },
-  { id: 'edit', label: 'edit', align: 'left' },
-  { id: 'delete', label: 'delete', align: 'left' },
+  { id: 'language', label: 'Language', align: 'left' },
+  { id: 'pits', label: `Total pit's`, align: 'left' },
+  { id: 'edit', label: 'Edit', align: 'left' },
+  { id: 'delete', label: 'Delete', align: 'left' },
 ];
 
-// ----------------------------------------------------------------------
 
 export default function FarmersList() {
   const {
@@ -80,8 +73,6 @@ export default function FarmersList() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState([]);
-
   const [filterName, setFilterName] = useState('');
 
   const [filterVillage, setFilterVillage] = useState('');
@@ -90,13 +81,13 @@ export default function FarmersList() {
 
 
   useEffect(() => {
-    getUsersList()
+    getFarmerList()
   }, [])
 
-  const { userListData, statesList } = useSelector((state) => state.user);
+  const { farmerListData } = useSelector((state) => state.farmer);
 
   const onSearch = () => {
-    getUsersList(filterName, filterVillage)
+    getFarmerList(filterName, filterVillage)
   }
 
   const handleFilterName = (filterName: string) => {
@@ -114,12 +105,12 @@ export default function FarmersList() {
   const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
-    (!userListData?.length && !!filterName) ||
-    (!userListData?.length && !!filterVillage) ||
-    (!userListData?.length && !!filterStatus);
+    (!farmerListData?.length && !!filterName) ||
+    (!farmerListData?.length && !!filterVillage) ||
+    (!farmerListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
-    navigate(PATH_DASHBOARD.sevek.create)
+    navigate(PATH_DASHBOARD.farmers.new)
   }
   
   const onhandleEditDetails = (id: string) => {
@@ -143,7 +134,7 @@ export default function FarmersList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddUser}
             >
-              New Sevek
+              New Farmer
             </Button>
           }
         />
@@ -155,53 +146,25 @@ export default function FarmersList() {
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
-            placeholderText={"Search by sevak name"}
+            placeholderText={"Search by farmer name"}
             placeholderTextSecond={"Search by village name"}
           />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {/* {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={userListData?.length || 0}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
-                  // actions={
-                  //   <Tooltip title="Delete">
-                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  //       <Iconify icon={'eva:trash-2-outline'} />
-                  //     </IconButton>
-                  //   </Tooltip>
-                  // }
-                />
-              )} */}
-
               <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userListData?.length}
+                  rowCount={farmerListData?.length}
                   numSelected={selected.length}
-                // onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row.id)
-                //   )
-                // }
                 />
 
                 <TableBody>
-                  {userListData?.length ? userListData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  {farmerListData?.length ? farmerListData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
-                      <UserTableRow
+                      <FarmerTableRow
                         key={row.id}
                         row={row}
                         selected={selected.includes(row.id)}
@@ -213,11 +176,6 @@ export default function FarmersList() {
                       />
                     )) : null}
 
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -228,7 +186,7 @@ export default function FarmersList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={userListData?.length ? userListData.length : 0}
+              count={farmerListData?.length ? farmerListData.length : 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}
