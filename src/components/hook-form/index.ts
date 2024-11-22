@@ -3,6 +3,7 @@ export * from './RHFCheckbox';
 
 export { default as RHFSwitch } from './RHFSwitch';
 export { default as RHFSelect } from './RHFSelect';
+export { default as RHFSelectDropdown } from './RHFSelectDropdown';
 export { default as RHFEditor } from './RHFEditor';
 export { default as RHFSlider } from './RHFSlider';
 export { default as RHFTextField } from './RHFTextField';

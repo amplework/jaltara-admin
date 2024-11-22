@@ -54,7 +54,7 @@ const navConfig = [
       // },
       {
         title: 'sevek',
-        path: PATH_DASHBOARD.user.list,
+        path: PATH_DASHBOARD.sevek.list,
         icon: ICONS.user,
       },
       {

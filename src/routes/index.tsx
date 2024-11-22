@@ -39,7 +39,7 @@ export default function Router() {
     {
       // path: '',
       children: [
-        { element: <Navigate to={"login"} replace />, index: true },
+        { element: <Navigate to={'login'} replace />, index: true },
         {
           path: 'login',
           element: (
@@ -62,7 +62,6 @@ export default function Router() {
         { path: 'new-password', element: <NewPassword /> },
         { path: 'verify', element: <VerifyCode /> },
       ],
-      
     },
 
     // Dashboard Routes
@@ -78,9 +77,11 @@ export default function Router() {
           path: 'sevek',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            // { path: 'profile', element: <UserProfile /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'sevek-create/:id', element: <UserCreate /> },
+            // { path: 'profile', elementSevek /> },
+            { path: 'list', element: <SevekList /> },
+            { path: 'sevek-create', element: <SevekCreate /> },
+            { path: 'sevek-edit/:id', element: <SevekEdit /> },
+
             // { path: 'cards', element: <UserCards /> },
             // { path: ':name/edit', element: <UserCreate /> },
             // { path: 'account', element: <UserAccount /> },
@@ -110,15 +111,11 @@ export default function Router() {
         },
         {
           path: 'crop',
-          children: [
-            { path: 'list', element: <CropList /> },
-          ],
+          children: [{ path: 'list', element: <CropList /> }],
         },
         {
           path: 'equipment',
-          children: [
-            { path: 'list', element: <EquipmentList /> },
-          ],
+          children: [{ path: 'list', element: <EquipmentList /> }],
         },
         // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         // { path: 'app', element: <GeneralApp /> },
@@ -229,17 +226,19 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
-// DASHBOARD
-// USER
-const UserProfile = Loadable(lazy(() => import('../pages/users/UserProfile')));
-const UserList = Loadable(lazy(() => import('../pages/users/UserList')));
+// Sevek
+const SevekProfile = Loadable(lazy(() => import('../pages/sevek/SevekProfile')));
+const SevekList = Loadable(lazy(() => import('../pages/sevek/SevekList')));
+const SevekCreate = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
+const SevekEdit = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
+
+
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
 const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
+
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
-
-const UserCreate = Loadable(lazy(() => import('../pages/users/UserCreate')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

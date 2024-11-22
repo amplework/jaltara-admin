@@ -16,7 +16,6 @@ import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
-import CollapseButton from './CollapseButton';
 
 // ----------------------------------------------------------------------
 
@@ -70,30 +69,23 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
           ...(isCollapse && { alignItems: 'center' }),
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack direction="row" alignItems="center" justifyContent={'space-between'}>
           <Logo />
-          <Box display={isCollapse ? "none" :'flex'} alignItems={"end"} justifyContent={"end"} justifyItems={"end"}>
-              <Typography variant="h6" sx={{ letterSpacing: 3, color: '#3892FA' }}>
-                JAL
-              </Typography>
-              <Typography variant="h6" sx={{ letterSpacing: 3,}}>
-                TARA
-              </Typography>
+          <Box display={'flex'} justifyContent={'center'}>
+            <Typography variant="h6" sx={{ letterSpacing: 3, color: '#3892FA' }}>
+              JAL
+            </Typography>
+            <Typography variant="h6" sx={{ letterSpacing: 3 }}>
+              TARA
+            </Typography>
           </Box>
-
-          {isDesktop && !isCollapse && (
-            <CollapseButton onToggleCollapse={onToggleCollapse} collapseClick={collapseClick} />
-          )}
+          <Box></Box>
         </Stack>
-
-        {/* <NavbarAccount isCollapse={isCollapse} /> */}
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {/* {!isCollapse && <NavbarDocs />} */}
     </Scrollbar>
   );
 

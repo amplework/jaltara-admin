@@ -34,25 +34,21 @@ export const PATH_PAGE = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-
   permissionDenied: path('/permission-denied'),
-  // dashboard: {
-  //   root: path('/dashboard'),
-  // },
-  user: {
+
+  sevek: {
     root: path('/sevek'),
     new: path('/sevek/new'),
-    create:(id?:string)=> path(`/sevek/sevek-create/${id}`),
-    // create: path(`/user/user-create`),
-
     list: path('/sevek/list'),
-    cards: path('/user/cards'),
-    profile: path('/user/profile'),
-    account: path('/user/account'),
-    edit: (name: string) => path(`/user/${name}/edit`),
+    cards: path('/sevek/cards'),
+    create: path(`/sevek/sevek-create`),
+    edit:(id?:string)=> path(`/sevek/sevek-edit/${id}`),
+    profile: path('/sevek/profile'),
+    account: path('/sevek/account'),
+    // edit: (name: string) => path(ROOTS_DASHBOARD, `/sevek/${name}/edit`),
   },
-  farmers:{
-    list: path('/farmer/list')
+  farmers: {
+    list: path('/farmer/list'),
   },
   wells: {
     list: path('/well/list'),

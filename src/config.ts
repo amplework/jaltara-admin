@@ -4,6 +4,7 @@ import { enUS, frFR, zhCN, viVN, arSD } from '@mui/material/locale';
 import { SettingsValueProps } from './components/settings/type';
 // routes
 import { PATH_DASHBOARD } from './routes/paths';
+import Iconify from './components/Iconify';
 
 // API
 // ----------------------------------------------------------------------
@@ -35,7 +36,7 @@ export const AUTH0_API = {
 export const MAPBOX_API = process.env.REACT_APP_MAPBOX_API;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATH_DASHBOARD.user.list; // as '/dashboard/app'
+export const PATH_AFTER_LOGIN = PATH_DASHBOARD.sevek.list; // as '/dashboard/app'
 
 // LAYOUT
 // ----------------------------------------------------------------------
@@ -81,34 +82,22 @@ export const defaultSettings: SettingsValueProps = {
 
 export const allLangs = [
   {
-    label: 'English',
-    value: 'en',
-    systemValue: enUS,
-    icon: '/assets/icons/flags/ic_flag_en.svg',
-  },
-  {
-    label: 'French',
+    label: 'हिन्दी',
     value: 'fr',
     systemValue: frFR,
-    icon: '/assets/icons/flags/ic_flag_fr.svg',
+    icon: '/assets/icons/flags/ic_flag_vn.svg',
   },
   {
-    label: 'Vietnamese',
+    label: 'मराठी',
     value: 'vn',
     systemValue: viVN,
     icon: '/assets/icons/flags/ic_flag_vn.svg',
   },
   {
-    label: 'Chinese',
-    value: 'cn',
-    systemValue: zhCN,
-    icon: '/assets/icons/flags/ic_flag_cn.svg',
-  },
-  {
-    label: 'Arabic (Sudan)',
-    value: 'ar',
-    systemValue: arSD,
-    icon: '/assets/icons/flags/ic_flag_sa.svg',
+    label: 'English',
+    value: 'en',
+    systemValue: enUS,
+    icon: '/assets/icons/flags/ic_flag_en.svg',
   },
 ];
 

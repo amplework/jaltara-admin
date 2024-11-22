@@ -130,7 +130,7 @@ export default function EquipmentList() {
   // };
 
   const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
   };
 
   // let dataFiltered = applySortFilter({
@@ -154,13 +154,13 @@ export default function EquipmentList() {
         <HeaderBreadcrumbs
           heading="Equipments List"
           links={[
-            { href: PATH_DASHBOARD.user.root },
+            { href: PATH_DASHBOARD.sevek.root },
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_DASHBOARD.sevek.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Equipment

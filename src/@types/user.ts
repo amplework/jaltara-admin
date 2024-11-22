@@ -161,10 +161,12 @@ export type CildEntitiesType = {
   entityType: string;
   parentId?: string;
 };
+
 type DistrictListData = {
   mainEntity: StatesList;
   childEntities: CildEntitiesType[] | null;
 };
+
 type TalukListData = {
   mainEntity: CildEntitiesType;
   childEntities: CildEntitiesType[] | null;
@@ -174,6 +176,7 @@ type VillageListData = {
   mainEntity: CildEntitiesType;
   childEntities: CildEntitiesType[] | null;
 };
+
 export type UserList = {
   isLoading: boolean;
   error: string | null;

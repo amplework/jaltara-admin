@@ -120,7 +120,7 @@ export default function UserList() {
   // };
 
   const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
   };
 
   // let dataFiltered = applySortFilter({
@@ -139,11 +139,11 @@ export default function UserList() {
     (!userListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
-    // dispatch(emptyUserDetails())
-    navigate(PATH_DASHBOARD.user.create())
+    navigate(PATH_DASHBOARD.sevek.create)
   }
+  
   const onhandleEditDetails = (id: string) => {
-    navigate(PATH_DASHBOARD.user.create(id))
+    navigate(PATH_DASHBOARD.sevek.edit(id))
   }
   const onhandleDeleteRow=(id:string)=>{
 
@@ -155,7 +155,7 @@ export default function UserList() {
         <HeaderBreadcrumbs
           heading="Seveks List"
           links={[
-            { href: PATH_DASHBOARD.user.root },
+            { href: PATH_DASHBOARD.sevek.root },
           ]}
           action={
             <Button

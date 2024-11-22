@@ -108,7 +108,7 @@ export default function FarmersList() {
   };
 
   const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
   };
 
   const denseHeight = dense ? 52 : 72;
@@ -119,10 +119,11 @@ export default function FarmersList() {
     (!userListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
-    navigate(PATH_DASHBOARD.user.create())
+    navigate(PATH_DASHBOARD.sevek.create)
   }
+  
   const onhandleEditDetails = (id: string) => {
-    navigate(PATH_DASHBOARD.user.create(id))
+    // navigate(PATH_DASHBOARD.sevek.create(id))
   }
   const onhandleDeleteRow=(id:string)=>{
 
@@ -134,7 +135,7 @@ export default function FarmersList() {
         <HeaderBreadcrumbs
           heading="Farmer List"
           links={[
-            { href: PATH_DASHBOARD.user.root },
+            { href: PATH_DASHBOARD.sevek.root },
           ]}
           action={
             <Button
