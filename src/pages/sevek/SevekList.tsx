@@ -42,7 +42,7 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { emptyUserDetails, getUsersList } from 'src/redux/slices/user';
+import { emptyStatesDetails, emptyUserDetails, getUsersList } from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
 const TABLE_HEAD = [
   // { id: '' },
@@ -107,29 +107,9 @@ export default function UserList() {
     setFilterVillage(filterVillage);
   };
 
-  // const handleDeleteRow = (id: string) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
-
-  // const handleDeleteRows = (selected: string[]) => {
-  //   const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  // };
-
   const handleEditRow = (id: string) => {
     // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
   };
-
-  // let dataFiltered = applySortFilter({
-  //   userListData,
-  //   comparator: getComparator(order, orderBy),
-  //   filterName,
-  //   filterRole,
-  //   filterStatus,
-  // });
 
   const denseHeight = dense ? 52 : 72;
 
@@ -140,15 +120,16 @@ export default function UserList() {
 
   const handleAddUser = () => {
     dispatch(emptyUserDetails(null))
+    dispatch(emptyStatesDetails(null))
     navigate(PATH_DASHBOARD.sevek.create)
   }
   
   const onhandleEditDetails = (id: string) => {
     dispatch(emptyUserDetails(null))
+    dispatch(emptyStatesDetails(null))
     navigate(PATH_DASHBOARD.sevek.edit(id))
   }
   const onhandleDeleteRow=(id:string)=>{
-
   }
 
   return (
@@ -183,27 +164,6 @@ export default function UserList() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {/* {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={userListData?.length || 0}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
-                  // actions={
-                  //   <Tooltip title="Delete">
-                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  //       <Iconify icon={'eva:trash-2-outline'} />
-                  //     </IconButton>
-                  //   </Tooltip>
-                  // }
-                />
-              )} */}
-
               <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
@@ -211,13 +171,6 @@ export default function UserList() {
                   headLabel={TABLE_HEAD}
                   rowCount={userListData?.length}
                   numSelected={selected.length}
-                // onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row.id)
-                //   )
-                // }
                 />
 
                 <TableBody>
@@ -234,12 +187,6 @@ export default function UserList() {
                         onhandleDeleteRow={onhandleDeleteRow}
                       />
                     )) : null}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -267,47 +214,4 @@ export default function UserList() {
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({
-  tableData,
-  comparator,
-  filterName,
-  filterStatus,
-  filterRole,
-}: {
-  tableData: UserItem[];
-  comparator: (a: any, b: any) => number;
-  filterName: string;
-  filterStatus: string;
-  filterRole: string;
-}) {
-  const stabilizedThis = tableData.map((el: any, index: any) => [el, index] as const);
-
-  stabilizedThis.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter(
-      (item: Record<string, any>) =>
-        item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.role === filterRole);
-  }
-
-  return tableData;
 }

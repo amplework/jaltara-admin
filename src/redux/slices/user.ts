@@ -90,6 +90,8 @@ const slice = createSlice({
     //set district
     setDistrictList(state, action) {
       state.isLoading = false;
+      console.log('action.payload', action.payload);
+
       const { childEntities, mainEntity } = action.payload;
       state.districtList.mainEntity = mainEntity;
       state.districtList.childEntities = childEntities;
@@ -144,6 +146,36 @@ const slice = createSlice({
         },
       };
     },
+    emptyStatesDetails(state, action) {
+      state.isLoading = false;
+      state.statesList = [];
+      state.districtList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+        },
+        childEntities: [],
+      };
+      state.talukList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+      state.villageList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+    },
   },
 });
 
@@ -160,6 +192,7 @@ export const {
   getUserDetails,
   emptyUserDetails,
   emptyVillageList,
+  emptyStatesDetails,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

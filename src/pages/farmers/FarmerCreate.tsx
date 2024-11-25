@@ -43,7 +43,8 @@ import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { RHFDatePicker } from 'src/components/hook-form/RHFDatePicker';
 import { FarmerDetailsType } from 'src/@types/farmer';
-import { addNewFarmer, editNewFarmer } from 'src/redux/slices/farmers';
+import { addNewFarmer, editNewFarmer, getFarmerDetails } from 'src/redux/slices/farmers';
+import { CircularProgress } from '@mui/material';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -78,7 +79,7 @@ export default function FarmerCreate() {
 
   useEffect(() => {
     if (id) {
-      dispatch(getUsersDetails(id));
+      dispatch(getFarmerDetails(id));
     }
     getStatesList();
   }, []);
@@ -87,14 +88,23 @@ export default function FarmerCreate() {
     (state) => state.user
   );
 
+  const { farmersDetails } = useSelector((state) => state.farmer);
+  console.log('farmersDetails', farmersDetails);
+
   const NewFarmerSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
     phone: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
     // status: Yup.string().required('Status is required'),
-    land: Yup.string().required('Land(arces) is required'),
-    familyMemberNumber: Yup.string().required('Family Count is required'),
+    land: Yup.number()
+      .required('Land(arces) is required')
+      .typeError('land count must be a number')
+      .positive('land count must be a positive number'),
+    familyMemberNumber: Yup.number()
+      .required('Family Count is required')
+      .typeError('Family count must be a number')
+      .positive('Family count must be a positive number'),
     language: Yup.string().required('Language is required'),
-    farmAvailableDate: Yup.string().required('Report period date is required').nullable(),
+    farmAvailableDate: Yup.string().required('date is required').nullable(),
     selectStates: Yup.string().required('States is required'),
     // selectDistrict: Yup.string().required('District is required'),
     selectDistrict: Yup.string().required('District is required'),
@@ -135,85 +145,74 @@ export default function FarmerCreate() {
   } = methods;
 
   const getAssignVillageData = (value: string) => {
-    return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
+    return farmersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
   };
 
   useEffect(() => {
-    setVillageData();
-  }, [
-    usersDetails,
-    // districtList?.childEntities?.length,
-    // talukList?.childEntities?.length,
-    // villageList?.childEntities?.length,
-  ]);
+    if (farmersDetails && id) {
+      handleState();
+    }
+  }, [farmersDetails]);
 
-  const setVillageData = async () => {
+  const handleState = () => {
+    console.log('hello');
+
     const stateIdData = getAssignVillageData('state');
-    const districtIdData = getAssignVillageData('district');
+    const districtIdData: any = getAssignVillageData('district');
     const talukIdData = getAssignVillageData('taluk');
-    const isDistrict = usersDetails?.checkUpperGeo?.entityType === 'district';
-    const isVillage = usersDetails?.checkUpperGeo?.entityType === 'village';
-    const isTaluk = usersDetails?.checkUpperGeo?.entityType === 'taluk';
-    setValue('name', usersDetails?.name);
-    setValue('phone', usersDetails?.phone);
-    setValue('status', usersDetails?.status);
-    setValue('language', usersDetails?.language);
+    const isVillage = farmersDetails?.checkUpperGeo?.entityType === 'village';
+    setValue('name', farmersDetails?.name);
+    setValue('phone', farmersDetails?.phone);
+    setValue('land', farmersDetails?.land);
+    setValue('familyMemberNumber', farmersDetails?.familyMemberNumber);
+    setValue('language', farmersDetails?.language);
+    setValue('farmAvailableDate', farmersDetails?.farmAvailableDate);
+    setValue('isParticipate', farmersDetails?.isParticipate);
+    setValue('selectStates', stateIdData?.id);
 
-    let isDistrictData;
-
-    if (usersDetails && stateIdData?.id) {
+    if (farmersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
-      setValue('selectStates', stateIdData?.id || '');
       setState((prev: any) => ({ ...prev, villageId: stateIdData?.id }));
-      isDistrictData = await getTalukList(districtIdData?.id);
-    }
+      if (farmersDetails && districtIdData?.id && districtList?.childEntities) {
+        getTalukList(districtIdData?.id);
+        setValue('selectDistrict', districtIdData?.id || '');
+        setState((prev: any) => ({ ...prev, villageId: districtIdData?.id }));
+        if (talukIdData && farmersDetails && talukList?.childEntities) {
+          getVillageList(talukIdData?.id);
+          setValue('selectTaluk', talukIdData?.id || '');
+          setState((prev: any) => ({ ...prev, villageId: talukIdData?.id, isLoading: false }));
 
-    if (districtIdData && usersDetails && districtList?.childEntities?.length && !isDistrict) {
-      getTalukList(districtIdData?.id);
-      setValue('selectDistrict', districtIdData?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: districtIdData?.id }));
-    }
-
-    if (talukIdData && usersDetails && talukList?.childEntities?.length && !isTaluk) {
-      getVillageList(talukIdData?.id);
-      setValue('selectTaluk', talukIdData?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: talukIdData?.id }));
-    }
-
-    if (isDistrict && districtList?.childEntities?.length) {
-      setValue('selectDistrict', usersDetails?.checkUpperGeo?.id);
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
-    }
-
-    if (isVillage && villageList?.childEntities?.length) {
-      setValue('selectVillage', usersDetails?.checkUpperGeo?.id);
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
-    }
-
-    if (isTaluk && talukList?.childEntities?.length) {
-      getVillageList(usersDetails?.checkUpperGeo?.id);
-      setValue('selectTaluk', usersDetails?.checkUpperGeo?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
+          if (isVillage && farmersDetails) {
+            setValue('selectVillage', farmersDetails?.checkUpperGeo?.id);
+            setState((prev: any) => ({
+              ...prev,
+              villageId: farmersDetails?.checkUpperGeo?.id,
+              isLoading: false,
+            }));
+          }
+        } else {
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+        }
+      }
     }
   };
 
   const onSubmit = async (data: FarmerDetailsType) => {
     try {
       let previousState: any = {
-        name: usersDetails?.name,
-        phone: usersDetails?.phone,
-        language: usersDetails?.language,
-        // familyMemberNumber:usersDetails?.familyMemberNumber,
-        // date:usersDetails?.date,
-        // land:usersDetails?.land,
-        // status: usersDetails?.status,
+        name: farmersDetails?.name,
+        phone: farmersDetails?.phone,
+        language: farmersDetails?.language,
+        familyMemberNumber: Number(farmersDetails?.familyMemberNumber),
+        farmAvailableDate: farmersDetails?.farmAvailableDate,
+        land: Number(farmersDetails?.land),
+        status: farmersDetails?.status,
       };
 
       let payload: any = {
         name: data?.name,
         phone: data?.phone,
         language: data?.language,
-        // status: data?.status,
         villageId: state?.villageId,
         familyMemberNumber: Number(data.familyMemberNumber),
         farmAvailableDate: data?.farmAvailableDate,
@@ -230,7 +229,7 @@ export default function FarmerCreate() {
 
       if (id) {
         dispatch(editNewFarmer(payload, id)).then((res: any) => {
-          if (res?.data?.statusCode === 201) {
+          if (res?.data?.statusCode === 200) {
             enqueueSnackbar(res?.data?.message, {
               variant: 'success',
             });
@@ -370,7 +369,7 @@ export default function FarmerCreate() {
                   </Box>
                 </Box>
                 <Typography variant="h4" py={2}>
-                  Select village
+                  Select State
                 </Typography>
                 <Box
                   sx={{
@@ -387,31 +386,45 @@ export default function FarmerCreate() {
                     options={statesList}
                     onChange={handleStatesSelect}
                   />
-                  <RHFSelectDropdown
-                    name="selectDistrict"
-                    label={'Select District'}
-                    placeholder={'District'}
-                    options={districtList?.childEntities}
-                    defaultMessage="Please Select State"
-                    onChange={handleDistrictSelect}
-                  />
-                  <RHFSelectDropdown
-                    name="selectTaluk"
-                    label={'Select Taluk'}
-                    placeholder={'Taluk'}
-                    options={talukList?.childEntities}
-                    defaultMessage="Please Select District"
-                    onChange={handleTalukSelect}
-                  />
-                  <RHFSelectDropdown
-                    name="selectVillage"
-                    label={'Select Village'}
-                    placeholder={'Village'}
-                    options={villageList?.childEntities}
-                    defaultMessage="Please Select Village"
-                    onChange={handleVillageSelect}
-                  />
+                  {districtList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectDistrict"
+                      label={'Select District'}
+                      placeholder={'District'}
+                      options={districtList?.childEntities}
+                      defaultMessage="Please Select State"
+                      onChange={handleDistrictSelect}
+                      //   disabled={state.isLoading}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  {talukList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectTaluk"
+                      label={'Select Taluk'}
+                      placeholder={'Taluk'}
+                      options={talukList?.childEntities || []}
+                      defaultMessage="Please Select District"
+                      onChange={handleTalukSelect}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  {villageList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectVillage"
+                      label={'Select Village'}
+                      placeholder={'Village'}
+                      options={villageList?.childEntities}
+                      defaultMessage="Please Select Village"
+                      onChange={handleVillageSelect}
+                    />
+                  ) : (
+                    ''
+                  )}
                 </Box>
+
                 <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                   <LoadingButton
                     type="submit"

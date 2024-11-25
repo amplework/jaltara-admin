@@ -47,22 +47,26 @@ const RHFSelectDropdown = ({
       SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
     >
       {options?.length &&
-        options?.map((option: any, index: any) => (
-          <MenuItem
-            key={index}
-            id={`${optionId}.${index}`}
-            value={option.id}
-            sx={{
-              mx: 1,
-              my: 0.5,
-              borderRadius: 0.75,
-              typography: 'body2',
-              textTransform: 'capitalize',
-            }}
-          >
-            {option?.name}
-          </MenuItem>
-        ))}
+        options?.map((option: any, index: any) => {
+          console.log('option',option);
+          
+          return (
+            <MenuItem
+              key={index}
+              id={`${optionId}.${index}`}
+              value={option.id}
+              sx={{
+                mx: 1,
+                my: 0.5,
+                borderRadius: 0.75,
+                typography: 'body2',
+                textTransform: 'capitalize',
+              }}
+            >
+              {option?.name}
+            </MenuItem>
+          );
+        })}
       {defaultMessage && !options?.length && (
         <Typography
           sx={{

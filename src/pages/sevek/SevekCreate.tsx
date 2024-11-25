@@ -17,7 +17,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, RHFSelect, RHFSelectDropdown, RHFSwitch, RHFTextField } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFSelect,
+  RHFSelectDropdown,
+  RHFSwitch,
+  RHFTextField,
+} from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -67,8 +73,6 @@ export default function SevekCreate() {
   const { statesList, districtList, talukList, villageList, usersDetails } = useSelector(
     (state) => state.user
   );
-  // console.log('44444444', talukList);
-  // console.log('55555555', villageList);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
@@ -132,38 +136,39 @@ export default function SevekCreate() {
     setValue('phoneNumber', usersDetails?.phone);
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
-    let isDistrictData;
+    setValue('selectStates', stateIdData?.id || '');
 
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
-      setValue('selectStates', stateIdData?.id || '');
       setState((prev: any) => ({ ...prev, villageId: stateIdData?.id }));
-      isDistrictData = await getTalukList(districtIdData?.id);
     }
 
-    if (districtIdData && usersDetails && districtList?.childEntities?.length && !isDistrict) {
+    if (districtIdData && usersDetails && districtList?.childEntities && !isDistrict) {
       getTalukList(districtIdData?.id);
       setValue('selectDistrict', districtIdData?.id || '');
       setState((prev: any) => ({ ...prev, villageId: districtIdData?.id }));
     }
 
-    if (talukIdData && usersDetails && talukList?.childEntities?.length && !isTaluk) {
+    if (talukIdData && usersDetails && talukList?.childEntities && !isTaluk) {
       getVillageList(talukIdData?.id);
       setValue('selectTaluk', talukIdData?.id || '');
       setState((prev: any) => ({ ...prev, villageId: talukIdData?.id }));
     }
 
-    if (isDistrict && districtList?.childEntities?.length) {
+    if (isDistrict) {
+      getTalukList(usersDetails?.checkUpperGeo?.id);
       setValue('selectDistrict', usersDetails?.checkUpperGeo?.id);
       setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
     }
 
-    if (isVillage && villageList?.childEntities?.length) {
-      setValue('selectVillage', usersDetails?.checkUpperGeo?.id);
+    if (isVillage) {
+      console.log('isVillage',isVillage);
+      getVillageList(usersDetails?.checkUpperGeo?.id);
+      setValue('selectTaluk', usersDetails?.checkUpperGeo?.id);
       setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
     }
 
-    if (isTaluk && talukList?.childEntities?.length) {
+    if (isTaluk) {
       getVillageList(usersDetails?.checkUpperGeo?.id);
       setValue('selectTaluk', usersDetails?.checkUpperGeo?.id || '');
       setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
@@ -282,7 +287,6 @@ export default function SevekCreate() {
                     placeholder={'Language'}
                     options={languageList}
                   />
-                  
                 </Box>
                 <Typography variant="h4" py={2}>
                   Assign village
@@ -302,30 +306,45 @@ export default function SevekCreate() {
                     options={statesList}
                     onChange={handleStatesSelect}
                   />
-                  <RHFSelectDropdown
-                    name="selectDistrict"
-                    label={'Select District'}
-                    placeholder={'District'}
-                    options={districtList?.childEntities}
-                    defaultMessage="Please Select State"
-                    onChange={handleDistrictSelect}
-                  />
-                  <RHFSelectDropdown
-                    name="selectTaluk"
-                    label={'Select Taluk'}
-                    placeholder={'Taluk'}
-                    options={talukList?.childEntities}
-                    defaultMessage="Please Select District"
-                    onChange={handleTalukSelect}
-                  />
-                  <RHFSelectDropdown
-                    name="selectVillage"
-                    label={'Select Village'}
-                    placeholder={'Village'}
-                    options={villageList?.childEntities}
-                    defaultMessage="Please Select Village"
-                    onChange={handleVillageSelect}
-                  />
+                  {districtList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectDistrict"
+                      label={'Select District'}
+                      placeholder={'District'}
+                      options={districtList?.childEntities}
+                      defaultMessage="Please Select State"
+                      onChange={handleDistrictSelect}
+                      //   disabled={state.isLoading}
+                    />
+                  ) : (
+                    ''
+                  )}
+
+                  {talukList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectTaluk"
+                      label={'Select Taluk'}
+                      placeholder={'Taluk'}
+                      options={talukList?.childEntities || []}
+                      defaultMessage="Please Select District"
+                      onChange={handleTalukSelect}
+                    />
+                  ) : (
+                    ''
+                  )}
+
+                  {villageList?.childEntities?.length ? (
+                    <RHFSelectDropdown
+                      name="selectVillage"
+                      label={'Select Village'}
+                      placeholder={'Village'}
+                      options={villageList?.childEntities}
+                      defaultMessage="Please Select Village"
+                      onChange={handleVillageSelect}
+                    />
+                  ) : (
+                    ''
+                  )}
                 </Box>
                 <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                   <LoadingButton

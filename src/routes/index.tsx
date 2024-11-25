@@ -91,7 +91,8 @@ export default function Router() {
           path: 'farmer',
           children: [
             { path: 'list', element: <FarmersList /> },
-            {path:'farmer-create',element:<FarmerCreate/>}
+            { path: 'farmer-create', element: <FarmerCreate /> },
+            { path: 'farmer-edit/:id', element: <FarmerCreate /> },
             // { path: 'new', element: <UserCreate /> },
           ],
         },
@@ -233,14 +234,13 @@ const SevekList = Loadable(lazy(() => import('../pages/sevek/SevekList')));
 const SevekCreate = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
 const SevekEdit = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
 
-
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
 const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
 
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
-const FarmerCreate=Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));
+const FarmerCreate = Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

@@ -13,23 +13,27 @@ const initialState: FarmerList = {
   isLoading: false,
   error: null,
   farmerListData: [],
-  // farmersDetails:{
-  //   id: '',
-  //   name: '',
-  //   phone: '',
-  //   status: '',
-  //   language: '',
-  //   created: '',
-  //   modified: '',
-  //   villageId: '',
-  //   checkUpperGeo: {
-  //     id: '',
-  //     name: '',
-  //     entityType: '',
-  //     parentId: '',
-  //     parents: [],
-  //   },
-  // }
+  farmersDetails: {
+    name: '',
+    id: '',
+    phone: '',
+    land: '',
+    familyMemberNumber: '',
+    farmAvailableDate: '',
+    isParticipate: false,
+    language: '',
+    created: '',
+    modified: '',
+    villageId: '',
+    status: '',
+    checkUpperGeo: {
+      id: '',
+      name: '',
+      entityType: '',
+      parentId: '',
+      parents: [],
+    },
+  },
 };
 
 const slice = createSlice({
@@ -53,9 +57,33 @@ const slice = createSlice({
       state.farmerListData = action.payload;
     },
     // farmer Details
-    getUserDetails(state, action) {
+    getFarmerUserDetails(state, action) {
       state.isLoading = false;
-      // state.usersDetails = action.payload;
+      state.farmersDetails = action.payload;
+    },
+    emptyFarmerDetails(state, action) {
+      state.isLoading = false;
+      state.farmersDetails = {
+        name: '',
+        id: '',
+        phone: '',
+        land: '',
+        familyMemberNumber: '',
+        farmAvailableDate: '',
+        isParticipate: false,
+        language: '',
+        created: '',
+        modified: '',
+        villageId: '',
+        status: '',
+        checkUpperGeo: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+          parents: [],
+        },
+      };
     },
   },
 });
@@ -64,7 +92,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { farmerListData } = slice.actions;
+export const { farmerListData, getFarmerUserDetails, emptyFarmerDetails } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +109,7 @@ export function getFarmerList(name?: string, village?: string) {
       if (response?.status === 200 && response?.data?.statusCode === 200) {
         dispatch(slice.actions.farmerListData(response?.data?.data));
         return response.data;
-      } 
+      }
     });
   } catch (error) {
     dispatch(slice.actions.hasError(error));
@@ -107,7 +135,7 @@ export function editNewFarmer(payload?: any, id?: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      return await axios.patch(`/farmers-update/${id}`, payload).then((res) => {
+      return await axios.patch(`/farmers/${id}`, payload).then((res) => {
         return res;
       });
     } catch (error) {
@@ -123,7 +151,7 @@ export function getFarmerDetails(id?: any) {
     dispatch(slice.actions.startLoading());
     try {
       return await axios.get(`/farmers/${id}`).then((res) => {
-        dispatch(slice.actions.getUserDetails(res?.data?.data));
+        dispatch(slice.actions.getFarmerUserDetails(res?.data?.data));
         return res;
       });
     } catch (error) {

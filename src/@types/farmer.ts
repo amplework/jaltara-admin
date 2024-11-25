@@ -11,24 +11,24 @@ export type FarmerListData = {
   phone: string;
   land: number;
   familyMemberNumber: number;
-  farmAvailableDate: string; 
+  farmAvailableDate: string;
   isParticipate: boolean;
   language: string;
-  created: string; 
-  modified: string; 
+  created: string;
+  modified: string;
   villageId: string;
   crops: string[];
   farmingChallenge: string[];
   village: VillageData | null;
-  totalPits?:string,
-  photo?:string
+  totalPits?: string;
+  photo?: string;
 };
 
 export type FarmerList = {
   isLoading: boolean;
   error: string | null;
   farmerListData: FarmerListData[] | null;
-  // farmersDetails:FarmerData
+  farmersDetails: FarmerData;
 };
 
 export type FarmerDetailsType = {
@@ -40,10 +40,10 @@ export type FarmerDetailsType = {
   selectDistrict: string;
   selectTaluk: string;
   selectVillage: string;
-  land: Number,
-  familyMemberNumber: Number,
-  farmAvailableDate: string,
-  isParticipate:Boolean
+  land: Number;
+  familyMemberNumber: Number;
+  farmAvailableDate: string;
+  isParticipate: Boolean;
 };
 
 interface Parent {
@@ -68,17 +68,32 @@ interface FarmerData {
   name: string;
   id: string;
   phone: string;
-  land: number;
-  familyMemberNumber: number;
+  land:any;
+  familyMemberNumber: any;
   farmAvailableDate: string;
   isParticipate: boolean;
   language: string;
   created: string;
   modified: string;
   villageId: string;
-  status: string;
-  village: Village;
-  checkUpperGeo: CheckUpperGeo;
+  status: string | null;
+  village?: {
+    id: string;
+    name: string;
+    entityType: string;
+    parentId: string;
+  };
+  checkUpperGeo: {
+    id: string;
+    name: string;
+    entityType: string;
+    parentId: string;
+    parents: {
+      id: any;
+      name: any;
+      entityType: any;
+    }[];
+  };
 }
 
 interface FarmerResponse {

@@ -42,14 +42,15 @@ export const PATH_DASHBOARD = {
     list: path('/sevek/list'),
     cards: path('/sevek/cards'),
     create: path(`/sevek/sevek-create`),
-    edit:(id?:string)=> path(`/sevek/sevek-edit/${id}`),
+    edit: (id?: string) => path(`/sevek/sevek-edit/${id}`),
     profile: path('/sevek/profile'),
     account: path('/sevek/account'),
     // edit: (name: string) => path(ROOTS_DASHBOARD, `/sevek/${name}/edit`),
   },
   farmers: {
     list: path('/farmer/list'),
-    new:path('/farmer/farmer-create')
+    new: path('/farmer/farmer-create'),
+    edit: (id?: string) => path(`/farmer/farmer-edit/${id}`),
   },
   wells: {
     list: path('/well/list'),

@@ -34,9 +34,10 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar } from '../../sections/@dashboard/user/list';
-import { useSelector } from 'src/redux/store';
-import { getFarmerList } from 'src/redux/slices/farmers';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { emptyFarmerDetails, getFarmerList } from 'src/redux/slices/farmers';
 import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
+import { emptyStatesDetails } from 'src/redux/slices/user';
 const TABLE_HEAD = [
   // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
@@ -72,13 +73,13 @@ export default function FarmersList() {
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
+  const dispatch=useDispatch()
 
   const [filterName, setFilterName] = useState('');
 
   const [filterVillage, setFilterVillage] = useState('');
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
-
 
   useEffect(() => {
     getFarmerList()
@@ -110,12 +111,17 @@ export default function FarmersList() {
     (!farmerListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
+    dispatch(emptyFarmerDetails(null))
+    dispatch(emptyStatesDetails(null))
     navigate(PATH_DASHBOARD.farmers.new)
   }
   
   const onhandleEditDetails = (id: string) => {
-    // navigate(PATH_DASHBOARD.sevek.create(id))
+    dispatch(emptyFarmerDetails(null))
+    dispatch(emptyStatesDetails(null))
+    navigate(PATH_DASHBOARD.farmers.edit(id))
   }
+
   const onhandleDeleteRow=(id:string)=>{
 
   }
