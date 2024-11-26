@@ -90,7 +90,6 @@ const slice = createSlice({
     //set district
     setDistrictList(state, action) {
       state.isLoading = false;
-      console.log('action.payload', action.payload);
 
       const { childEntities, mainEntity } = action.payload;
       state.districtList.mainEntity = mainEntity;

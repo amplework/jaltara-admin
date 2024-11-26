@@ -162,7 +162,6 @@ export default function SevekCreate() {
     }
 
     if (isVillage) {
-      console.log('isVillage',isVillage);
       getVillageList(usersDetails?.checkUpperGeo?.id);
       setValue('selectTaluk', usersDetails?.checkUpperGeo?.id);
       setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
@@ -197,8 +196,6 @@ export default function SevekCreate() {
           delete payload[key];
         }
       });
-      console.log('payload', payload);
-
       if (id) {
         dispatch(editUsersDetails(payload, id)).then((res: any) => {
           if (res?.data?.statusCode === 200) {

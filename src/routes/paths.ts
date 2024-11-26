@@ -52,17 +52,24 @@ export const PATH_DASHBOARD = {
     new: path('/farmer/farmer-create'),
     edit: (id?: string) => path(`/farmer/farmer-edit/${id}`),
   },
-  wells: {
-    list: path('/well/list'),
-  },
   pits: {
     list: path('/pit/list'),
+    details:(id:string)=> path(`/pit/details/${id}`),
+  },
+  wells: {
+    list: path('/well/list'),
+    details:(id:string)=> path(`/well/details/${id}`),
   },
   crops: {
     list: path('/crop/list'),
   },
   equipments: {
     list: path('/equipment/list'),
+  },
+  masterData: {
+    root: path(ROOTS_DASHBOARD, '/masterData'),
+    cropList: path(ROOTS_DASHBOARD, '/masterData/cropList'),
+    equipmentList: path(ROOTS_DASHBOARD, '/masterData/equipmentList'),
   },
 };
 

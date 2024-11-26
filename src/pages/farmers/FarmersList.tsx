@@ -58,12 +58,10 @@ export default function FarmersList() {
     orderBy,
     rowsPerPage,
     setPage,
-    //
     selected,
     setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
     onChangeDense,
     onChangePage,
@@ -73,6 +71,7 @@ export default function FarmersList() {
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
+  
   const dispatch=useDispatch()
 
   const [filterName, setFilterName] = useState('');

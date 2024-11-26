@@ -73,7 +73,7 @@ const navConfig = [
         icon: ICONS.user,
       },
       {
-        title: 'village',
+        title: 'location',
         path: PATH_DASHBOARD.wells.list,
         icon: ICONS.user,
       },
@@ -82,17 +82,27 @@ const navConfig = [
         path: PATH_DASHBOARD.equipments.list,
         icon: ICONS.user,
       },
+      // master Data
 
       {
-        title: 'crops',
-        path: PATH_DASHBOARD.crops.list,
-        icon: ICONS.user,
+        title: 'master Data',
+        path: PATH_DASHBOARD.masterData.root,
+        icon: ICONS.invoice,
+        children: [
+          { title: 'crop List', path: PATH_DASHBOARD.masterData.cropList },
+          { title: 'equipmentList', path: PATH_DASHBOARD.masterData.equipmentList },
+        ],
       },
-      {
-        title: 'farmer challenge',
-        path: PATH_DASHBOARD.wells.list,
-        icon: ICONS.user,
-      },
+      // {
+      //   title: 'crops',
+      //   path: PATH_DASHBOARD.crops.list,
+      //   icon: ICONS.user,
+      // },
+      // {
+      //   title: 'farmer challenge',
+      //   path: PATH_DASHBOARD.wells.list,
+      //   icon: ICONS.user,
+      // },
 
       // E-COMMERCE
       // {

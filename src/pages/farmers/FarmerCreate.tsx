@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Container, Grid } from '@mui/material';
 // routes
@@ -7,44 +7,36 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // _mock_
-import { _userList, countries } from '../../_mock';
+import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo, useState } from 'react';
-import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   FormProvider,
-  RHFSelect,
   RHFSelectDropdown,
   RHFSwitch,
   RHFTextField,
-  RHFUploadAvatar,
 } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
-  addEditUsers,
-  editUsersDetails,
-  emptyVillageList,
   getDistrictList,
   getStatesList,
   getTalukList,
-  getUsersDetails,
   getVillageList,
 } from 'src/redux/slices/user';
-import { dispatch, useDispatch, useSelector } from 'src/redux/store';
+import { useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { RHFDatePicker } from 'src/components/hook-form/RHFDatePicker';
 import { FarmerDetailsType } from 'src/@types/farmer';
 import { addNewFarmer, editNewFarmer, getFarmerDetails } from 'src/redux/slices/farmers';
-import { CircularProgress } from '@mui/material';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -89,8 +81,6 @@ export default function FarmerCreate() {
   );
 
   const { farmersDetails } = useSelector((state) => state.farmer);
-  console.log('farmersDetails', farmersDetails);
-
   const NewFarmerSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
     phone: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
   Box,
@@ -13,27 +13,20 @@ import {
   TablePagination,
   FormControlLabel,
 } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
-import useTable from '../../hooks/useTable';
-// @types
-// _mock_
-import { _userList } from '../../_mock';
-// components
-import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { TableNoData, TableHeadCustom } from '../../components/table';
-// sections
-import { UserTableToolbar } from '../../sections/@dashboard/user/list';
 import { useSelector } from 'src/redux/store';
 import { getPitsList } from 'src/redux/slices/pits';
 import { PitItem } from 'src/@types/pits';
 import PitTableRow from 'src/sections/@dashboard/user/list/PitTableRow';
+import useTable from 'src/hooks/useTable';
+import useSettings from 'src/hooks/useSettings';
+import useTabs from 'src/hooks/useTabs';
+import Page from 'src/components/Page';
+import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
+import { PATH_DASHBOARD } from 'src/routes/paths';
+import Iconify from 'src/components/Iconify';
+import { UserTableToolbar } from 'src/sections/@dashboard/user/list';
+import Scrollbar from 'src/components/Scrollbar';
+import { TableHeadCustom, TableNoData } from 'src/components/table';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Farmer name', align: 'left' },
@@ -42,59 +35,23 @@ const TABLE_HEAD = [
   { id: 'stage name', label: 'Stage name', align: 'left' },
   { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
-  // { id: 'edit', label: 'edit', align: 'left' },
+  { id: 'edit', label: 'edit', align: 'left' },
   { id: 'delete', label: 'delete', align: 'left' },
 ];
 
-export default function PitList() {
+export default function StatesList() {
   const {
     dense,
     page,
     order,
     orderBy,
     rowsPerPage,
-    //
     selected,
     onSelectRow,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
-
-  const stagesName = [
-    // {
-    //   id: '5',
-    //   name: '',
-    //   value: 'all',
-    //   label: 'All',
-    // },
-    {
-      id: '1',
-      name: 'marking',
-      value: 'marking',
-      label: 'Marking',
-    },
-    {
-      id: '2',
-      name: 'digging',
-      value: 'digging',
-      label: 'Digging',
-    },
-    {
-      id: '3',
-      name: 'filling',
-      value: 'filling',
-      label: 'Filling',
-    },
-    {
-      id: '4',
-      name: 'maintenance',
-      value: 'maintenance',
-      label: 'Maintenance',
-    },
-  ];
-
-    const navigate = useNavigate();
 
   const { themeStretch } = useSettings();
 
@@ -131,11 +88,7 @@ export default function PitList() {
   };
   const onChange = (value: any) => {
     setState((prev) => ({ ...prev, selectStages: value }));
-  };
-
-
-  const handleShowDetails = (id: string) => {
-    navigate(PATH_DASHBOARD.pits.details(id));
+    console.log('onChange', value);
   };
 
   const isNotFound =
@@ -145,12 +98,28 @@ export default function PitList() {
     (!pitListData?.length && !!filterStatus);
 
   return (
-    <Page title="Pits List">
+    <Page title="states">
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs heading="Pits List" links={[{ href: PATH_DASHBOARD.pits.list }]} />
+        <HeaderBreadcrumbs
+          heading="States"
+          links={[
+            // { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { href: PATH_DASHBOARD.sevek.root },
+          ]}
+          action={
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to={PATH_DASHBOARD.sevek.new}
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+            >
+              New States
+            </Button>
+          }
+        />
 
         <Card>
-          <UserTableToolbar
+          {/* <UserTableToolbar
             filterName={filterName}
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
@@ -158,11 +127,7 @@ export default function PitList() {
             onSearch={onSearch}
             placeholderText={'Search by Sevek name'}
             placeholderTextSecond={'Search by village name'}
-            pits={true}
-            stagesName={stagesName}
-            onChange={onChange}
-            state={state}
-          />
+          /> */}
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -179,13 +144,7 @@ export default function PitList() {
                   {pitListData?.length
                     ? pitListData
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row: PitItem) => (
-                          <PitTableRow
-                            key={row.id}
-                            row={row}
-                            handleShowDetails={handleShowDetails}
-                          />
-                        ))
+                        .map((row: PitItem) => <PitTableRow key={row.id} row={row} />)
                     : null}
 
                   <TableNoData isNotFound={isNotFound} />
@@ -203,12 +162,6 @@ export default function PitList() {
               page={page}
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
-            />
-
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
             />
           </Box>
         </Card>

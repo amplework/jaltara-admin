@@ -99,8 +99,6 @@ export default function EquipmentList() {
 
   const { equipmentListData } = useSelector((state) => state.equipments);
 
-  console.log('quipmentListData', equipmentListData);
-
   useEffect(() => {
     getEquipmentsList();
   }, []);

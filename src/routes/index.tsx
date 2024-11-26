@@ -100,7 +100,7 @@ export default function Router() {
           path: 'pit',
           children: [
             { path: 'list', element: <PitList /> },
-            // { path: 'new', element: <UserCreate /> },
+            { path: 'details/:id', element: <PitsDetails /> },
           ],
         },
 
@@ -108,17 +108,47 @@ export default function Router() {
           path: 'well',
           children: [
             { path: 'list', element: <WellList /> },
+            { path: 'details/:id', element: <WellsDetails /> },
+
             // { path: 'new', element: <UserCreate /> },
           ],
         },
         {
-          path: 'crop',
-          children: [{ path: 'list', element: <CropList /> }],
+          path: 'location',
+          children: [
+            {
+              path: 'state',
+              element: <CropList />,
+            },
+            {
+              path: 'district',
+              element: <EquipmentList />,
+            },
+            {
+              path: 'talauk ',
+              element: <CropList />,
+            },
+            {
+              path: 'village',
+              element: <EquipmentList />,
+            },
+          ],
         },
+
         {
-          path: 'equipment',
-          children: [{ path: 'list', element: <EquipmentList /> }],
+          path: 'masterData',
+          children: [
+            {
+              path: 'cropList',
+              element: <CropList />,
+            },
+            {
+              path: 'equipmentList',
+              element: <EquipmentList />,
+            },
+          ],
         },
+
         // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         // { path: 'app', element: <GeneralApp /> },
         // { path: 'ecommerce', element: <GeneralEcommerce /> },
@@ -234,13 +264,18 @@ const SevekList = Loadable(lazy(() => import('../pages/sevek/SevekList')));
 const SevekCreate = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
 const SevekEdit = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
 
+//pits
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
-const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
+const PitsDetails = Loadable(lazy(() => import('../pages/pits/PitsDetails')));
 const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
 
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
 const FarmerCreate = Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));
+
+// wells create
+const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
+const WellsDetails = Loadable(lazy(() => import('../pages/wells/WellsDetails')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

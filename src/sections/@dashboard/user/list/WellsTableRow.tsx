@@ -1,41 +1,26 @@
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box } from '@mui/material';
-// @types
-import { UserItem } from '../../../../@types/user';
+import { TableRow, TableCell, Typography } from '@mui/material';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
-import { PitItem } from 'src/@types/pits';
 import { formatedDate } from 'src/utils/formateDate';
+import { WellsItem } from 'src/@types/wells';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: PitItem | null;
+  row: WellsItem | null;
   handleShowDetails?: (id: any) => void;
 };
 
-export default function PitTableRow({ row, handleShowDetails }: Props) {
+export default function WellsTableRow({ row, handleShowDetails }: Props) {
   const theme = useTheme();
 
-  const { farmer, village, level, stages, id } = row || {};
+  const { village, level, stages, id } = row || {};
 
   return (
-    <TableRow
-      hover
-      onClick={() => handleShowDetails && handleShowDetails(id)}
-      sx={{ cursor: 'pointer' }}
-    >
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* <Avatar alt={} src={''} sx={{ mr: 2 }} /> */}
-        <Typography variant="subtitle2" noWrap>
-          {farmer?.name}
-        </Typography>
-      </TableCell>
-
+    <TableRow hover onClick={() => handleShowDetails && handleShowDetails(id)} sx={{ cursor:"pointer" }}>
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {village?.name}
@@ -50,12 +35,6 @@ export default function PitTableRow({ row, handleShowDetails }: Props) {
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {stages?.[0]?.stageName}
-        </Typography>
-      </TableCell>
-
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
           {stages?.[0]?.updatedbySevek?.name ? stages?.[0]?.updatedbySevek?.name : '--'}
         </Typography>
       </TableCell>
@@ -65,13 +44,13 @@ export default function PitTableRow({ row, handleShowDetails }: Props) {
           {formatedDate(stages?.[0]?.created)}
         </Typography>
       </TableCell>
-      {/* 
-      <TableCell>
+
+      {/* <TableCell>
         <Box
-          onClick={() => onhandleEditDetails && onhandleEditDetails(id)}
+          onClick={() => handleShowDetails && handleShowDetails(id)}
           sx={{ cursor: 'pointer' }}
         >
-          <Iconify icon={'fluent-color:edit-16'} width="64" height="64" />
+          <Iconify icon={'mdi:show-outline'} width="20px" height="20px" />
         </Box>
       </TableCell> */}
 
@@ -81,7 +60,7 @@ export default function PitTableRow({ row, handleShowDetails }: Props) {
           sx={{ color: theme.palette.error.dark }}
           width="64"
           height="64"
-          // onClick={() => onhandleDeleteRow && onhandleDeleteRow(id)}
+          //   onClick={() => onhandleDeleteRow && onhandleDeleteRow(id)}
         />
       </TableCell>
     </TableRow>

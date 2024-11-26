@@ -4,36 +4,25 @@ import { EventInput } from '@fullcalendar/common';
 import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
-import { PitList } from 'src/@types/pits';
+import { WellsData } from 'src/@types/wells';
 
 // ----------------------------------------------------------------------
 
-const initialState: PitList = {
+const initialState: WellsData = {
   isLoading: false,
   error: null,
-  pitListData: [],
-  pitsDetails: {
+  wellsListData: [],
+  wellsDetails: {
     id: '',
     photo: '',
     gpsLocation: '',
-    plotSize: '',
-    stageName: '',
     level: '',
-    created: '',
-    modified: '',
-    farmerId: '',
+    description: '',
     villageId: '',
-    farmer: {
-      name: '',
-      id: '',
-      photo: '',
-    },
-    stages: [],
+    plotSize: '',
     village: {
       id: '',
       name: '',
-      entityType: '',
-      parentId: '',
     },
     checkUpperGeo: {
       id: '',
@@ -42,11 +31,23 @@ const initialState: PitList = {
       parentId: '',
       parents: [],
     },
+    stages: [
+      {
+        id: '',
+        wellId: '',
+        created: '',
+        updatedBy: '',
+        updatedbySevek: {
+          id: '',
+          name: '',
+        },
+      },
+    ],
   },
 };
 
 const slice = createSlice({
-  name: 'pits',
+  name: 'wells',
   initialState,
   reducers: {
     // START LOADING
@@ -61,14 +62,15 @@ const slice = createSlice({
     },
 
     // GET EVENTS
-    getPitsListing(state, action) {
+    getWellsListing(state, action) {
       state.isLoading = false;
-      state.pitListData = action.payload;
+      state.wellsListData = action.payload;
     },
-    // pits Details
-    getPitsUserDetails(state, action) {
+
+    // wells Details
+    getWellsUserDetails(state, action) {
       state.isLoading = false;
-      state.pitsDetails = action.payload;
+      state.wellsDetails = action.payload;
     },
   },
 });
@@ -77,22 +79,21 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getPitsListing } = slice.actions;
+export const { getWellsUserDetails } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getPitsList(name?: string, village?: string, statgesSearch?: string) {
+export function getWillsList(name?: string, village?: string) {
   dispatch(slice.actions.startLoading());
+
   let payload = {
     ...(village?.length && { villageName: village }),
     ...(name?.length && { name: name }),
-    ...(statgesSearch?.length && { stageName: statgesSearch }),
   };
   try {
-    axios.get('/pits', { params: payload }).then((response) => {
+    axios.get('/wells', { params: payload }).then((response) => {
       if (response?.status === 200 && response?.data?.statusCode === 200) {
-        console.log('response', response?.data?.data);
-        dispatch(slice.actions.getPitsListing(response?.data?.data));
+        dispatch(slice.actions.getWellsListing(response?.data?.data));
         return response.data;
       }
     });
@@ -101,12 +102,12 @@ export function getPitsList(name?: string, village?: string, statgesSearch?: str
   }
 }
 
-export function getPitDetails(id?: any) {
+export function getWellsDetails(id?: any) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      return await axios.get(`/pits/${id}`).then((res) => {
-        dispatch(slice.actions.getPitsUserDetails(res?.data?.data));
+      return await axios.get(`/wells/${id}`).then((res) => {
+        dispatch(slice.actions.getWellsUserDetails(res?.data?.data));
         return res;
       });
     } catch (error) {

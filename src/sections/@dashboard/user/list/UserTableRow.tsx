@@ -37,13 +37,9 @@ export default function UserTableRow({
   const { name, village, phone, status, id } = row || {};
 
   return (
-    <TableRow hover selected={selected}>
-      {/* <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell> */}
-
+    <TableRow hover>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={name} src={''} sx={{ mr: 2 }} />
+        {/* <Avatar alt={name} src={''} sx={{ mr: 2 }} /> */}
         <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>

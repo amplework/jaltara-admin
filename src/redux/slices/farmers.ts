@@ -104,8 +104,6 @@ export function getFarmerList(name?: string, village?: string) {
   };
   try {
     axios.get('/farmers', { params: payload }).then((response) => {
-      console.log('response', response);
-
       if (response?.status === 200 && response?.data?.statusCode === 200) {
         dispatch(slice.actions.farmerListData(response?.data?.data));
         return response.data;
