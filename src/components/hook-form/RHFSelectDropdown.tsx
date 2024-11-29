@@ -48,8 +48,6 @@ const RHFSelectDropdown = ({
     >
       {options?.length &&
         options?.map((option: any, index: any) => {
-          console.log('option',option);
-          
           return (
             <MenuItem
               key={index}

@@ -145,8 +145,6 @@ export default function FarmerCreate() {
   }, [farmersDetails]);
 
   const handleState = () => {
-    console.log('hello');
-
     const stateIdData = getAssignVillageData('state');
     const districtIdData: any = getAssignVillageData('district');
     const talukIdData = getAssignVillageData('taluk');

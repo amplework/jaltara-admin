@@ -32,7 +32,6 @@ export default function SevekDetails() {
   }, [id, dispatch]);
 
   const { usersDetails } = useSelector((state) => state.user);
-  console.log('usersDetails', usersDetails);
 
   const {
     photo,

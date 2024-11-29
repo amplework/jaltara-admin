@@ -91,7 +91,6 @@ export function getPitsList(name?: string, village?: string, statgesSearch?: str
   try {
     axios.get('/pits', { params: payload }).then((response) => {
       if (response?.status === 200 && response?.data?.statusCode === 200) {
-        console.log('response', response?.data?.data);
         dispatch(slice.actions.getPitsListing(response?.data?.data));
         return response.data;
       }

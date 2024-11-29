@@ -28,8 +28,6 @@ export default function NavList({
 
   const active =
     getActive(data.path, pathname) || pathname.toLowerCase().includes(data.title.toLowerCase());
-  console.log('path',pathname)
-  
   const [open, setOpen] = useState(active);
 
   const handleClickItem = () => {

@@ -30,7 +30,6 @@ export default function PitsDetails() {
   }, [id, dispatch]);
 
   const { pitsDetails } = useSelector((state) => state.pits);
-  console.log('pitsDetails',pitsDetails);
 
   const {  farmer,gpsLocation, level,stageName, photo, plotSize, stages, checkUpperGeo } =
   pitsDetails;

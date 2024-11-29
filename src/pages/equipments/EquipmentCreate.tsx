@@ -51,8 +51,6 @@ export default function EquipmentCreate() {
   }, [id, dispatch]);
 
   const { equipmentDetails } = useSelector((state) => state.equipments);
-  console.log('equipmentDetails', equipmentDetails);
-
   const defaultValues = useMemo(
     () => ({
       name: '',

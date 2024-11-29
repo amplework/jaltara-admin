@@ -12,32 +12,24 @@ import palette from 'src/theme/palette';
 import { Box } from '@mui/material';
 import { FarmerListData } from 'src/@types/farmer';
 import Image from 'src/components/Image';
+import { ChallangesItem } from 'src/@types/challanges';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: FarmerListData | null;
-  selected: boolean;
-  onEditRow: VoidFunction;
-  onSelectRow: VoidFunction;
-  onDeleteRow?: VoidFunction;
-  onhandleEditDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  row: ChallangesItem | null;
+  onEditRow: (id: any) => void;
+  onDeleteRow?: (id: any) => void;
   handleShowDetails?: (id: any) => void;
 };
 
 export default function ChallangesTableRow({
   row,
-  selected,
   onEditRow,
-  onSelectRow,
-  onDeleteRow,
-  onhandleEditDetails,
-  onhandleDeleteRow,
   handleShowDetails,
+  onDeleteRow
 }: Props) {
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
-  const theme = useTheme();
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
   };
@@ -45,46 +37,18 @@ export default function ChallangesTableRow({
     setOpenMenuActions(null);
   };
 
-  const { name, phone, id, land, village, language, totalPits, photo } = row || {};
-  console.log('row', row);
+  const { status, challenge, id } = row || {};
 
   return (
-    <TableRow hover selected={selected}>
-      <TableCell
-        sx={{ display: 'flex', alignItems: 'center' }}
-        onClick={() => handleShowDetails && handleShowDetails(id)}
-      >
-        {photo ? (
-          <Image alt="cover" src={photo} ratio="16/9" />
-        ) : (
-          <Avatar alt={name} src={''} sx={{ mr: 2 }} />
-        )}
-
-        <Typography variant="subtitle2" noWrap>
-          {name}
-        </Typography>
-      </TableCell>
-
+    <TableRow hover >
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {land}
-        </Typography>
-      </TableCell>
-
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
-          {village ? village?.name : '--'}
-        </Typography>
-      </TableCell>
-
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
-          {language}
+          {challenge}
         </Typography>
       </TableCell>
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {totalPits}
+          {status}
         </Typography>
       </TableCell>
       <TableCell align="left">
@@ -96,7 +60,7 @@ export default function ChallangesTableRow({
             <>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onDeleteRow && onDeleteRow(id);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}
@@ -106,7 +70,7 @@ export default function ChallangesTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleEditDetails && onhandleEditDetails(id);
+                  onEditRow && onEditRow(id);
                   handleCloseMenu();
                 }}
               >
@@ -117,7 +81,6 @@ export default function ChallangesTableRow({
           }
         />
       </TableCell>
-
     </TableRow>
   );
 }

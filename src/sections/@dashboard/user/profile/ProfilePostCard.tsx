@@ -32,7 +32,7 @@ import { EmojiPicker } from '../../../../components/emoji-picker';
 // ----------------------------------------------------------------------
 
 interface Props {
-  post: UserPost;
+  post?: UserPost;
 }
 
 export default function ProfilePostCard({ post }: Props) {
@@ -42,23 +42,7 @@ export default function ProfilePostCard({ post }: Props) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [isLiked, setLiked] = useState(post.isLiked);
-
-  const [likes, setLikes] = useState(post.personLikes.length);
-
   const [message, setMessage] = useState('');
-
-  const hasComments = post.comments.length > 0;
-
-  const handleLike = () => {
-    setLiked(true);
-    setLikes((prevLikes) => prevLikes + 1);
-  };
-
-  const handleUnlike = () => {
-    setLiked(false);
-    setLikes((prevLikes) => prevLikes - 1);
-  };
 
   const handleChangeMessage = (value: string) => {
     setMessage(value);
@@ -84,7 +68,7 @@ export default function ProfilePostCard({ post }: Props) {
         }
         subheader={
           <Typography variant="caption" sx={{ display: 'block', color: 'text.secondary' }}>
-            {fDate(post.createdAt)}
+            {/* {fDate(post.createdAt)} */}
           </Typography>
         }
         action={
@@ -94,7 +78,7 @@ export default function ProfilePostCard({ post }: Props) {
         }
       />
 
-      <Stack spacing={3} sx={{ p: 3 }}>
+      {/* <Stack spacing={3} sx={{ p: 3 }}>
         <Typography>{post.message}</Typography>
 
         <Image alt="post media" src={post.media} ratio="16/9" sx={{ borderRadius: 1 }} />
@@ -201,7 +185,7 @@ export default function ProfilePostCard({ post }: Props) {
 
           <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
         </Stack>
-      </Stack>
+      </Stack> */}
     </Card>
   );
 }

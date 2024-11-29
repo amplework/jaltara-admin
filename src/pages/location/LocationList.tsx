@@ -88,7 +88,6 @@ export default function LocationList() {
   };
   const onChange = (value: any) => {
     setState((prev) => ({ ...prev, selectStages: value }));
-    console.log('onChange', value);
   };
 
   const isNotFound =

@@ -172,7 +172,7 @@ export default function Router() {
             },
             {
               path: 'challanges',
-              element: <CropList />,
+              element: <Challanges />,
             },
           ],
         },
@@ -225,9 +225,11 @@ const SevekDetails = Loadable(lazy(() => import('../pages/sevek/SevekDetails')))
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const PitsDetails = Loadable(lazy(() => import('../pages/pits/PitsDetails')));
 // master data
-const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
-const CropCreate = Loadable(lazy(() => import('../pages/crops/CropCreate')));
+const CropList = Loadable(lazy(() => import('../pages/masterData/crops/CropList')));
+const CropCreate = Loadable(lazy(() => import('../pages/masterData/crops/CropCreate')));
+const Challanges = Loadable(lazy(() => import('../pages/masterData/cropsChallanges/ChallangesList')));
 
+// Challanges
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
 const FarmerCreate = Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));

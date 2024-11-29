@@ -95,7 +95,6 @@ export function getEquipmentsDetails(id?: any) {
     dispatch(slice.actions.startLoading());
     try {
       return await axios.get(`/equipment/${id}`).then((res) => {
-        console.log('res', res);
 
         dispatch(slice.actions.equipmentsDetails(res?.data?.data));
         return res;

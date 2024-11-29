@@ -1,7 +1,7 @@
 import { useDropzone } from 'react-dropzone';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 // type
 import { UploadProps } from './type';
 //
@@ -16,14 +16,14 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
   padding: theme.spacing(5, 1),
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: "50%",
   transition: theme.transitions.create('padding'),
   backgroundColor: theme.palette.background.neutral,
-  border: `1px dashed ${theme.palette.grey[500_32]}`,
-  '&:hover': { opacity: 0.72, cursor: 'pointer' },
+  // border: `1px dashed ${theme.palette.grey[500_32]}`,
+  // '&:hover': { opacity: 0.72, cursor: 'pointer' },
+  width:"100%",
 }));
 
-// ----------------------------------------------------------------------
 
 export default function UploadSingleFile({
   error = false,
@@ -38,20 +38,9 @@ export default function UploadSingleFile({
   });
 
   return (
-    <Box sx={{ width: '100%', ...sx }}>
+    <Box sx={{ width: '200px',height:"200px",display:"flex",margin:"auto",borderRadius:"50%", ...sx }}>
       <DropZoneStyle
         {...getRootProps()}
-        sx={{
-          ...(isDragActive && { opacity: 0.72 }),
-          ...((isDragReject || error) && {
-            color: 'error.main',
-            borderColor: 'error.light',
-            bgcolor: 'error.lighter',
-          }),
-          ...(file && {
-            padding: '12% 0',
-          }),
-        }}
       >
         <input {...getInputProps()} />
 
@@ -62,12 +51,12 @@ export default function UploadSingleFile({
             alt="file preview"
             src={typeof file === 'string' ? file : file.preview}
             sx={{
-              top: 8,
-              left: 8,
+              top: 0,
+              left: 0,
+              right:0,
+              bottom:0,
               borderRadius: 1,
               position: 'absolute',
-              width: 'calc(100% - 16px)',
-              height: 'calc(100% - 16px)',
             }}
           />
         )}

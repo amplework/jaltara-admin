@@ -3,14 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Container, Grid } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
-import useSettings from '../../hooks/useSettings';
+import useSettings from '../../../hooks/useSettings';
 // _mock_
-import { _userList } from '../../_mock';
+import { _userList } from '../../../_mock';
 // components
-import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
+import Page from '../../../components/Page';
+import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
 import { useEffect, useMemo } from 'react';

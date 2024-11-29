@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Container, Grid } from '@mui/material';
+import { Card, CardHeader, Container, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -13,7 +13,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,6 +23,8 @@ import {
   RHFSelectDropdown,
   RHFSwitch,
   RHFTextField,
+  RHFUploadAvatar,
+  RHFUploadSingleFile,
 } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
@@ -40,6 +42,7 @@ import {
 import { dispatch, useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
+import { ProfilePostCard } from 'src/sections/@dashboard/user/profile';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -84,6 +87,7 @@ export default function SevekCreate() {
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
     selectVillage: Yup.string(),
+    photo: Yup.mixed().test('required', 'Photo is required', (value) => value !== ''),
   });
 
   const defaultValues = useMemo(
@@ -96,6 +100,7 @@ export default function SevekCreate() {
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: '',
+      photo: '',
     }),
     [usersDetails]
   );
@@ -115,6 +120,8 @@ export default function SevekCreate() {
   const getAssignVillageData = (value: string) => {
     return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
   };
+
+  const values = watch();
 
   useEffect(() => {
     setVillageData();
@@ -137,6 +144,7 @@ export default function SevekCreate() {
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
     setValue('selectStates', stateIdData?.id || '');
+    setValue('photo', usersDetails?.name || '');
 
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
@@ -246,22 +254,82 @@ export default function SevekCreate() {
     setState((prev: any) => ({ ...prev, villageId: id }));
   };
 
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      console.log('file', file?.name);
+
+      if (file) {
+        const preview = URL.createObjectURL(file);
+        console.log('preview', preview);
+        setValue('photo', preview);
+      }
+    },
+    [setValue]
+  );
+
+  // sx={{
+  //   left: 40,
+  //   zIndex: 9,
+  //   width: 140,
+  //   position: 'relative',
+  //   filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.24))',
+  // }}
   return (
     <Page title="Create sevek">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          // heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
           heading={!id ? 'Create a new sevek' : 'Edit sevek details'}
           links={[
             { name: 'Sevek List', href: PATH_DASHBOARD.sevek.list },
-            // { name: !isEdit ? 'New sevek' : 'Edit sevek' },
             { name: !id ? 'Create a new sevek' : 'Edit sevek' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Card sx={{ p: 3 }}>
+              <Card
+                sx={{
+                  mb: 10,
+                  overflow: 'visible', // Allow the image to overflow outside the Card
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center', // Center content horizontally
+                  alignItems: 'center', // Center content vertically
+                  minHeight: '200px', // Adjust height based on content
+                  padding: 2,
+
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <RHFUploadSingleFile
+                    name="photo"
+                    onDrop={handleDrop}
+                    sx={{
+                      zIndex: 9,
+                      mt: 5, // Adjust to position the image halfway out of the Card
+                      position: 'absolute', // Position the image absolutely to overlap the Card
+                      bottom: '-50px', // Ensure the image is partially outside the Card
+                      width: '200px',
+                      height: '200px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #e0e0e0',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    }}
+                  />
+                </Box>
+              </Card>
+
+              <Card sx={{ p: 3, boxShadow: '0 12px 24px rgba(0,0,0,0.18)' }}>
                 <Box
                   sx={{
                     display: 'grid',

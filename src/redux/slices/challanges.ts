@@ -5,25 +5,24 @@ import axios from '../../utils/axios';
 //
 import { dispatch } from '../store';
 import { CropList } from 'src/@types/crops';
+import { ChallengesItemList } from 'src/@types/challanges';
 
 // ----------------------------------------------------------------------
 
-const initialState: CropList = {
+const initialState: ChallengesItemList = {
   isLoading: false,
   error: null,
   totalCrop: 0,
-  cropListData: [],
-  cropsDetails: {
+  challengesListData: [],
+  challengesDetails: {
     id: '',
-    name: '',
     status: '',
-    created: '',
-    modified: '',
+    challenge: '',
   },
 };
 
 const slice = createSlice({
-  name: 'crops',
+  name: 'challenges',
   initialState,
   reducers: {
     // START LOADING
@@ -38,26 +37,24 @@ const slice = createSlice({
     },
 
     // GET EVENTS
-    getCrops(state, action) {
+    getCropsChallenges(state, action) {
       const { totalCrop, data } = action.payload;
       state.isLoading = false;
       state.totalCrop = totalCrop;
-      state.cropListData = data;
+      state.challengesListData = action.payload;
     },
     // GET Details
-    getCropsInfo(state, action) {
+    getCropsChallengesInfo(state, action) {
       state.isLoading = false;
-      state.cropsDetails = action.payload;
+      state.challengesDetails = action.payload;
     },
     // empty details
-    emptyCropsDetails(state, action) {
+    emptyCropsChallengesDetails(state, action) {
       state.isLoading = false;
-      state.cropsDetails = {
+      state.challengesDetails = {
         id: '',
-        name: '',
         status: '',
-        created: '',
-        modified: '',
+        challenge: '',
       };
     },
   },
@@ -67,20 +64,21 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getCrops, emptyCropsDetails, getCropsInfo } = slice.actions;
+export const { getCropsChallenges, getCropsChallengesInfo, emptyCropsChallengesDetails } =
+  slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getCropsList(crop?: string, status?: string) {
+export function getCropsChallengesList(challenge?: string, status?: string) {
   dispatch(slice.actions.startLoading());
   let payload = {
-    ...(crop?.length && { crop: crop }),
+    ...(challenge?.length && { challenge: challenge }),
     ...(status?.length && { status: status }),
   };
   try {
-    axios.get('/crops', { params: payload }).then((response) => {
+    axios.get('/farmers-challenges', { params: payload }).then((response) => {
       if (response?.status === 200 && response?.data?.statusCode === 200) {
-        dispatch(slice.actions.getCrops(response?.data));
+        dispatch(slice.actions.getCropsChallenges(response?.data?.data));
         return response.data;
       } else {
       }
@@ -90,12 +88,12 @@ export function getCropsList(crop?: string, status?: string) {
   }
 }
 
-export function getCropsDetails(id?: any) {
+export function getCropsChallangesDetails(id?: any) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      return await axios.get(`/crops/${id}`).then((res) => {
-        dispatch(slice.actions.getCropsInfo(res?.data?.data));
+      return await axios.get(`/farmers-challenges/${id}`).then((res) => {
+        dispatch(slice.actions.getCropsChallengesInfo(res?.data?.data));
         return res;
       });
     } catch (error) {
@@ -106,11 +104,11 @@ export function getCropsDetails(id?: any) {
   };
 }
 
-export function addEditCrops(payload?: any, id?: string) {
+export function addEditCropsChallenges(payload?: any, id?: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const url = id ? `/crops/${id}` : `/crops`;
+      const url = id ? `/farmers-challenges/${id}` : `/farmers-challenges`;
       const method = id ? 'patch' : 'post';
       const response = await axios({ method, url, data: payload });
       return response;

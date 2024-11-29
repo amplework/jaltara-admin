@@ -18,7 +18,6 @@ type Props = {
 };
 
 export default function WellsDetailsRow({ row, index, pit, sevek }: Props) {
-  console.log('row', row);
 
   const theme = useTheme();
 

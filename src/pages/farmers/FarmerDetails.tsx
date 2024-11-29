@@ -62,7 +62,6 @@ export default function FarmerDetails() {
     pits,
     challengesData,
   } = farmersDetails;
-  console.log('pits', pits);
 
   const reverseGeoLocations = [...checkUpperGeo?.parents]?.reverse();
   const TABLE_HEAD = [

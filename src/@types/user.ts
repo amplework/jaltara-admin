@@ -190,6 +190,7 @@ export type UserList = {
 
 export type CreateUserType = {
   name: string;
+  photo?:string;
   phoneNumber: string;
   status: string;
   language: string;
