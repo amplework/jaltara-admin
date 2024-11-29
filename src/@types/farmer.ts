@@ -64,11 +64,21 @@ interface CheckUpperGeo extends Village {
   parents: Parent[];
 }
 
+type Challenge = {
+  id: number;
+  name: string;
+  uuid: string;
+};
+
 interface FarmerData {
   name: string;
   id: string;
   phone: string;
-  land:any;
+  photo?: string;
+  crops?: string[];
+  farmingChallenge?: string[];
+  challengesData?: Challenge[] | null;
+  land: any;
   familyMemberNumber: any;
   farmAvailableDate: string;
   isParticipate: boolean;
@@ -77,6 +87,7 @@ interface FarmerData {
   modified: string;
   villageId: string;
   status: string | null;
+  pits?: PitWithStages[] | null;
   village?: {
     id: string;
     name: string;
@@ -101,3 +112,28 @@ interface FarmerResponse {
   message: string;
   data: FarmerData;
 }
+
+type PitWithStages = {
+  id: string;
+  photo: string;
+  plotSize: number;
+  level: number;
+  farmerId: string;
+  villageId: string;
+  stages: Stage[];
+};
+type UpdatedBySevek = {
+  id: string;
+  name: string;
+};
+
+type Stage = {
+  id: string;
+  stageName: string;
+  photo: string;
+  created: string;
+  modified: string;
+  updatedBy: string;
+  pitId: string;
+  updatedbySevek: UpdatedBySevek;
+};

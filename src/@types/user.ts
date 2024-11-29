@@ -210,12 +210,16 @@ type Parent = {
   entityType: string;
 };
 
-type UsersDetails = {
+export type UsersDetails = {
   id: string;
   name: string;
   phone: string;
   status: string;
   language: string;
+  photo: string;
+  farmerCount?: string | number;
+  pitCount?: string | number;
+  wellCount?: string | number;
   location: {
     lat: number;
     lng: number;
@@ -223,6 +227,7 @@ type UsersDetails = {
   created: string;
   modified: string;
   villageId: string;
+  stages?: SevekStage[] | null;
   checkUpperGeo: {
     id: string;
     name: string;
@@ -234,4 +239,52 @@ type UsersDetails = {
       entityType: any;
     }[];
   };
+};
+
+export interface SevekStage {
+  id: string;
+  stageName: string;
+  photo: string;
+  created: string;
+  modified: string;
+  updatedBy: string;
+  pitId?: string;
+  pit?: PitsDetails;
+  wellId?: string;
+  well?: WellDetails;
+  maintenanceType?: string;
+  briefMaintenance?: string;
+}
+
+type WellDetails = {
+  id: string;
+  photo: string;
+  level: number;
+  villageId: string;
+  plotSize: number;
+  village?: Village;
+};
+
+type PitsDetails = {
+  id: string;
+  photo: string;
+  plotSize: number;
+  level: number;
+  farmerId: string;
+  villageId: string;
+  farmer?: Farmer;
+  village?: Village;
+};
+
+type Farmer = {
+  id: string;
+  name: string;
+  photo: string;
+  land: number;
+  villageId: string;
+};
+
+type Village = {
+  id: string;
+  name: string;
 };

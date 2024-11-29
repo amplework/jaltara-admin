@@ -45,6 +45,10 @@ const initialState: UserList = {
     phone: '',
     status: '',
     language: '',
+    farmerCount: '',
+    pitCount: '',
+    wellCount:'',
+    photo:'',
     location: {
       lat: 0,
       lng: 0,
@@ -52,6 +56,7 @@ const initialState: UserList = {
     created: '',
     modified: '',
     villageId: '',
+    stages: [],
     checkUpperGeo: {
       id: '',
       name: '',
@@ -127,6 +132,7 @@ const slice = createSlice({
         id: '',
         name: '',
         phone: '',
+        photo:'',
         status: '',
         language: '',
         location: {

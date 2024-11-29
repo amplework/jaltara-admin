@@ -1,30 +1,22 @@
-import { useState } from 'react';
-// @mui
-import { useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Typography, Box } from '@mui/material';
 // components
-import Iconify from '../../../../components/Iconify';
 import { formatedDate } from 'src/utils/formateDate';
-import { Stage, WellsItem } from 'src/@types/wells';
 import Image from 'src/components/Image';
+import noImage from 'src/assets/images/noImage.jpg';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: Stage | null;
+  row: any;
   index: number;
-  pit?: boolean;
-  sevek?: boolean;
 };
 
-export default function WellsDetailsRow({ row, index, pit, sevek }: Props) {
-  console.log('row', row);
+export default function FarmerPitsDetails({ row }: Props) {
+  const { photo, level, stages, plotSize } = row || {};
 
-  const theme = useTheme();
-
-  const { created, photo, updatedbySevek, stageName } = row || {};
-
-  
+  const pitStageName = stages?.[0]?.stageName || 'N/A';
+  const pitName = stages?.[0]?.updatedbySevek?.name || 'N/A';
+  const pitStageUpdatedDate = stages?.[0]?.modified ? formatedDate(stages[0].modified) : 'N/A';
 
   return (
     <TableRow>
@@ -42,23 +34,33 @@ export default function WellsDetailsRow({ row, index, pit, sevek }: Props) {
         />
       </TableCell>
 
-      {pit ? (
-        <TableCell>
-          <Typography variant="subtitle2" noWrap>
-            {stageName ? stageName : '--'}
-          </Typography>
-        </TableCell>
-      ) : null}
-
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {updatedbySevek?.name ? updatedbySevek?.name : '--'}
+          {pitName}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {formatedDate(created)}
+          {level}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {plotSize}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {pitStageName}
+        </Typography>
+      </TableCell>
+
+      <TableCell>
+        <Typography variant="subtitle2" noWrap>
+          {pitStageUpdatedDate}
         </Typography>
       </TableCell>
     </TableRow>

@@ -36,6 +36,7 @@ import { emptyFarmerDetails, getFarmerList } from 'src/redux/slices/farmers';
 import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
 import { emptyStatesDetails } from 'src/redux/slices/user';
 const TABLE_HEAD = [
+  // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'land', label: 'Land (acres)', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
@@ -44,14 +45,20 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
-export default function FarmersList() {
+export default function FarmerChallangesList() {
   const {
     dense,
     page,
     order,
     orderBy,
     rowsPerPage,
+    setPage,
     selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    onSort,
+    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
@@ -66,7 +73,7 @@ export default function FarmersList() {
 
   const [filterVillage, setFilterVillage] = useState('');
 
-  const { currentTab: filterStatus } = useTabs('all');
+  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
   useEffect(() => {
     getFarmerList();
@@ -86,6 +93,10 @@ export default function FarmersList() {
     setFilterVillage(filterVillage);
   };
 
+  const handleEditRow = (id: string) => {
+    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
+  };
+
   const isNotFound =
     (!farmerListData?.length && !!filterName) ||
     (!farmerListData?.length && !!filterVillage) ||
@@ -103,7 +114,7 @@ export default function FarmersList() {
     navigate(PATH_DASHBOARD.farmers.edit(id));
   };
 
-  const onhandleDeleteRow = () => {};
+  const onhandleDeleteRow = (id: string) => {};
   const handleShowDetails = (id: string) => {
     navigate(PATH_DASHBOARD.farmers.details(id));
   };

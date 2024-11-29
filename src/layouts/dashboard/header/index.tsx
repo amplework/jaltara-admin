@@ -1,5 +1,5 @@
 // @mui
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 // hooks
 import useOffSetTop from '../../../hooks/useOffSetTop';
@@ -69,7 +69,7 @@ export default function DashboardHeader({
   verticalLayout = false,
 }: Props) {
   const isOffset = useOffSetTop(HEADER.DASHBOARD_DESKTOP_HEIGHT) && !verticalLayout;
-
+  const theme=useTheme()
   const isDesktop = useResponsive('up', 'lg');
 
   return (
@@ -78,6 +78,7 @@ export default function DashboardHeader({
         sx={{
           minHeight: '100% !important',
           px: { lg: 5 },
+          bgcolor:theme.palette.grey[100]
         }}
       >
         {isDesktop && verticalLayout && <Logo sx={{ mr: 2.5 }} />}
@@ -88,11 +89,11 @@ export default function DashboardHeader({
           </IconButtonAnimate>
         )}
 
-        <Searchbar />
+        {/* <Searchbar /> */}
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
-          <LanguagePopover />
+          {/* <LanguagePopover /> */}
           {/* <NotificationsPopover />
           <ContactsPopover /> */}
           <AccountPopover />

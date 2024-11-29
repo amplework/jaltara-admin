@@ -14,7 +14,6 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_AFTER_LOGIN } from '../config';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-import EquipmentList from 'src/pages/equipments/EquipmentList';
 
 // ----------------------------------------------------------------------
 
@@ -77,27 +76,23 @@ export default function Router() {
           path: 'sevek',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            // { path: 'profile', elementSevek /> },
             { path: 'list', element: <SevekList /> },
             { path: 'sevek-create', element: <SevekCreate /> },
             { path: 'sevek-edit/:id', element: <SevekEdit /> },
-
-            // { path: 'cards', element: <UserCards /> },
-            // { path: ':name/edit', element: <UserCreate /> },
-            // { path: 'account', element: <UserAccount /> },
+            { path: 'details/:id', element: <SevekDetails /> },
           ],
         },
         {
-          path: 'farmer',
+          path: 'farmers',
           children: [
             { path: 'list', element: <FarmersList /> },
-            { path: 'farmer-create', element: <FarmerCreate /> },
-            { path: 'farmer-edit/:id', element: <FarmerCreate /> },
-            // { path: 'new', element: <UserCreate /> },
+            { path: 'create', element: <FarmerCreate /> },
+            { path: 'edit/:id', element: <FarmerCreate /> },
+            { path: 'details/:id', element: <FarmersDetails /> },
           ],
         },
         {
-          path: 'pit',
+          path: 'pits',
           children: [
             { path: 'list', element: <PitList /> },
             { path: 'details/:id', element: <PitsDetails /> },
@@ -105,121 +100,82 @@ export default function Router() {
         },
 
         {
-          path: 'well',
+          path: 'wells',
           children: [
             { path: 'list', element: <WellList /> },
             { path: 'details/:id', element: <WellsDetails /> },
-
-            // { path: 'new', element: <UserCreate /> },
+          ],
+        },
+        {
+          path: 'equipment',
+          children: [
+            {
+              path: 'list',
+              element: <EquipmentList />,
+            },
+            {
+              path: 'create',
+              element: <EquipmentCreate />,
+            },
+            {
+              path: 'edit/:id',
+              element: <EquipmentCreate />,
+            },
           ],
         },
         {
           path: 'location',
           children: [
             {
-              path: 'state',
-              element: <CropList />,
-            },
-            {
-              path: 'district',
-              element: <EquipmentList />,
-            },
-            {
-              path: 'talauk ',
-              element: <CropList />,
-            },
-            {
-              path: 'village',
-              element: <EquipmentList />,
+              path: 'list',
+              element: <LocationList />,
             },
           ],
         },
-
+        // {
+        //   path: 'masterdata',
+        //   children: [
+        //     {
+        //       path: 'croplist',
+        //       element: <CropList />,
+        //       children: [
+        //         {
+        //           path: 'create',
+        //           element: <CropCreate />,
+        //         },
+        //         {
+        //           path: 'edit',
+        //           element: <LocationList />,
+        //         },
+        //       ],
+        //     },
+        //     {
+        //       path: 'challanges',
+        //       element: <CropList />,
+        //     },
+        //   ],
+        // },
         {
-          path: 'masterData',
+          path: 'masterdata',
           children: [
             {
-              path: 'cropList',
+              path: 'croplist',
               element: <CropList />,
             },
             {
-              path: 'equipmentList',
-              element: <EquipmentList />,
+              path: 'create',
+              element: <CropCreate />,
+            },
+            {
+              path: 'edit/:id',
+              element: <CropCreate />,
+            },
+            {
+              path: 'challanges',
+              element: <CropList />,
             },
           ],
         },
-
-        // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        // { path: 'app', element: <GeneralApp /> },
-        // { path: 'ecommerce', element: <GeneralEcommerce /> },
-        // { path: 'analytics', element: <GeneralAnalytics /> },
-        // { path: 'banking', element: <GeneralBanking /> },
-        // { path: 'booking', element: <GeneralBooking /> },
-
-        // {
-        //   path: 'e-commerce',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-        //     { path: 'shop', element: <EcommerceShop /> },
-        //     { path: 'product/:name', element: <EcommerceProductDetails /> },
-        //     { path: 'list', element: <EcommerceProductList /> },
-        //     { path: 'product/new', element: <EcommerceProductCreate /> },
-        //     { path: 'product/:name/edit', element: <EcommerceProductEdit /> },
-        //     { path: 'checkout', element: <EcommerceCheckout /> },
-        //   ],
-        // },
-        // {
-        //   path: 'user',
-        //   children: [
-        //     { element: <Navigate to="/user/profile" replace />, index: true },
-        //     { path: 'profile', element: <UserProfile /> },
-        //     { path: 'list', element: <UserList /> },
-        //     { path: 'new', element: <UserCreate /> },
-        //     { path: 'cards', element: <UserCards /> },
-        //     { path: ':name/edit', element: <UserCreate /> },
-        //     { path: 'account', element: <UserAccount /> },
-        //   ],
-        // },
-        // {
-        //   path: 'invoice',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-        //     { path: 'list', element: <InvoiceList /> },
-        //     { path: ':id', element: <InvoiceDetails /> },
-        //     { path: ':id/edit', element: <InvoiceEdit /> },
-        //     { path: 'new', element: <InvoiceCreate /> },
-        //   ],
-        // },
-        // {
-        //   path: 'blog',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-        //     { path: 'posts', element: <BlogPosts /> },
-        //     { path: 'post/:title', element: <BlogPost /> },
-        //     { path: 'new', element: <BlogNewPost /> },
-        //   ],
-        // },
-        // {
-        //   path: 'mail',
-        //   children: [
-        //     { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-        //     { path: 'label/:customLabel', element: <Mail /> },
-        //     { path: 'label/:customLabel/:mailId', element: <Mail /> },
-        //     { path: ':systemLabel', element: <Mail /> },
-        //     { path: ':systemLabel/:mailId', element: <Mail /> },
-        //   ],
-        // },
-        // {
-        //   path: 'chat',
-        //   children: [
-        //     { element: <Chat />, index: true },
-        //     { path: 'new', element: <Chat /> },
-        //     { path: ':conversationKey', element: <Chat /> },
-        //   ],
-        // },
-        // { path: 'calendar', element: <Calendar /> },
-        // { path: 'kanban', element: <Kanban /> },
-        // { path: 'permission-denied', element: <PermissionDenied /> },
       ],
     },
 
@@ -263,19 +219,28 @@ const SevekProfile = Loadable(lazy(() => import('../pages/sevek/SevekProfile')))
 const SevekList = Loadable(lazy(() => import('../pages/sevek/SevekList')));
 const SevekCreate = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
 const SevekEdit = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
+const SevekDetails = Loadable(lazy(() => import('../pages/sevek/SevekDetails')));
 
 //pits
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));
 const PitsDetails = Loadable(lazy(() => import('../pages/pits/PitsDetails')));
+// master data
 const CropList = Loadable(lazy(() => import('../pages/crops/CropList')));
+const CropCreate = Loadable(lazy(() => import('../pages/crops/CropCreate')));
 
 // farmer
 const FarmersList = Loadable(lazy(() => import('../pages/farmers/FarmersList')));
 const FarmerCreate = Loadable(lazy(() => import('../pages/farmers/FarmerCreate')));
+const FarmersDetails = Loadable(lazy(() => import('../pages/farmers/FarmerDetails')));
 
 // wells create
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
 const WellsDetails = Loadable(lazy(() => import('../pages/wells/WellsDetails')));
+// location
+const LocationList = Loadable(lazy(() => import('../pages/location/LocationList')));
+// equipent
+const EquipmentList = Loadable(lazy(() => import('../pages/equipments/EquipmentList')));
+const EquipmentCreate = Loadable(lazy(() => import('../pages/equipments/EquipmentCreate')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

@@ -11,4 +11,5 @@ export type EquipmentList = {
 isLoading: boolean;
 error: string | null;
 equipmentListData: EquipmentItem[] | null;
+equipmentDetails:EquipmentItem
 };

@@ -3,53 +3,88 @@ import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // @types
+import { UserItem } from '../../../../@types/user';
 // components
-import { EquipmentItem } from 'src/@types/equipment';
-import _ from 'lodash';
-import { TableMoreMenu } from 'src/components/table';
-import Iconify from 'src/components/Iconify';
+import Label from '../../../../components/Label';
+import Iconify from '../../../../components/Iconify';
+import { TableMoreMenu } from '../../../../components/table';
+import palette from 'src/theme/palette';
+import { Box } from '@mui/material';
+import { FarmerListData } from 'src/@types/farmer';
+import Image from 'src/components/Image';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: EquipmentItem | null;
+  row: FarmerListData | null;
+  selected: boolean;
+  onEditRow: VoidFunction;
+  onSelectRow: VoidFunction;
+  onDeleteRow?: VoidFunction;
   onhandleEditDetails?: (id: any) => void;
   onhandleDeleteRow?: (id: any) => void;
   handleShowDetails?: (id: any) => void;
 };
 
-export default function EquipmentTableRow({
+export default function ChallangesTableRow({
   row,
+  selected,
+  onEditRow,
+  onSelectRow,
+  onDeleteRow,
   onhandleEditDetails,
   onhandleDeleteRow,
   handleShowDetails,
 }: Props) {
-  const theme = useTheme();
-
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
+  const theme = useTheme();
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
   };
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   };
-  const { name, equipment, status,id } = row || {};
+
+  const { name, phone, id, land, village, language, totalPits, photo } = row || {};
+  console.log('row', row);
 
   return (
-    <TableRow hover>
-      <TableCell>
+    <TableRow hover selected={selected}>
+      <TableCell
+        sx={{ display: 'flex', alignItems: 'center' }}
+        onClick={() => handleShowDetails && handleShowDetails(id)}
+      >
+        {photo ? (
+          <Image alt="cover" src={photo} ratio="16/9" />
+        ) : (
+          <Avatar alt={name} src={''} sx={{ mr: 2 }} />
+        )}
+
         <Typography variant="subtitle2" noWrap>
-          {_.capitalize(name) || 'N/A'}
+          {name}
         </Typography>
       </TableCell>
-      <TableCell>
+
+      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {_.capitalize(equipment) || 'N/A'}
+          {land}
         </Typography>
       </TableCell>
-      <TableCell>
+
+      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {_.capitalize(status) || 'N/A'}
+          {village ? village?.name : '--'}
+        </Typography>
+      </TableCell>
+
+      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+        <Typography variant="subtitle2" noWrap>
+          {language}
+        </Typography>
+      </TableCell>
+      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+        <Typography variant="subtitle2" noWrap>
+          {totalPits}
         </Typography>
       </TableCell>
       <TableCell align="left">
@@ -82,6 +117,7 @@ export default function EquipmentTableRow({
           }
         />
       </TableCell>
+
     </TableRow>
   );
 }

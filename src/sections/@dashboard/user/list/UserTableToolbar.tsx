@@ -34,7 +34,7 @@ export default function UserTableToolbar({
   state,
 }: Props) {
   return (
-    <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 3 }}>
+    <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ py: 2.5, px: 1}}>
       <TextField
         fullWidth
         value={filterName}

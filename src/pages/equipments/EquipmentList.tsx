@@ -1,4 +1,3 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -6,64 +5,39 @@ import {
   Box,
   Card,
   Table,
-  Switch,
   Button,
   TableBody,
   Container,
   TableContainer,
   TablePagination,
-  FormControlLabel,
-  Divider,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { } from '../../hooks/useTable';
-// @types
-import { UserItem } from '../../@types/user';
+import useTable from '../../hooks/useTable';
 // _mock_
 import { _userList } from '../../_mock';
 // components
-import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
-import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableNoData,
-  TableHeadCustom,
-} from '../../components/table';
 // sections
-import { UserTableToolbar } from '../../sections/@dashboard/user/list';
-import { useSelector } from 'src/redux/store';
-import { getEquipmentsList } from 'src/redux/slices/equipment';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { emptyEquipmentsDetails, getEquipmentsList } from 'src/redux/slices/equipment';
+import Iconify from 'src/components/Iconify';
+import Page from 'src/components/Page';
+import { UserTableToolbar } from 'src/sections/@dashboard/user/list';
+import Scrollbar from 'src/components/Scrollbar';
+import { TableHeadCustom, TableNoData } from 'src/components/table';
 import { EquipmentItem } from 'src/@types/equipment';
 import EquipmentTableRow from 'src/sections/@dashboard/user/list/EquipmentTableRow';
 
-// ----------------------------------------------------------------------
-
-const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
-
 const TABLE_HEAD = [
-  // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'equipment', label: 'Equipment', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function EquipmentList() {
   const {
@@ -72,30 +46,23 @@ export default function EquipmentList() {
     order,
     orderBy,
     rowsPerPage,
-    setPage,
-    //
     selected,
-    setSelected,
     onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
 
-  const { themeStretch } = useSettings();
-
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState([]);
+  const { themeStretch } = useSettings();
+
+  const dispatch = useDispatch();
 
   const [filterName, setFilterName] = useState('');
 
   const [filterVillage, setFilterVillage] = useState('');
 
-  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
+  const { currentTab: filterStatus } = useTabs('all');
 
   const { equipmentListData } = useSelector((state) => state.equipments);
 
@@ -115,51 +82,43 @@ export default function EquipmentList() {
     setFilterVillage(filterVillage);
   };
 
-  // const handleDeleteRow = (id: string) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
-
-  // const handleDeleteRows = (selected: string[]) => {
-  //   const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  // };
-
-  const handleEditRow = (id: string) => {
+  const handleEditRow = () => {
     // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
   };
-
-  // let dataFiltered = applySortFilter({
-  //   userListData,
-  //   comparator: getComparator(order, orderBy),
-  //   filterName,
-  //   filterRole,
-  //   filterStatus,
-  // });
-
-  const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
     (!equipmentListData?.length && !!filterName) ||
     (!equipmentListData?.length && !!filterName) ||
     (!equipmentListData?.length && !!filterStatus);
 
+  const onhandleEditDetails = (id: string) => {
+    dispatch(emptyEquipmentsDetails(null));
+    navigate(PATH_DASHBOARD.equipments.edit(id));
+  };
+
+  const onhandleDeleteRow = () => {
+    // const handleShowDetails = (id: string) => {
+    //   navigate(PATH_DASHBOARD.farmers.details(id));
+  };
+  const handleShowDetails = (id: string) => {
+    // navigate(PATH_DASHBOARD.farmers.details(id));
+  };
+
+  const handleAddEquipment = () => {
+    dispatch(emptyEquipmentsDetails(null));
+    navigate(PATH_DASHBOARD.equipments.create);
+  };
   return (
     <Page title="equipments List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Equipments List"
-          links={[
-            { href: PATH_DASHBOARD.sevek.root },
-          ]}
+          links={[{ href: PATH_DASHBOARD.equipments.list }]}
           action={
             <Button
               variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.sevek.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={handleAddEquipment}
             >
               New Equipment
             </Button>
@@ -173,33 +132,12 @@ export default function EquipmentList() {
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
-            placeholderText={"Search by names"}
-            placeholderTextSecond={"Search by equipments"}
+            placeholderText={'Search by names'}
+            placeholderTextSecond={'Search by equipments'}
           />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {/* {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={userListData?.length || 0}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
-                  // actions={
-                  //   <Tooltip title="Delete">
-                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  //       <Iconify icon={'eva:trash-2-outline'} />
-                  //     </IconButton>
-                  //   </Tooltip>
-                  // }
-                />
-              )} */}
-
               <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
@@ -207,28 +145,21 @@ export default function EquipmentList() {
                   headLabel={TABLE_HEAD}
                   rowCount={equipmentListData?.length}
                   numSelected={selected.length}
-                // onSort={onSort}
-                // onSelectAllRows={(checked) =>
-                //   onSelectAllRows(
-                //     checked,
-                //     tableData.map((row) => row.id)
-                //   )
-                // }
                 />
 
                 <TableBody>
                   {equipmentListData?.length
                     ? equipmentListData
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row: EquipmentItem) => (
-                        <EquipmentTableRow
-                          key={row.id}
-                          row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
-                        />
-                      ))
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row: EquipmentItem) => (
+                          <EquipmentTableRow
+                            key={row.id}
+                            row={row}
+                            onhandleEditDetails={onhandleEditDetails}
+                            onhandleDeleteRow={onhandleDeleteRow}
+                            handleShowDetails={handleShowDetails}
+                          />
+                        ))
                     : null}
 
                   <TableNoData isNotFound={isNotFound} />
@@ -247,58 +178,9 @@ export default function EquipmentList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
           </Box>
         </Card>
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({
-  tableData,
-  comparator,
-  filterName,
-  filterStatus,
-  filterRole,
-}: {
-  tableData: UserItem[];
-  comparator: (a: any, b: any) => number;
-  filterName: string;
-  filterStatus: string;
-  filterRole: string;
-}) {
-  const stabilizedThis = tableData.map((el: any, index: any) => [el, index] as const);
-
-  stabilizedThis.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter(
-      (item: Record<string, any>) =>
-        item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.role === filterRole);
-  }
-
-  return tableData;
 }

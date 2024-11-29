@@ -1,4 +1,3 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -6,100 +5,69 @@ import {
   Box,
   Card,
   Table,
-  Switch,
   Button,
   TableBody,
   Container,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, {  } from '../../hooks/useTable';
-// @types
-import { UserItem } from '../../@types/user';
-// _mock_
-import { _userList } from '../../_mock';
+import useTable from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableNoData,
-  TableHeadCustom,
-} from '../../components/table';
+import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
 import { UserTableToolbar } from '../../sections/@dashboard/user/list';
-import { useSelector } from 'src/redux/store';
-import { getCropsList } from 'src/redux/slices/crops';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { emptyCropsDetails, getCropsList } from 'src/redux/slices/crops';
 import { CropItem } from 'src/@types/crops';
 import CropTableRow from 'src/sections/@dashboard/user/list/CropTableRow';
 
 // ----------------------------------------------------------------------
 
-const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
-];
-
 const TABLE_HEAD = [
-  { id: '' },
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'crop', label: 'Crops', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
+  { id: 'lastdate', label: 'Last Update Date', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
-
-// ----------------------------------------------------------------------
 
 export default function CropList() {
   const {
-    dense,
     page,
     order,
     orderBy,
     rowsPerPage,
-    setPage,
-    //
     selected,
-    setSelected,
     onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
 
   const { themeStretch } = useSettings();
+  
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
-
-  const [tableData, setTableData] = useState([]);
 
   const [filterName, setFilterName] = useState('');
 
   const [filterVillage, setFilterVillage] = useState('');
 
-  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
-
-  const { cropListData } = useSelector((state) => state.crops);
+  const { currentTab: filterStatus } = useTabs('all');
 
   useEffect(() => {
     getCropsList();
   }, []);
+
+  const { cropListData } = useSelector((state) => state.crops);
 
   const onSearch = () => {
     getCropsList(filterName);
@@ -113,31 +81,6 @@ export default function CropList() {
     setFilterVillage(filterVillage);
   };
 
-  // const handleDeleteRow = (id: string) => {
-  //   const deleteRow = tableData.filter((row) => row.id !== id);
-  //   setSelected([]);
-  //   setTableData(deleteRow);
-  // };
-
-  // const handleDeleteRows = (selected: string[]) => {
-  //   const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-  // };
-
-  const handleEditRow = (id: string) => {
-    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
-  };
-
-  // let dataFiltered = applySortFilter({
-  //   userListData,
-  //   comparator: getComparator(order, orderBy),
-  //   filterName,
-  //   filterRole,
-  //   filterStatus,
-  // });
-
-  const denseHeight = dense ? 52 : 72;
 
   const isNotFound =
     (!cropListData?.length && !!filterName) ||
@@ -145,21 +88,31 @@ export default function CropList() {
     (!cropListData?.length && !!filterName) ||
     (!cropListData?.length && !!filterStatus);
 
+    const handleAddCrop = () => {
+      dispatch(emptyCropsDetails(null))
+      navigate(PATH_DASHBOARD.masterdata.create);
+    };
+
+    const onDeleteRow = (id: string) => {
+      // navigate(PATH_DASHBOARD.farmers.details(id));
+    };
+    const onEditRow = (id: string) => {
+      dispatch(emptyCropsDetails(null))
+      navigate(PATH_DASHBOARD.masterdata.edit(id));
+    };
   return (
     <Page title="Crops List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Crops List"
           links={[
-            // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { href: PATH_DASHBOARD.sevek.root },
+            { href: PATH_DASHBOARD.masterdata.create },
           ]}
           action={
             <Button
               variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.sevek.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={handleAddCrop}
             >
               New Crop
             </Button>
@@ -167,21 +120,6 @@ export default function CropList() {
         />
 
         <Card>
-          {/* <Tabs
-            allowScrollButtonsMobile
-            variant="scrollable"
-            scrollButtons="auto"
-            value={filterStatus}
-            onChange={onChangeFilterStatus}
-            sx={{ px: 2, bgcolor: 'background.neutral' }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs> */}
-
-          {/* <Divider /> */}
-
           <UserTableToolbar
             filterName={filterName}
             filterVillage={filterVillage}
@@ -194,27 +132,6 @@ export default function CropList() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
-              {/* {selected.length > 0 && (
-                <TableSelectedActions
-                  dense={dense}
-                  numSelected={selected.length}
-                  rowCount={userListData?.length || 0}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
-                  // actions={
-                  //   <Tooltip title="Delete">
-                  //     <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  //       <Iconify icon={'eva:trash-2-outline'} />
-                  //     </IconButton>
-                  //   </Tooltip>
-                  // }
-                />
-              )} */}
-
               <Table size={'medium'}>
                 <TableHeadCustom
                   order={order}
@@ -222,13 +139,6 @@ export default function CropList() {
                   headLabel={TABLE_HEAD}
                   rowCount={cropListData?.length}
                   numSelected={selected.length}
-                  // onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row.id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -239,10 +149,8 @@ export default function CropList() {
                           <CropTableRow
                             key={row.id}
                             row={row}
-                            selected={selected.includes(row.id)}
-                            onSelectRow={() => onSelectRow(row.id)}
-                            // onDeleteRow={() => handleDeleteRow(row.id)}
-                            onEditRow={() => handleEditRow(row.name)}
+                            onDeleteRow={onDeleteRow}
+                            onEditRow={onEditRow}
                           />
                         ))
                     : null}
@@ -263,58 +171,9 @@ export default function CropList() {
               onPageChange={onChangePage}
               onRowsPerPageChange={onChangeRowsPerPage}
             />
-
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={onChangeDense} />}
-              label="Dense"
-              sx={{ px: 3, py: 1.5, top: 0, position: { md: 'absolute' } }}
-            />
           </Box>
         </Card>
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({
-  tableData,
-  comparator,
-  filterName,
-  filterStatus,
-  filterRole,
-}: {
-  tableData: UserItem[];
-  comparator: (a: any, b: any) => number;
-  filterName: string;
-  filterStatus: string;
-  filterRole: string;
-}) {
-  const stabilizedThis = tableData.map((el: any, index: any) => [el, index] as const);
-
-  stabilizedThis.sort((a: any, b: any) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter(
-      (item: Record<string, any>) =>
-        item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.role === filterRole);
-  }
-
-  return tableData;
 }

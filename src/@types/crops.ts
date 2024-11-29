@@ -11,4 +11,5 @@ export type CropList = {
   error: string | null;
   totalCrop: number | null;
   cropListData: CropItem[] | null;
+  cropsDetails:CropItem
 };

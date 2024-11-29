@@ -45,31 +45,40 @@ export const PATH_DASHBOARD = {
     edit: (id?: string) => path(`/sevek/sevek-edit/${id}`),
     profile: path('/sevek/profile'),
     account: path('/sevek/account'),
+    details: (id: string) => path(`/sevek/details/${id}`),
     // edit: (name: string) => path(ROOTS_DASHBOARD, `/sevek/${name}/edit`),
   },
   farmers: {
-    list: path('/farmer/list'),
-    new: path('/farmer/farmer-create'),
-    edit: (id?: string) => path(`/farmer/farmer-edit/${id}`),
+    list: path('/farmers/list'),
+    new: path('/farmers/create'),
+    edit: (id?: string) => path(`/farmers/edit/${id}`),
+    details: (id: string) => path(`/farmers/details/${id}`),
   },
   pits: {
-    list: path('/pit/list'),
-    details:(id:string)=> path(`/pit/details/${id}`),
+    list: path('/pits/list'),
+    details: (id: string) => path(`/pits/details/${id}`),
   },
   wells: {
-    list: path('/well/list'),
-    details:(id:string)=> path(`/well/details/${id}`),
+    list: path('/wells/list'),
+    details: (id: string) => path(`/wells/details/${id}`),
   },
   crops: {
     list: path('/crop/list'),
   },
+  location: {
+    list: path('/location/list'),
+  },
   equipments: {
     list: path('/equipment/list'),
+    create: path('/equipment/create'),
+    edit: (id: string) => path(`/equipment/edit/${id}`),
   },
-  masterData: {
-    root: path(ROOTS_DASHBOARD, '/masterData'),
-    cropList: path(ROOTS_DASHBOARD, '/masterData/cropList'),
-    equipmentList: path(ROOTS_DASHBOARD, '/masterData/equipmentList'),
+  masterdata: {
+    root: path('/masterdata'),
+    cropList: path('/masterdata/croplist'),
+    create: path('/masterdata/create'),
+    edit: (id: string) => path(`/masterdata/edit/${id}`),
+    challangesList: path('/masterdata/challanges'),
   },
 };
 

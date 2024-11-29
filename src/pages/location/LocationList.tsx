@@ -27,19 +27,19 @@ import Iconify from 'src/components/Iconify';
 import { UserTableToolbar } from 'src/sections/@dashboard/user/list';
 import Scrollbar from 'src/components/Scrollbar';
 import { TableHeadCustom, TableNoData } from 'src/components/table';
+import LocationTableRow from 'src/sections/@dashboard/user/list/LocationTableRow';
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Farmer name', align: 'left' },
-  { id: 'village', label: 'Village name', align: 'left' },
-  { id: 'number of pits', label: 'Pit level', align: 'left' },
-  { id: 'stage name', label: 'Stage name', align: 'left' },
-  { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
+  { id: 'village', label: 'Village Name', align: 'left' },
+  { id: 'district', label: 'District', align: 'left' },
+  { id: 'state', label: 'State', align: 'left' },
+  { id: 'noUser', label: 'No Of User', align: 'left' },
+//   { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
-  { id: 'edit', label: 'edit', align: 'left' },
   { id: 'delete', label: 'delete', align: 'left' },
 ];
 
-export default function StatesList() {
+export default function LocationList() {
   const {
     dense,
     page,
@@ -98,10 +98,10 @@ export default function StatesList() {
     (!pitListData?.length && !!filterStatus);
 
   return (
-    <Page title="states">
+    <Page title="location">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="States"
+          heading="Location"
           links={[
             // { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { href: PATH_DASHBOARD.sevek.root },
@@ -113,13 +113,13 @@ export default function StatesList() {
               to={PATH_DASHBOARD.sevek.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              New States
+              New Location
             </Button>
           }
         />
 
         <Card>
-          {/* <UserTableToolbar
+          <UserTableToolbar
             filterName={filterName}
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
@@ -127,7 +127,7 @@ export default function StatesList() {
             onSearch={onSearch}
             placeholderText={'Search by Sevek name'}
             placeholderTextSecond={'Search by village name'}
-          /> */}
+          />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -144,7 +144,7 @@ export default function StatesList() {
                   {pitListData?.length
                     ? pitListData
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row: PitItem) => <PitTableRow key={row.id} row={row} />)
+                        .map((row: PitItem) => <LocationTableRow key={row.id} row={row} />)
                     : null}
 
                   <TableNoData isNotFound={isNotFound} />
