@@ -73,13 +73,13 @@ export default function Router() {
       ),
       children: [
         {
-          path: 'sevek',
+          path: 'sevak',
           children: [
             { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-            { path: 'list', element: <SevekList /> },
-            { path: 'sevek-create', element: <SevekCreate /> },
-            { path: 'sevek-edit/:id', element: <SevekEdit /> },
-            { path: 'details/:id', element: <SevekDetails /> },
+            { path: 'list', element: <SevakList /> },
+            { path: 'sevak-create', element: <SevakCreate /> },
+            { path: 'sevak-edit/:id', element: <SevakEdit /> },
+            { path: 'details/:id', element: <SevakDetails /> },
           ],
         },
         {
@@ -214,12 +214,12 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
-// Sevek
-const SevekProfile = Loadable(lazy(() => import('../pages/sevek/SevekProfile')));
-const SevekList = Loadable(lazy(() => import('../pages/sevek/SevekList')));
-const SevekCreate = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
-const SevekEdit = Loadable(lazy(() => import('../pages/sevek/SevekCreate')));
-const SevekDetails = Loadable(lazy(() => import('../pages/sevek/SevekDetails')));
+// Sevak
+const SevakProfile = Loadable(lazy(() => import('../pages/sevak/SevakProfile')));
+const SevakList = Loadable(lazy(() => import('../pages/sevak/SevakList')));
+const SevakCreate = Loadable(lazy(() => import('../pages/sevak/SevakCreate')));
+const SevakEdit = Loadable(lazy(() => import('../pages/sevak/SevakCreate')));
+const SevakDetails = Loadable(lazy(() => import('../pages/sevak/SevakDetails')));
 
 //pits
 const PitList = Loadable(lazy(() => import('../pages/pits/PitList')));

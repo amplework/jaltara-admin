@@ -77,7 +77,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getPitsListing } = slice.actions;
+export const { getPitsListing,startLoading } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -106,6 +106,22 @@ export function getPitDetails(id?: any) {
     try {
       return await axios.get(`/pits/${id}`).then((res) => {
         dispatch(slice.actions.getPitsUserDetails(res?.data?.data));
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+
+// delete pits
+export function deletePits(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/pits/${id}`).then((res) => {
         return res;
       });
     } catch (error) {

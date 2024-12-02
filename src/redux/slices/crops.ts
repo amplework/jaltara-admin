@@ -121,3 +121,19 @@ export function addEditCrops(payload?: any, id?: string) {
     }
   };
 }
+
+// delete Crops 
+export function deleteCrops(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/crops/${id}`).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}

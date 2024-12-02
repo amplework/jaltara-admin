@@ -23,7 +23,11 @@ import { _userList } from '../../_mock';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useDispatch, useSelector } from 'src/redux/store';
-import { emptyEquipmentsDetails, getEquipmentsList } from 'src/redux/slices/equipment';
+import {
+  deleteEquipment,
+  emptyEquipmentsDetails,
+  getEquipmentsList,
+} from 'src/redux/slices/equipment';
 import Iconify from 'src/components/Iconify';
 import Page from 'src/components/Page';
 import { UserTableToolbar } from 'src/sections/@dashboard/user/list';
@@ -31,6 +35,7 @@ import Scrollbar from 'src/components/Scrollbar';
 import { TableHeadCustom, TableNoData } from 'src/components/table';
 import { EquipmentItem } from 'src/@types/equipment';
 import EquipmentTableRow from 'src/sections/@dashboard/user/list/EquipmentTableRow';
+import { useSnackbar } from 'notistack';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
@@ -59,6 +64,8 @@ export default function EquipmentList() {
   const dispatch = useDispatch();
 
   const [filterName, setFilterName] = useState('');
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [filterVillage, setFilterVillage] = useState('');
 
@@ -96,10 +103,23 @@ export default function EquipmentList() {
     navigate(PATH_DASHBOARD.equipments.edit(id));
   };
 
-  const onhandleDeleteRow = () => {
-    // const handleShowDetails = (id: string) => {
-    //   navigate(PATH_DASHBOARD.farmers.details(id));
+  const onhandleDeleteRow = (id: string) => {
+    dispatch(deleteEquipment(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getEquipmentsList();
+        } else {
+          getEquipmentsList();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
   };
+
   const handleShowDetails = (id: string) => {
     // navigate(PATH_DASHBOARD.farmers.details(id));
   };

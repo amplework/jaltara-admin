@@ -29,6 +29,7 @@ import { UserTableToolbar } from '../../../sections/@dashboard/user/list';
 import { useDispatch, useSelector } from 'src/redux/store';
 import {
   addEditCrops,
+  deleteCrops,
   emptyCropsDetails,
   getCropsDetails,
   getCropsList,
@@ -95,7 +96,7 @@ export default function CropList() {
   const { cropListData, cropsDetails } = useSelector((state) => state.crops);
 
   const onSearch = () => {
-    getCropsList(state.filterName,state.filterStatus);
+    getCropsList(state.filterName, state.filterStatus);
   };
 
   const handleFilterName = (filterName: string) => {
@@ -153,7 +154,20 @@ export default function CropList() {
   };
 
   const onDeleteRow = (id: string) => {
-    // navigate(PATH_DASHBOARD.farmers.details(id));
+    dispatch(deleteCrops(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleCropListing();
+        } else {
+          handleCropListing();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
   };
 
   const onEditRow = (id: string) => {

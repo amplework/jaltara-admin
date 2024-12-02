@@ -85,6 +85,7 @@ const slice = createSlice({
         },
       };
     },
+  
   },
 });
 
@@ -92,7 +93,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { farmerListData, getFarmerUserDetails, emptyFarmerDetails } = slice.actions;
+export const { farmerListData, getFarmerUserDetails, emptyFarmerDetails,startLoading } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -150,6 +151,22 @@ export function getFarmerDetails(id?: any) {
     try {
       return await axios.get(`/farmers/${id}`).then((res) => {
         dispatch(slice.actions.getFarmerUserDetails(res?.data?.data));
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+
+// delete farmer delete 
+export function deleteFarmer  (id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/farmers/${id}`).then((res) => {
         return res;
       });
     } catch (error) {

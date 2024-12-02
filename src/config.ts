@@ -10,7 +10,7 @@ import Iconify from './components/Iconify';
 // ----------------------------------------------------------------------
 
 // export const HOST_API = process.env.REACT_APP_HOST_API_KEY || '';
-export const HOST_API = "http://192.168.0.137:3000"
+export const HOST_API = "http://192.168.0.136:3000"
 
 export const FIREBASE_API = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -36,7 +36,7 @@ export const AUTH0_API = {
 export const MAPBOX_API = process.env.REACT_APP_MAPBOX_API;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
-export const PATH_AFTER_LOGIN = PATH_DASHBOARD.sevek.list; // as '/dashboard/app'
+export const PATH_AFTER_LOGIN = PATH_DASHBOARD.sevak.list; // as '/dashboard/app'
 
 // LAYOUT
 // ----------------------------------------------------------------------

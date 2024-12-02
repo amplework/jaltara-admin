@@ -13,12 +13,12 @@ const getIcon = (name: string) => (
 );
 
 const ICONS = {
-  sevek: getIcon('fa-solid:user-friends'),
+  sevak: getIcon('fa-solid:user-friends'),
   farmer: getIcon('game-icons:farmer'),
   pit: getIcon('tabler:shovel-pitchforks'),
   well: getIcon('game-icons:well'),
   location: getIcon('subway:location'),
-  tools: getIcon('vscode-icons:file-type-light-rust-toolchain'),
+  tools: getIcon('la:tools'),
   masterdata: getIcon('eos-icons:big-data'),
 };
 
@@ -27,9 +27,9 @@ const navConfig = [
     subheader: '',
     items: [
       {
-        title: 'sevek',
-        path: PATH_DASHBOARD.sevek.list,
-        icon: ICONS.sevek,
+        title: 'sevak',
+        path: PATH_DASHBOARD.sevak.list,
+        icon: ICONS.sevak,
       },
       {
         title: 'farmers',

@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
   Card,
   Table,
-  Switch,
-  Button,
   TableBody,
   Container,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -20,20 +17,19 @@ import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
 // @types
-// _mock_
 import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
 import { UserTableToolbar } from '../../sections/@dashboard/user/list';
-import { useSelector } from 'src/redux/store';
-import { getPitsList } from 'src/redux/slices/pits';
+import { useDispatch, useSelector } from 'src/redux/store';
+import { deletePits, getPitsList, startLoading } from 'src/redux/slices/pits';
 import { PitItem } from 'src/@types/pits';
 import PitTableRow from 'src/sections/@dashboard/user/list/PitTableRow';
+import { useSnackbar } from 'notistack';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Farmer name', align: 'left' },
@@ -43,31 +39,14 @@ const TABLE_HEAD = [
   { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
   // { id: 'edit', label: 'edit', align: 'left' },
-  { id: 'delete', label: 'delete', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function PitList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    //
-    selected,
-    onSelectRow,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable();
+  const { page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
+    useTable();
 
   const stagesName = [
-    // {
-    //   id: '5',
-    //   name: '',
-    //   value: 'all',
-    //   label: 'All',
-    // },
     {
       id: '1',
       name: 'marking',
@@ -94,11 +73,15 @@ export default function PitList() {
     },
   ];
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { themeStretch } = useSettings();
 
   const [filterName, setFilterName] = useState('');
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useDispatch();
 
   const [filterVillage, setFilterVillage] = useState('');
 
@@ -113,6 +96,7 @@ export default function PitList() {
   }, []);
 
   const { pitListData } = useSelector((state) => state.pits);
+
   const onSearch = () => {
     const statgesSearch = state.selectStages;
     getPitsList(filterName, filterVillage, statgesSearch);
@@ -126,16 +110,29 @@ export default function PitList() {
     setFilterVillage(filterVillage);
   };
 
-  const handleEditRow = () => {
-    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
-  };
   const onChange = (value: any) => {
     setState((prev) => ({ ...prev, selectStages: value }));
   };
 
-
   const handleShowDetails = (id: string) => {
     navigate(PATH_DASHBOARD.pits.details(id));
+  };
+
+  const onhandleDeleteRow = (id: string) => {
+    dispatch(deletePits(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getPitsList();
+        } else {
+          getPitsList();
+        }
+      })
+      .catch(() => {
+        console.log('error');
+      });
   };
 
   const isNotFound =
@@ -184,6 +181,7 @@ export default function PitList() {
                             key={row.id}
                             row={row}
                             handleShowDetails={handleShowDetails}
+                            onhandleDeleteRow={onhandleDeleteRow}
                           />
                         ))
                     : null}

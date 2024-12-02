@@ -121,3 +121,21 @@ export function addEditEquipment(payload?: any, id?: string) {
     }
   };
 }
+
+
+// delete element
+export function deleteEquipment(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/equipment/${id}`).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+

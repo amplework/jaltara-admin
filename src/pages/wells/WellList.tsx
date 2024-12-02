@@ -1,50 +1,34 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Box,
-  Tab,
-  Tabs,
   Card,
   Table,
-  Switch,
-  Button,
-  Tooltip,
-  Divider,
   TableBody,
   Container,
-  IconButton,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../hooks/useTable';
-// @types
-import { UserManager } from '../../@types/user';
+import useTable from '../../hooks/useTable';
 // _mock_
 import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import {
-  TableNoData,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedActions,
-} from '../../components/table';
+import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { getWillsList } from 'src/redux/slices/wells';
-import { useSelector } from 'src/redux/store';
+import { UserTableToolbar } from '../../sections/@dashboard/user/list';
+import { deleteWells, getWillsList } from 'src/redux/slices/wells';
+import { useDispatch, useSelector } from 'src/redux/store';
 import WellsTableRow from 'src/sections/@dashboard/user/list/WellsTableRow';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
@@ -53,7 +37,7 @@ const TABLE_HEAD = [
   { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
   // { id: 'edit', label: 'edit', align: 'left' },
-  { id: 'delete', label: 'delete', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function WellList() {
@@ -81,6 +65,10 @@ export default function WellList() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useDispatch();
 
   const [filterVillage, setFilterVillage] = useState('');
 
@@ -115,14 +103,29 @@ export default function WellList() {
     (!wellsListData?.length && !!filterRole) ||
     (!wellsListData?.length && !!filterStatus);
 
+  const onhandleDeleteRow = (id: string) => {
+    dispatch(deleteWells(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getWillsList();
+        } else {
+          getWillsList();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
+  };
+
   return (
     <Page title="Well: List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Well List"
-          links={[
-            { href: PATH_DASHBOARD.wells.list },
-          ]}
+          links={[{ href: PATH_DASHBOARD.wells.list }]}
           // action={
           //   <Button
           //     variant="contained"
@@ -164,6 +167,7 @@ export default function WellList() {
                             key={row.id}
                             row={row}
                             handleShowDetails={handleShowDetails}
+                            onhandleDeleteRow={onhandleDeleteRow}
                           />
                         ))
                     : null}

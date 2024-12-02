@@ -27,8 +27,14 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { emptyStatesDetails, emptyUserDetails, getUsersList } from 'src/redux/slices/user';
+import {
+  deleteSevak,
+  emptyStatesDetails,
+  emptyUserDetails,
+  getUsersList,
+} from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
+import { useSnackbar } from 'notistack';
 const TABLE_HEAD = [
   // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
@@ -36,7 +42,6 @@ const TABLE_HEAD = [
   { id: 'village', label: 'Village', align: 'left' },
   { id: 'status', label: 'status', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
-  // { id: 'delete', label: 'delete', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -56,6 +61,8 @@ export default function UserList() {
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [filterName, setFilterName] = useState('');
 
@@ -82,7 +89,7 @@ export default function UserList() {
   };
 
   const handleEditRow = () => {
-    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
+    // navigate(PATH_DASHBOARD.sevak.edit(paramCase(id)));
   };
 
   const isNotFound =
@@ -93,33 +100,49 @@ export default function UserList() {
   const handleAddUser = () => {
     dispatch(emptyUserDetails(null));
     dispatch(emptyStatesDetails(null));
-    navigate(PATH_DASHBOARD.sevek.create);
+    navigate(PATH_DASHBOARD.sevak.create);
   };
 
   const onhandleEditDetails = (id: string) => {
     dispatch(emptyUserDetails(null));
     dispatch(emptyStatesDetails(null));
-    navigate(PATH_DASHBOARD.sevek.edit(id));
+    navigate(PATH_DASHBOARD.sevak.edit(id));
   };
-  const onhandleDeleteRow = () => {};
+  
+  const onhandleDeleteRow = (id: string) => {
+    dispatch(deleteSevak(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getUsersList();
+        } else {
+          getUsersList();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
+  };
 
   const handleShowDetails = (id: string) => {
-    navigate(PATH_DASHBOARD.sevek.details(id));
+    navigate(PATH_DASHBOARD.sevak.details(id));
   };
 
   return (
-    <Page title="Seveks List">
+    <Page title="Sevaks List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Seveks List"
-          links={[{ href: PATH_DASHBOARD.sevek.root }]}
+          heading="Sevak's List"
+          links={[{ href: PATH_DASHBOARD.sevak.root }]}
           action={
             <Button
               variant="contained"
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddUser}
             >
-              New Sevek
+              New Sevak
             </Button>
           }
         />

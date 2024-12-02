@@ -15,10 +15,11 @@ import Image from 'src/components/Image';
 import { Table } from '@mui/material';
 import { TableHeadCustom } from 'src/components/table';
 import Scrollbar from 'src/components/Scrollbar';
-import { getUsersDetails } from 'src/redux/slices/user';
+import { detailsLoading, getUsersDetails } from 'src/redux/slices/user';
 import SevekSummary from 'src/sections/@dashboard/user/list/SevekPitsCount';
 import SevekPitsList from 'src/sections/@dashboard/user/list/SevekPitsList';
 import noImage from 'src/assets/images/noImage.jpg';
+import { SkeletonProduct } from 'src/components/skeleton';
 
 export default function SevekDetails() {
   const { themeStretch } = useSettings();
@@ -27,11 +28,12 @@ export default function SevekDetails() {
 
   useEffect(() => {
     if (id) {
+      dispatch(detailsLoading());
       dispatch(getUsersDetails(id));
     }
   }, [id, dispatch]);
 
-  const { usersDetails } = useSelector((state) => state.user);
+  const { usersDetails, isDetailsLoading } = useSelector((state) => state.user);
 
   const {
     photo,
@@ -46,7 +48,10 @@ export default function SevekDetails() {
     farmerCount,
   } = usersDetails;
 
-  const reverseGeoLocations = [...checkUpperGeo?.parents]?.reverse();
+  const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
+  ? [...checkUpperGeo.parents].reverse()
+  : [];
+  
   const TABLE_HEAD = [
     { id: 'photo', label: 'Photo', align: 'left' },
     { id: 'status ', label: 'Status', align: 'left' },
@@ -76,7 +81,7 @@ export default function SevekDetails() {
         <HeaderBreadcrumbs
           heading="Sevek Details"
           links={[
-            { name: 'sevek List', href: PATH_DASHBOARD.sevek.list },
+            { name: 'sevek List', href: PATH_DASHBOARD.sevak.list },
             { name: 'Sevek Details' },
           ]}
         />
@@ -93,51 +98,55 @@ export default function SevekDetails() {
         </Grid>
 
         <Card sx={{ p: 3 }}>
-          <Grid container spacing={4} justifyContent="center">
-            {/* Image Section */}
-            <Grid item xs={12} sm={6} md={4}>
-              <Image
-                src={photo ? photo : noImage}
-                alt="sevek Image"
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  borderRadius: 2,
-                  objectFit: 'cover',
-                  boxShadow: 3,
-                }}
-              />
-            </Grid>
+          {isDetailsLoading ? (
+            <SkeletonProduct />
+          ) : (
+            <Grid container spacing={4} justifyContent="center">
+              {/* Image Section */}
+              <Grid item xs={12} sm={6} md={4}>
+                <Image
+                  src={photo ? photo : noImage}
+                  alt="sevek Image"
+                  sx={{
+                    width: '100%',
+                    height: 'auto',
+                    borderRadius: 2,
+                    objectFit: 'cover',
+                    boxShadow: 3,
+                  }}
+                />
+              </Grid>
 
-            {/* Details Section */}
-            <Grid item xs={12} sm={6} md={8}>
-              <Typography variant="h5" gutterBottom>
-                Sevek Information
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
-                  mt: 2,
-                }}
-              >
-                {details.map(({ label, value }) => (
-                  <Box
-                    key={label}
-                    display="flex"
-                    // justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
-                      {label} :
-                    </Typography>
-                    <Typography variant="body1">{value}</Typography>
-                  </Box>
-                ))}
-              </Box>
+              {/* Details Section */}
+              <Grid item xs={12} sm={6} md={8}>
+                <Typography variant="h5" gutterBottom>
+                  Sevek Information
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    mt: 2,
+                  }}
+                >
+                  {details.map(({ label, value }) => (
+                    <Box
+                      key={label}
+                      display="flex"
+                      // justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                        {label} :
+                      </Typography>
+                      <Typography variant="body1">{value}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
 
           {/* stages Section */}
           {usersDetails?.stages && (

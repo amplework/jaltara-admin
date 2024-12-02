@@ -23,11 +23,11 @@ const MENU_OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: PATH_DASHBOARD.sevek.profile,
+    linkTo: PATH_DASHBOARD.sevak.profile,
   },
   {
     label: 'Settings',
-    linkTo: PATH_DASHBOARD.sevek.account,
+    linkTo: PATH_DASHBOARD.sevak.account,
   },
 ];
 

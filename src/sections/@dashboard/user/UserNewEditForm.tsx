@@ -107,7 +107,7 @@ export default function UserNewEditForm({ isEdit, currentUser }: Props) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.sevek.list);
+      navigate(PATH_DASHBOARD.sevak.list);
     } catch (error) {
       console.error(error);
     }

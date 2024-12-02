@@ -179,6 +179,7 @@ type VillageListData = {
 
 export type UserList = {
   isLoading: boolean;
+  isDetailsLoading:boolean;
   error: string | null;
   userListData: UserItem[] | null;
   statesList: StatesList[] | null;
@@ -190,7 +191,7 @@ export type UserList = {
 
 export type CreateUserType = {
   name: string;
-  photo?:string;
+  // photo?:string;
   phoneNumber: string;
   status: string;
   language: string;

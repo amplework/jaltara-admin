@@ -32,7 +32,7 @@ export default function NavbarAccount({ isCollapse }: Props) {
   const { user } = useAuth();
 
   return (
-    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.sevek.account}>
+    <Link underline="none" color="inherit" component={RouterLink} to={PATH_DASHBOARD.sevak.account}>
       <RootStyle
         sx={{
           ...(isCollapse && {

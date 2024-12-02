@@ -93,7 +93,7 @@ export default function UserProfile() {
           heading="Profile"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.sevek.root },
+            { name: 'User', href: PATH_DASHBOARD.sevak.root },
             { name: user?.displayName || '' },
           ]}
         />

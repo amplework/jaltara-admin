@@ -119,3 +119,19 @@ export function addEditCropsChallenges(payload?: any, id?: string) {
     }
   };
 }
+
+// delete Crops
+export function deleteCropsChallanges(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/farmers-challenges/${id}`).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}

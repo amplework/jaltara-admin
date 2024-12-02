@@ -5,13 +5,11 @@ import {
   Box,
   Card,
   Table,
-  Switch,
   Button,
   TableBody,
   Container,
   TableContainer,
   TablePagination,
-  FormControlLabel,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -20,7 +18,6 @@ import useTabs from '../../hooks/useTabs';
 import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
 // @types
-import { UserItem } from '../../@types/user';
 // _mock_
 import { _userList } from '../../_mock';
 // components
@@ -32,9 +29,10 @@ import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
 import { UserTableToolbar } from '../../sections/@dashboard/user/list';
 import { useDispatch, useSelector } from 'src/redux/store';
-import { emptyFarmerDetails, getFarmerList } from 'src/redux/slices/farmers';
+import { deleteFarmer, emptyFarmerDetails, getFarmerList } from 'src/redux/slices/farmers';
 import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
 import { emptyStatesDetails } from 'src/redux/slices/user';
+import { useSnackbar } from 'notistack';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'land', label: 'Land (acres)', align: 'left' },
@@ -45,22 +43,16 @@ const TABLE_HEAD = [
 ];
 
 export default function FarmersList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    selected,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable();
+  const { dense, page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
+    useTable();
 
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [filterName, setFilterName] = useState('');
 
@@ -103,9 +95,25 @@ export default function FarmersList() {
     navigate(PATH_DASHBOARD.farmers.edit(id));
   };
 
-  const onhandleDeleteRow = () => {};
   const handleShowDetails = (id: string) => {
     navigate(PATH_DASHBOARD.farmers.details(id));
+  };
+
+  const onhandleDeleteRow = (id: string) => {
+    dispatch(deleteFarmer(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getFarmerList();
+        } else {
+          getFarmerList();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
   };
 
   return (
@@ -113,7 +121,7 @@ export default function FarmersList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Farmer List"
-          links={[{ href: PATH_DASHBOARD.sevek.root }]}
+          links={[{ href: PATH_DASHBOARD.farmers.list }]}
           action={
             <Button
               variant="contained"

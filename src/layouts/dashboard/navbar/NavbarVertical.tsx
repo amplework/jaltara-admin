@@ -16,6 +16,8 @@ import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
+import Image from 'src/components/Image';
+import jaltaraLogo from 'src/assets/images/LogoJalTara.png';
 
 // ----------------------------------------------------------------------
 
@@ -66,9 +68,21 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
           pb: 2,
           px: 2.5,
           flexShrink: 0,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
           ...(isCollapse && { alignItems: 'center' }),
         }}
       >
+        {/* <img
+          src={jaltaraLogo}
+          style={{
+            display: 'block',
+            width: '100%',
+            height: 'auto',
+            borderRadius: '8px',
+          }}
+        /> */}
         <Stack direction="row" alignItems="center" justifyContent={'space-between'}>
           <Logo />
           <Box display={'flex'} justifyContent={'center'}>

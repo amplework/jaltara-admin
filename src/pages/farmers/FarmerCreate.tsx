@@ -16,16 +16,12 @@ import { useSnackbar } from 'notistack';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  FormProvider,
-  RHFSelectDropdown,
-  RHFSwitch,
-  RHFTextField,
-} from 'src/components/hook-form';
+import { FormProvider, RHFSelectDropdown, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
+  emptyDistrictList,
   getDistrictList,
   getStatesList,
   getTalukList,
@@ -36,12 +32,13 @@ import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { RHFDatePicker } from 'src/components/hook-form/RHFDatePicker';
 import { FarmerDetailsType } from 'src/@types/farmer';
-import { addNewFarmer, editNewFarmer, getFarmerDetails } from 'src/redux/slices/farmers';
-
-const statusList = [
-  { id: 'active', label: 'Active', name: 'active' },
-  { id: 'inactive', label: 'Inactive', name: 'inactive' },
-];
+import {
+  addNewFarmer,
+  editNewFarmer,
+  getFarmerDetails,
+  startLoading,
+} from 'src/redux/slices/farmers';
+import { SkeletonProduct } from 'src/components/skeleton';
 
 const languageList = [
   { id: 'hindi', label: 'Hindi', name: 'hindi' },
@@ -71,6 +68,7 @@ export default function FarmerCreate() {
 
   useEffect(() => {
     if (id) {
+      dispatch(startLoading());
       dispatch(getFarmerDetails(id));
     }
     getStatesList();
@@ -80,7 +78,8 @@ export default function FarmerCreate() {
     (state) => state.user
   );
 
-  const { farmersDetails } = useSelector((state) => state.farmer);
+  const { farmersDetails, isLoading } = useSelector((state) => state.farmer);
+
   const NewFarmerSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
     phone: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
@@ -96,10 +95,17 @@ export default function FarmerCreate() {
     language: Yup.string().required('Language is required'),
     farmAvailableDate: Yup.string().required('date is required').nullable(),
     selectStates: Yup.string().required('States is required'),
-    // selectDistrict: Yup.string().required('District is required'),
     selectDistrict: Yup.string().required('District is required'),
-    selectTaluk: Yup.string().required('Taluk is required'),
-    selectVillage: Yup.string().required('Village is required'),
+    selectTaluk: Yup.string().when([], {
+      is: () => talukList?.childEntities && talukList?.childEntities?.length > 0,
+      then: Yup.string().required('Taluk is required'),
+      otherwise: Yup.string(),
+    }),
+    selectVillage: Yup.string().when([], {
+      is: () => villageList?.childEntities && villageList?.childEntities?.length > 0,
+      then: Yup.string().required('Village is required'),
+      otherwise: Yup.string(),
+    }),
     isParticipate: Yup.boolean().required('Participate is required'),
   });
 
@@ -127,8 +133,6 @@ export default function FarmerCreate() {
   });
 
   const {
-    reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -161,6 +165,7 @@ export default function FarmerCreate() {
     if (farmersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
       setState((prev: any) => ({ ...prev, villageId: stateIdData?.id }));
+
       if (farmersDetails && districtIdData?.id && districtList?.childEntities) {
         getTalukList(districtIdData?.id);
         setValue('selectDistrict', districtIdData?.id || '');
@@ -169,8 +174,14 @@ export default function FarmerCreate() {
           getVillageList(talukIdData?.id);
           setValue('selectTaluk', talukIdData?.id || '');
           setState((prev: any) => ({ ...prev, villageId: talukIdData?.id, isLoading: false }));
-
           if (isVillage && farmersDetails) {
+            setValue('selectVillage', farmersDetails?.checkUpperGeo?.id);
+            setState((prev: any) => ({
+              ...prev,
+              villageId: farmersDetails?.checkUpperGeo?.id,
+              isLoading: false,
+            }));
+          } else {
             setValue('selectVillage', farmersDetails?.checkUpperGeo?.id);
             setState((prev: any) => ({
               ...prev,
@@ -180,7 +191,10 @@ export default function FarmerCreate() {
           }
         } else {
           setState((prev: any) => ({ ...prev, isLoading: false }));
+          setValue('selectTaluk', farmersDetails?.checkUpperGeo?.id || '');
         }
+      } else if (farmersDetails && stateIdData?.id && !districtIdData?.id) {
+        setValue('selectDistrict', farmersDetails?.checkUpperGeo?.id || '');
       }
     }
   };
@@ -247,6 +261,7 @@ export default function FarmerCreate() {
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
+    dispatch(emptyDistrictList(null));
     getDistrictList(id);
   };
 
@@ -275,7 +290,7 @@ export default function FarmerCreate() {
           // heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
           heading={!id ? 'Create a new Farmer' : 'Edit Farmer details'}
           links={[
-            { name: 'Farmer List', href: PATH_DASHBOARD.sevek.list },
+            { name: 'Farmer List', href: PATH_DASHBOARD.sevak.list },
             // { name: !isEdit ? 'New sevek' : 'Edit sevek' },
             { name: !id ? 'Create a new farmer' : 'Edit farmer' },
           ]}
@@ -283,148 +298,154 @@ export default function FarmerCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <RHFTextField name="name" label="Farmer Name" />
-                  <RHFTextField name="phone" label="Phone Number" />
-                  <RHFTextField name="land" label="Land (arces)" />
-                  <RHFTextField name="familyMemberNumber" label="Family Count" />
-                  <RHFDatePicker name="farmAvailableDate" label="Farm Available Date" />
-                  <RHFSelectDropdown
-                    name="language"
-                    label={'Select Language'}
-                    placeholder={'Language'}
-                    options={languageList}
-                  />
-                  <Box width="100%">
-                    <Box display="flex" alignItems="center" justifyContent="space-between">
-                      <Box display="flex" flexWrap="wrap" flex="1">
-                        {content2?.map((text, index) => (
-                          <Typography
-                            key={index}
-                            variant="subtitle2"
-                            sx={{
-                              mb: 0.5,
-                              width: '100%',
-                              flexShrink: 0,
-                            }}
-                          >
-                            {text}
-                          </Typography>
-                        ))}
-                      </Box>
-                      <RHFSwitch
-                        name="isParticipate"
-                        labelPlacement="end"
-                        label=""
-                        sx={{
-                          mx: 0,
-                          justifyContent: 'flex-end',
-                          flexShrink: 0,
-                          '& .MuiSwitch-switchBase': {
-                            color: '#ccc',
-                          },
-                          '& .MuiSwitch-switchBase.Mui-checked': {
-                            color: '#a2a',
-                          },
-                          '& .MuiSwitch-track': {
-                            backgroundColor: '#ddd',
-                            opacity: 1,
-                          },
-                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                            backgroundColor: '#a2a',
-                          },
-                        }}
-                      />
-                    </Box>
-
-                    {content?.map((text, index) => (
-                      <Typography
-                        key={index}
-                        variant={index === 0 ? 'subtitle2' : 'body2'}
-                        sx={{ mb: 0.5 }}
-                      >
-                        {text}
-                      </Typography>
-                    ))}
-                  </Box>
-                </Box>
-                <Typography variant="h4" py={2}>
-                  Select State
-                </Typography>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <RHFSelectDropdown
-                    name="selectStates"
-                    label={'Select States'}
-                    placeholder={'States'}
-                    options={statesList}
-                    onChange={handleStatesSelect}
-                  />
-                  {districtList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectDistrict"
-                      label={'Select District'}
-                      placeholder={'District'}
-                      options={districtList?.childEntities}
-                      defaultMessage="Please Select State"
-                      onChange={handleDistrictSelect}
-                      //   disabled={state.isLoading}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  {talukList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectTaluk"
-                      label={'Select Taluk'}
-                      placeholder={'Taluk'}
-                      options={talukList?.childEntities || []}
-                      defaultMessage="Please Select District"
-                      onChange={handleTalukSelect}
-                    />
-                  ) : (
-                    ''
-                  )}
-                  {villageList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectVillage"
-                      label={'Select Village'}
-                      placeholder={'Village'}
-                      options={villageList?.childEntities}
-                      defaultMessage="Please Select Village"
-                      onChange={handleVillageSelect}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </Box>
-
-                <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                    startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+              {isLoading ? (
+                <Card sx={{ p: 3 }}>
+                  <SkeletonProduct />
+                </Card>
+              ) : (
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
                   >
-                    {/* {!isEdit ? 'Create sevek' : 'Edit sevek'} */}
-                    {id ? 'Edit sevek' : 'Add New'}
-                  </LoadingButton>
-                </Stack>
-              </Card>
+                    <RHFTextField name="name" label="Farmer Name" />
+                    <RHFTextField name="phone" label="Phone Number" />
+                    <RHFTextField name="land" label="Land (arces)" />
+                    <RHFTextField name="familyMemberNumber" label="Family Count" />
+                    <RHFDatePicker name="farmAvailableDate" label="Farm Available Date" />
+                    <RHFSelectDropdown
+                      name="language"
+                      label={'Select Language'}
+                      placeholder={'Language'}
+                      options={languageList}
+                    />
+                    <Box width="100%">
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box display="flex" flexWrap="wrap" flex="1">
+                          {content2?.map((text, index) => (
+                            <Typography
+                              key={index}
+                              variant="subtitle2"
+                              sx={{
+                                mb: 0.5,
+                                width: '100%',
+                                flexShrink: 0,
+                              }}
+                            >
+                              {text}
+                            </Typography>
+                          ))}
+                        </Box>
+                        <RHFSwitch
+                          name="isParticipate"
+                          labelPlacement="end"
+                          label=""
+                          sx={{
+                            mx: 0,
+                            justifyContent: 'flex-end',
+                            flexShrink: 0,
+                            '& .MuiSwitch-switchBase': {
+                              color: '#ccc',
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked': {
+                              color: '#a2a',
+                            },
+                            '& .MuiSwitch-track': {
+                              backgroundColor: '#ddd',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: '#a2a',
+                            },
+                          }}
+                        />
+                      </Box>
+
+                      {content?.map((text, index) => (
+                        <Typography
+                          key={index}
+                          variant={index === 0 ? 'subtitle2' : 'body2'}
+                          sx={{ mb: 0.5 }}
+                        >
+                          {text}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </Box>
+                  <Typography variant="h4" py={2}>
+                    Select State
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <RHFSelectDropdown
+                      name="selectStates"
+                      label={'Select States'}
+                      placeholder={'States'}
+                      options={statesList}
+                      onChange={handleStatesSelect}
+                    />
+                    {districtList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectDistrict"
+                        label={'Select District'}
+                        placeholder={'District'}
+                        options={districtList?.childEntities}
+                        defaultMessage="Please Select State"
+                        onChange={handleDistrictSelect}
+                        //   disabled={state.isLoading}
+                      />
+                    ) : (
+                      ''
+                    )}
+                    {talukList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectTaluk"
+                        label={'Select Taluk'}
+                        placeholder={'Taluk'}
+                        options={talukList?.childEntities || []}
+                        defaultMessage="Please Select District"
+                        onChange={handleTalukSelect}
+                      />
+                    ) : (
+                      ''
+                    )}
+                    {villageList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectVillage"
+                        label={'Select Village'}
+                        placeholder={'Village'}
+                        options={villageList?.childEntities}
+                        defaultMessage="Please Select Village"
+                        onChange={handleVillageSelect}
+                      />
+                    ) : (
+                      ''
+                    )}
+                  </Box>
+
+                  <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isSubmitting}
+                      startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                    >
+                      {/* {!isEdit ? 'Create sevek' : 'Edit sevek'} */}
+                      {id ? 'Edit sevek' : 'Add New'}
+                    </LoadingButton>  
+                  </Stack>
+                </Card>
+              )}
             </Grid>
           </Grid>
         </FormProvider>

@@ -1,48 +1,42 @@
 import * as Yup from 'yup';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, CardHeader, Container, Grid } from '@mui/material';
+import { Card, Container, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // _mock_
-import { _userList, countries } from '../../_mock';
+import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  FormProvider,
-  RHFSelect,
-  RHFSelectDropdown,
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
-  RHFUploadSingleFile,
-} from 'src/components/hook-form';
+import { FormProvider, RHFSelectDropdown, RHFTextField } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import {
-  addEditUsers,
-  editUsersDetails,
-  emptyVillageList,
+  createNewSevek,
+  detailsLoading,
+  editSevekDetails,
+  emptyDistrictList,
   getDistrictList,
   getStatesList,
   getTalukList,
   getUsersDetails,
   getVillageList,
+  startLoading,
 } from 'src/redux/slices/user';
-import { dispatch, useDispatch, useSelector } from 'src/redux/store';
+import { useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
-import { ProfilePostCard } from 'src/sections/@dashboard/user/profile';
+import { SkeletonProduct } from 'src/components/skeleton';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -68,12 +62,13 @@ export default function SevekCreate() {
 
   useEffect(() => {
     if (id) {
+      dispatch(detailsLoading())
       dispatch(getUsersDetails(id));
     }
     getStatesList();
   }, []);
 
-  const { statesList, districtList, talukList, villageList, usersDetails } = useSelector(
+  const { statesList, districtList, talukList, villageList, usersDetails,isDetailsLoading } = useSelector(
     (state) => state.user
   );
 
@@ -83,11 +78,10 @@ export default function SevekCreate() {
     status: Yup.string().required('Status is required'),
     language: Yup.string().required('Language is required'),
     selectStates: Yup.string().required('States is required'),
-    // selectDistrict: Yup.string().required('District is required'),
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
     selectVillage: Yup.string(),
-    photo: Yup.mixed().test('required', 'Photo is required', (value) => value !== ''),
+    // photo: Yup.mixed().test('required', 'Photo is required', (value) => value !== ''),
   });
 
   const defaultValues = useMemo(
@@ -100,7 +94,7 @@ export default function SevekCreate() {
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: '',
-      photo: '',
+      // photo: '',
     }),
     [usersDetails]
   );
@@ -144,7 +138,7 @@ export default function SevekCreate() {
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
     setValue('selectStates', stateIdData?.id || '');
-    setValue('photo', usersDetails?.name || '');
+    // setValue('photo', usersDetails?.name || '');
 
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
@@ -204,26 +198,34 @@ export default function SevekCreate() {
           delete payload[key];
         }
       });
+
       if (id) {
-        dispatch(editUsersDetails(payload, id)).then((res: any) => {
+        dispatch(editSevekDetails(payload, id)).then((res: any) => {
           if (res?.data?.statusCode === 200) {
             enqueueSnackbar(res?.data?.message, {
               variant: 'success',
             });
-            navigate(PATH_DASHBOARD.sevek.list);
+            navigate(PATH_DASHBOARD.sevak.list);
             reset();
           }
         });
       } else {
-        dispatch(addEditUsers(payload)).then((res: any) => {
-          if (res?.data?.statusCode === 200) {
-            enqueueSnackbar(res?.data?.message, {
-              variant: 'success',
-            });
-            navigate(PATH_DASHBOARD.sevek.list);
-            reset();
-          }
-        });
+        dispatch(createNewSevek(payload))
+          .then((res: any) => {
+            if (res?.data?.statusCode === 201) {
+              enqueueSnackbar(res?.data?.message, {
+                variant: 'success',
+              });
+              navigate(PATH_DASHBOARD.sevak.list);
+              reset();
+            } else {
+              navigate(PATH_DASHBOARD.sevak.list);
+              reset();
+            }
+          })
+          .catch((error) => {
+            console.log('error');
+          });
       }
     } catch (error) {
       console.error(error);
@@ -233,6 +235,7 @@ export default function SevekCreate() {
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
+    dispatch(emptyDistrictList(null));
     getDistrictList(id);
   };
 
@@ -240,6 +243,7 @@ export default function SevekCreate() {
     setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
+    // dispatch(emptyTalukList(null));
     getTalukList(id);
   };
 
@@ -254,81 +258,38 @@ export default function SevekCreate() {
     setState((prev: any) => ({ ...prev, villageId: id }));
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      console.log('file', file?.name);
+  // const handleDrop = useCallback(
+  //   (acceptedFiles: File[]) => {
+  //     const file = acceptedFiles[0];
+  //     console.log('file', file?.name);
 
-      if (file) {
-        const preview = URL.createObjectURL(file);
-        console.log('preview', preview);
-        setValue('photo', preview);
-      }
-    },
-    [setValue]
-  );
+  //     if (file) {
+  //       const preview = URL.createObjectURL(file);
+  //       console.log('preview', preview);
+  //       // setValue('photo', preview);
+  //     }
+  //   },
+  //   [setValue]
+  // );
 
-  // sx={{
-  //   left: 40,
-  //   zIndex: 9,
-  //   width: 140,
-  //   position: 'relative',
-  //   filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.24))',
-  // }}
   return (
-    <Page title="Create sevek">
+    <Page title="Create sevak">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!id ? 'Create a new sevek' : 'Edit sevek details'}
+          heading={!id ? 'Create a new sevak' : 'Edit sevak details'}
           links={[
-            { name: 'Sevek List', href: PATH_DASHBOARD.sevek.list },
-            { name: !id ? 'Create a new sevek' : 'Edit sevek' },
+            { name: 'Sevak List', href: PATH_DASHBOARD.sevak.list },
+            { name: !id ? 'Create a new sevak' : 'Edit sevak' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Card
-                sx={{
-                  mb: 10,
-                  overflow: 'visible', // Allow the image to overflow outside the Card
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'center', // Center content horizontally
-                  alignItems: 'center', // Center content vertically
-                  minHeight: '200px', // Adjust height based on content
-                  padding: 2,
-
-                }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <RHFUploadSingleFile
-                    name="photo"
-                    onDrop={handleDrop}
-                    sx={{
-                      zIndex: 9,
-                      mt: 5, // Adjust to position the image halfway out of the Card
-                      position: 'absolute', // Position the image absolutely to overlap the Card
-                      bottom: '-50px', // Ensure the image is partially outside the Card
-                      width: '200px',
-                      height: '200px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      border: '2px solid #e0e0e0',
-                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    }}
-                  />
-                </Box>
-              </Card>
-
+            {isDetailsLoading ? (
+                <Card sx={{ p: 3 }}>
+                  <SkeletonProduct />
+                </Card>
+              ) : (
               <Card sx={{ p: 3, boxShadow: '0 12px 24px rgba(0,0,0,0.18)' }}>
                 <Box
                   sx={{
@@ -418,11 +379,10 @@ export default function SevekCreate() {
                     loading={isSubmitting}
                     startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
                   >
-                    {/* {!isEdit ? 'Create sevek' : 'Edit sevek'} */}
                     {id ? 'Edit sevek' : 'Add New'}
                   </LoadingButton>
                 </Stack>
-              </Card>
+              </Card>)}
             </Grid>
           </Grid>
         </FormProvider>

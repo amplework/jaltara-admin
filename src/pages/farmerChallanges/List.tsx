@@ -124,7 +124,7 @@ export default function FarmerChallangesList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Farmer List"
-          links={[{ href: PATH_DASHBOARD.sevek.root }]}
+          links={[{ href: PATH_DASHBOARD.sevak.root }]}
           action={
             <Button
               variant="contained"

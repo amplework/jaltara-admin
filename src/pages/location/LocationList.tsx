@@ -103,13 +103,13 @@ export default function LocationList() {
           heading="Location"
           links={[
             // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { href: PATH_DASHBOARD.sevek.root },
+            { href: PATH_DASHBOARD.sevak.root },
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.sevek.new}
+              to={PATH_DASHBOARD.sevak.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               New Location

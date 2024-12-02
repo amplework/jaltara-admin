@@ -10,6 +10,7 @@ import { CildEntitiesType, UserList } from 'src/@types/user';
 
 const initialState: UserList = {
   isLoading: false,
+  isDetailsLoading:false,
   error: null,
   userListData: [],
   statesList: [],
@@ -47,8 +48,8 @@ const initialState: UserList = {
     language: '',
     farmerCount: '',
     pitCount: '',
-    wellCount:'',
-    photo:'',
+    wellCount: '',
+    photo: '',
     location: {
       lat: 0,
       lng: 0,
@@ -76,6 +77,10 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // only for loader 
+    detailsLoading(state) {
+      state.isDetailsLoading = true;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -117,6 +122,7 @@ const slice = createSlice({
     //get user Details
     getUserDetails(state, action) {
       state.isLoading = false;
+      state.isDetailsLoading=false;
       state.usersDetails = action.payload;
     },
     //empty village list
@@ -132,7 +138,7 @@ const slice = createSlice({
         id: '',
         name: '',
         phone: '',
-        photo:'',
+        photo: '',
         status: '',
         language: '',
         location: {
@@ -181,6 +187,56 @@ const slice = createSlice({
         childEntities: [],
       };
     },
+    emptyDistrictList(state, action) {
+      state.isLoading = false;
+      state.districtList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+        },
+        childEntities: [],
+      };
+      state.talukList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+      state.villageList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+    },
+    emptyTalukList(state, action) {
+      state.isLoading = false;
+      state.talukList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+      state.villageList = {
+        mainEntity: {
+          id: '',
+          name: '',
+          entityType: '',
+          parentId: '',
+        },
+        childEntities: [],
+      };
+    },
   },
 });
 
@@ -198,10 +254,15 @@ export const {
   emptyUserDetails,
   emptyVillageList,
   emptyStatesDetails,
+  emptyDistrictList,
+  emptyTalukList,
+  startLoading,
+  detailsLoading
 } = slice.actions;
 
 // ----------------------------------------------------------------------
 
+// sevek listing get here
 export function getUsersList(name?: string, village?: string) {
   dispatch(slice.actions.startLoading());
   let payload = {
@@ -221,6 +282,7 @@ export function getUsersList(name?: string, village?: string) {
   }
 }
 
+// states list get here
 export function getStatesList() {
   dispatch(slice.actions.startLoading());
   try {
@@ -234,6 +296,7 @@ export function getStatesList() {
   }
 }
 
+// district list get here
 export function getDistrictList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
@@ -246,6 +309,8 @@ export function getDistrictList(id?: any) {
     dispatch(slice.actions.hasError(error));
   }
 }
+
+// taluk list get here
 export function getTalukList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
@@ -259,11 +324,11 @@ export function getTalukList(id?: any) {
   }
 }
 
+//village list get here
 export function getVillageList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
     axios.get(`/geographic-entities/${id}`).then((response) => {
-
       if (response?.status === 200) {
         dispatch(slice.actions.setVillageList(response?.data?.data));
       }
@@ -273,11 +338,12 @@ export function getVillageList(id?: any) {
   }
 }
 
-export function addEditUsers(payload?: any) {
+// add new sevek
+export function createNewSevek(payload?: any) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      return await axios.post(`/users`, payload).then((res) => {
+      return await axios.post(`/sevak-add`, payload).then((res) => {
         return res;
       });
     } catch (error) {
@@ -287,7 +353,9 @@ export function addEditUsers(payload?: any) {
     }
   };
 }
-export function editUsersDetails(payload?: any, id?: string) {
+
+// edit sevek details
+export function editSevekDetails(payload?: any, id?: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -302,12 +370,30 @@ export function editUsersDetails(payload?: any, id?: string) {
   };
 }
 
+// get sevek details
 export function getUsersDetails(id?: any) {
   return async () => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.detailsLoading())
     try {
       return await axios.get(`/sevak-details/${id}`).then((res) => {
         dispatch(slice.actions.getUserDetails(res?.data?.data));
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+
+// delete sevek details
+export function deleteSevak(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/sevak-delete/${id}`).then((res) => {
         return res;
       });
     } catch (error) {

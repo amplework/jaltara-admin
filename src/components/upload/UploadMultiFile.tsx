@@ -8,6 +8,7 @@ import { UploadMultiFileProps } from './type';
 import BlockContent from './BlockContent';
 import RejectionFiles from './RejectionFiles';
 import MultiFilePreview from './MultiFilePreview';
+import Iconify from '../Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +54,22 @@ export default function UploadMultiFile({
         <input {...getInputProps()} />
 
         <BlockContent />
+        {/* <PlaceholderStyle
+          className="placeholder"
+          sx={{
+            ...(file && {
+              opacity: 0,
+              color: 'common.white',
+              bgcolor: 'grey.900',
+              '&:hover': { opacity: 0.72 },
+            }),
+            ...((isDragReject || error) && {
+              bgcolor: 'error.lighter',
+            }),
+          }}
+        > */}
+          {/* <Typography variant="caption">{file ? 'Update photo' : 'Upload photo'}</Typography>
+        </PlaceholderStyle> */}
       </DropZoneStyle>
 
       {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}

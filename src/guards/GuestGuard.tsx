@@ -17,7 +17,7 @@ export default function GuestGuard({ children }: GuestGuardProps) {
   const { isAuthenticated, isInitialized } = useAuth();
 
   if (isAuthenticated) {
-    return <Navigate to={PATH_DASHBOARD.sevek.list} replace/>;
+    return <Navigate to={PATH_DASHBOARD.sevak.list} replace/>;
   }
 
   if (!isInitialized) {

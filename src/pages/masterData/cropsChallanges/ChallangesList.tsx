@@ -33,6 +33,7 @@ import { useSnackbar } from 'notistack';
 import ChallangesTableRow from 'src/sections/@dashboard/user/list/ChallangesRow';
 import {
   addEditCropsChallenges,
+  deleteCropsChallanges,
   emptyCropsChallengesDetails,
   getCropsChallangesDetails,
   getCropsChallengesList,
@@ -43,8 +44,8 @@ import ChallengesForm from '../form/ChallengesForm';
 // ----------------------------------------------------------------------
 
 export const statusList = [
-  { id: 'active', label: 'Active', name: 'active',value:'active' },
-  { id: 'inactive', label: 'Inactive', name: 'inactive',value:'inactive'  },
+  { id: 'active', label: 'Active', name: 'active', value: 'active' },
+  { id: 'inactive', label: 'Inactive', name: 'inactive', value: 'inactive' },
 ];
 
 const TABLE_HEAD = [
@@ -91,7 +92,7 @@ export default function ChallangesList() {
   const { challengesListData, challengesDetails } = useSelector((state) => state.challenges);
 
   const onSearch = () => {
-    getCropsChallengesList(state.filterChallenge,state.filterStatus);
+    getCropsChallengesList(state.filterChallenge, state.filterStatus);
   };
 
   const handleFilterChallenge = (filterChallenge: string) => {
@@ -147,7 +148,20 @@ export default function ChallangesList() {
   };
 
   const onDeleteRow = (id: string) => {
-    // navigate(PATH_DASHBOARD.farmers.details(id));
+    dispatch(deleteCropsChallanges(id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleCropListing();
+        } else {
+          handleCropListing();
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
   };
 
   const onEditRow = (id: string) => {

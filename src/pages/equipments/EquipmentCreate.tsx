@@ -139,7 +139,7 @@ export default function EquipmentCreate() {
         <HeaderBreadcrumbs
           heading={!id ? 'Create a new equipment' : 'Edit equipment details'}
           links={[
-            { name: 'equipment List', href: PATH_DASHBOARD.sevek.list },
+            { name: 'equipment List', href: PATH_DASHBOARD.sevak.list },
             { name: !id ? 'Create a new equipment' : 'Edit equipment' },
           ]}
         />
@@ -176,7 +176,7 @@ export default function EquipmentCreate() {
                     }
                     startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
                   >
-                    {id ? 'Edit sevek' : 'Add New'}
+                    {id ? 'Edit sevak' : 'Add New'}
                   </LoadingButton>
                 </Stack>
               </Card>
