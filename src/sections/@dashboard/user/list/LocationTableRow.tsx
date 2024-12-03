@@ -1,11 +1,8 @@
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem, Box } from '@mui/material';
-// @types
-import { UserItem } from '../../../../@types/user';
+import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import { PitItem } from 'src/@types/pits';
@@ -16,10 +13,18 @@ import { formatedDate } from 'src/utils/formateDate';
 type Props = {
   row: PitItem | null;
   handleShowDetails?: (id: any) => void;
+  onhandleDeleteRow?: (id: any) => void;
 };
 
-export default function LocationTableRow({ row, handleShowDetails }: Props) {
+export default function LocationTableRow({ row, handleShowDetails, onhandleDeleteRow }: Props) {
   const theme = useTheme();
+  const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setOpenMenuActions(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setOpenMenuActions(null);
+  };
 
   const { farmer, village, level, stages, id } = row || {};
 
@@ -30,7 +35,6 @@ export default function LocationTableRow({ row, handleShowDetails }: Props) {
       sx={{ cursor: 'pointer' }}
     >
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* <Avatar alt={} src={''} sx={{ mr: 2 }} /> */}
         <Typography variant="subtitle2" noWrap>
           {farmer?.name}
         </Typography>
@@ -54,34 +58,31 @@ export default function LocationTableRow({ row, handleShowDetails }: Props) {
         </Typography>
       </TableCell>
 
-      {/* <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {stages?.[0]?.updatedbySevek?.name ? stages?.[0]?.updatedbySevek?.name : '--'}
-        </Typography>
-      </TableCell> */}
-
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {formatedDate(stages?.[0]?.created)}
         </Typography>
       </TableCell>
-      {/* 
-      <TableCell>
-        <Box
-          onClick={() => onhandleEditDetails && onhandleEditDetails(id)}
-          sx={{ cursor: 'pointer' }}
-        >
-          <Iconify icon={'fluent-color:edit-16'} width="64" height="64" />
-        </Box>
-      </TableCell> */}
 
-      <TableCell>
-        <Iconify
-          icon={'icon-park:delete'}
-          sx={{ color: theme.palette.error.dark }}
-          width="64"
-          height="64"
-          // onClick={() => onhandleDeleteRow && onhandleDeleteRow(id)}
+      <TableCell align="left">
+        <TableMoreMenu
+          open={openMenu}
+          onOpen={handleOpenMenu}
+          onClose={handleCloseMenu}
+          actions={
+            <>
+              <MenuItem
+                onClick={() => {
+                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  handleCloseMenu();
+                }}
+                sx={{ color: 'error.main' }}
+              >
+                <Iconify icon={'eva:trash-2-outline'} />
+                Delete
+              </MenuItem>
+            </>
+          }
         />
       </TableCell>
     </TableRow>

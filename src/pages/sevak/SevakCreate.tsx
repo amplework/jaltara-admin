@@ -62,15 +62,14 @@ export default function SevekCreate() {
 
   useEffect(() => {
     if (id) {
-      dispatch(detailsLoading())
+      dispatch(detailsLoading());
       dispatch(getUsersDetails(id));
     }
     getStatesList();
   }, []);
 
-  const { statesList, districtList, talukList, villageList, usersDetails,isDetailsLoading } = useSelector(
-    (state) => state.user
-  );
+  const { statesList, districtList, talukList, villageList, usersDetails, isDetailsLoading } =
+    useSelector((state) => state.user);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
@@ -231,6 +230,7 @@ export default function SevekCreate() {
       console.error(error);
     }
   };
+
   const handleStatesSelect = (id: any) => {
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
@@ -285,104 +285,105 @@ export default function SevekCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-            {isDetailsLoading ? (
+              {isDetailsLoading ? (
                 <Card sx={{ p: 3 }}>
                   <SkeletonProduct />
                 </Card>
               ) : (
-              <Card sx={{ p: 3, boxShadow: '0 12px 24px rgba(0,0,0,0.18)' }}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <RHFTextField name="name" label="Full Name" />
-                  <RHFTextField name="phoneNumber" label="Phone Number" />
-                  <RHFSelectDropdown
-                    name="status"
-                    label={'Select Status'}
-                    placeholder={'Status'}
-                    options={statusList}
-                  />
-                  <RHFSelectDropdown
-                    name="language"
-                    label={'Select Language'}
-                    placeholder={'Language'}
-                    options={languageList}
-                  />
-                </Box>
-                <Typography variant="h4" py={2}>
-                  Assign village
-                </Typography>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <RHFSelectDropdown
-                    name="selectStates"
-                    label={'Select States'}
-                    placeholder={'States'}
-                    options={statesList}
-                    onChange={handleStatesSelect}
-                  />
-                  {districtList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectDistrict"
-                      label={'Select District'}
-                      placeholder={'District'}
-                      options={districtList?.childEntities}
-                      defaultMessage="Please Select State"
-                      onChange={handleDistrictSelect}
-                      //   disabled={state.isLoading}
-                    />
-                  ) : (
-                    ''
-                  )}
-
-                  {talukList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectTaluk"
-                      label={'Select Taluk'}
-                      placeholder={'Taluk'}
-                      options={talukList?.childEntities || []}
-                      defaultMessage="Please Select District"
-                      onChange={handleTalukSelect}
-                    />
-                  ) : (
-                    ''
-                  )}
-
-                  {villageList?.childEntities?.length ? (
-                    <RHFSelectDropdown
-                      name="selectVillage"
-                      label={'Select Village'}
-                      placeholder={'Village'}
-                      options={villageList?.childEntities}
-                      defaultMessage="Please Select Village"
-                      onChange={handleVillageSelect}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </Box>
-                <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                    startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                <Card sx={{ p: 3, boxShadow: '0 12px 24px rgba(0,0,0,0.18)' }}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
                   >
-                    {id ? 'Edit sevek' : 'Add New'}
-                  </LoadingButton>
-                </Stack>
-              </Card>)}
+                    <RHFTextField name="name" label="Full Name" />
+                    <RHFTextField name="phoneNumber" label="Phone Number" />
+                    <RHFSelectDropdown
+                      name="status"
+                      label={'Select Status'}
+                      placeholder={'Status'}
+                      options={statusList}
+                    />
+                    <RHFSelectDropdown
+                      name="language"
+                      label={'Select Language'}
+                      placeholder={'Language'}
+                      options={languageList}
+                    />
+                  </Box>
+                  <Typography variant="h4" py={2}>
+                    Assign village
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
+                  >
+                    <RHFSelectDropdown
+                      name="selectStates"
+                      label={'Select States'}
+                      placeholder={'States'}
+                      options={statesList}
+                      onChange={handleStatesSelect}
+                    />
+                    {districtList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectDistrict"
+                        label={'Select District'}
+                        placeholder={'District'}
+                        options={districtList?.childEntities}
+                        defaultMessage="Please Select State"
+                        onChange={handleDistrictSelect}
+                        //   disabled={state.isLoading}
+                      />
+                    ) : (
+                      ''
+                    )}
+
+                    {talukList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectTaluk"
+                        label={'Select Taluk'}
+                        placeholder={'Taluk'}
+                        options={talukList?.childEntities || []}
+                        defaultMessage="Please Select District"
+                        onChange={handleTalukSelect}
+                      />
+                    ) : (
+                      ''
+                    )}
+
+                    {villageList?.childEntities?.length ? (
+                      <RHFSelectDropdown
+                        name="selectVillage"
+                        label={'Select Village'}
+                        placeholder={'Village'}
+                        options={villageList?.childEntities}
+                        defaultMessage="Please Select Village"
+                        onChange={handleVillageSelect}
+                      />
+                    ) : (
+                      ''
+                    )}
+                  </Box>
+                  <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isSubmitting}
+                      startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                    >
+                      {id ? 'Edit sevek' : 'Add New'}
+                    </LoadingButton>
+                  </Stack>
+                </Card>
+              )}
             </Grid>
           </Grid>
         </FormProvider>

@@ -215,7 +215,6 @@ const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // Sevak
-const SevakProfile = Loadable(lazy(() => import('../pages/sevak/SevakProfile')));
 const SevakList = Loadable(lazy(() => import('../pages/sevak/SevakList')));
 const SevakCreate = Loadable(lazy(() => import('../pages/sevak/SevakCreate')));
 const SevakEdit = Loadable(lazy(() => import('../pages/sevak/SevakCreate')));

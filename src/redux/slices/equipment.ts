@@ -67,7 +67,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getEquipments, equipmentsDetails,emptyEquipmentsDetails } = slice.actions;
+export const { getEquipments, equipmentsDetails,emptyEquipmentsDetails,startLoading } = slice.actions;
 
 // ----------------------------------------------------------------------
 

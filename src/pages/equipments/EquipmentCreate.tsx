@@ -24,7 +24,8 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import Iconify from 'src/components/Iconify';
 import { addNewFarmer, editNewFarmer } from 'src/redux/slices/farmers';
 import { EquipmentItem } from 'src/@types/equipment';
-import { addEditEquipment, getEquipmentsDetails } from 'src/redux/slices/equipment';
+import { addEditEquipment, getEquipmentsDetails, startLoading } from 'src/redux/slices/equipment';
+import { SkeletonProduct } from 'src/components/skeleton';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -46,11 +47,12 @@ export default function EquipmentCreate() {
 
   useEffect(() => {
     if (id) {
+      dispatch(startLoading());
       dispatch(getEquipmentsDetails(id));
     }
   }, [id, dispatch]);
 
-  const { equipmentDetails } = useSelector((state) => state.equipments);
+  const { equipmentDetails, isLoading } = useSelector((state) => state.equipments);
   const defaultValues = useMemo(
     () => ({
       name: '',
@@ -146,40 +148,46 @@ export default function EquipmentCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    columnGap: 2,
-                    rowGap: 3,
-                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
-                  }}
-                >
-                  <RHFTextField name="name" label="Owner Name" />
-                  <RHFSelectDropdown
-                    name="status"
-                    label={'Status'}
-                    placeholder={'Status'}
-                    options={statusList}
-                  />
-                  <RHFTextField name="equipment" label="Equipment Name" />
-                </Box>
-                <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                    disabled={
-                      equipmentDetails?.name === watch('name') &&
-                      equipmentDetails?.status === watch('status') &&
-                      equipmentDetails?.equipment === watch('equipment')
-                    }
-                    startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+              {isLoading ? (
+                <Card sx={{ p: 3 }}>
+                  <SkeletonProduct />
+                </Card>
+              ) : (
+                <Card sx={{ p: 3 }}>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      columnGap: 2,
+                      rowGap: 3,
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                    }}
                   >
-                    {id ? 'Edit sevak' : 'Add New'}
-                  </LoadingButton>
-                </Stack>
-              </Card>
+                    <RHFTextField name="name" label="Owner Name" />
+                    <RHFSelectDropdown
+                      name="status"
+                      label={'Status'}
+                      placeholder={'Status'}
+                      options={statusList}
+                    />
+                    <RHFTextField name="equipment" label="Equipment Name" />
+                  </Box>
+                  <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isSubmitting}
+                      disabled={
+                        equipmentDetails?.name === watch('name') &&
+                        equipmentDetails?.status === watch('status') &&
+                        equipmentDetails?.equipment === watch('equipment')
+                      }
+                      startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                    >
+                      {id ? 'Edit sevak' : 'Add New'}
+                    </LoadingButton>
+                  </Stack>
+                </Card>
+              )}
             </Grid>
           </Grid>
         </FormProvider>

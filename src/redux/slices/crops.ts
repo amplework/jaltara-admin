@@ -67,7 +67,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getCrops, emptyCropsDetails, getCropsInfo } = slice.actions;
+export const { getCrops, emptyCropsDetails, getCropsInfo,startLoading } = slice.actions;
 
 // ----------------------------------------------------------------------
 

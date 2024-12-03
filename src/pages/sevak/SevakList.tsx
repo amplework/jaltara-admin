@@ -36,7 +36,6 @@ import {
 import { dispatch, useSelector } from 'src/redux/store';
 import { useSnackbar } from 'notistack';
 const TABLE_HEAD = [
-  // { id: '' },
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
@@ -134,7 +133,7 @@ export default function UserList() {
     <Page title="Sevaks List">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Sevak's List"
+          heading="Sevaks List"
           links={[{ href: PATH_DASHBOARD.sevak.root }]}
           action={
             <Button

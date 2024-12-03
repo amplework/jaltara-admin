@@ -5,6 +5,9 @@ import Iconify from '../Iconify';
 import { FormProvider } from '../hook-form';
 import { CropItem } from 'src/@types/crops';
 import { ChallangesItem } from 'src/@types/challanges';
+import { startLoading } from 'src/redux/slices/crops';
+import { useDispatch } from 'src/redux/store';
+import { SkeletonProduct } from '../skeleton';
 
 interface MasterDataFormProps {
   openModal: boolean;
@@ -17,6 +20,7 @@ interface MasterDataFormProps {
   handleCropDetails?: any;
   cropDetails?: CropItem | ChallangesItem;
   disabled?: boolean;
+  isLoading?:boolean
 }
 
 const style = {
@@ -41,10 +45,14 @@ const MasterDataForm = ({
   handleCropDetails,
   title = 'Add New Crop',
   disabled,
+  isLoading
 }: MasterDataFormProps) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (id) {
+      dispatch(startLoading());
       handleCropDetails();
     }
   }, [id]);
@@ -61,8 +69,8 @@ const MasterDataForm = ({
       aria-describedby="modal-description"
       open={openModal}
       onClose={handleClose}
-      disableEnforceFocus={false} // Ensures focus stays trapped inside the modal
-      disableAutoFocus={false} // Allows proper initial focus handling
+      disableEnforceFocus={false} 
+      disableAutoFocus={false}
       sx={{ outline: 0 }}
     >
       <Box sx={style}>

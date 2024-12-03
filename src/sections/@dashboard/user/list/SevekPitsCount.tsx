@@ -6,6 +6,7 @@ import { Box, Card, Typography, Stack, CardProps } from '@mui/material';
 import { fNumber, fPercent } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/Iconify';
+import { SkeletonPostItem } from 'src/components/skeleton';
 
 // ----------------------------------------------------------------------
 
@@ -25,15 +26,24 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 interface Props extends CardProps {
   title: string;
   total: number | string | undefined;
+  isLoading?: boolean;
 }
 
-export default function SevekSummary({ title, total, sx, ...other }: Props) {
+export default function SevekSummary({ title, total, sx,isLoading, ...other }: Props) {
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
-      <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2" textAlign={"center"}>{title}</Typography>
-        <Typography variant="h3" textAlign={"center"}>{total}</Typography>
-      </Box>
+      {isLoading ? (
+        <SkeletonPostItem />
+      ) : (
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="subtitle2" textAlign={'center'}>
+            {title}
+          </Typography>
+          <Typography variant="h3" textAlign={'center'}>
+            {total}
+          </Typography>
+        </Box>
+      )}
     </Card>
   );
 }

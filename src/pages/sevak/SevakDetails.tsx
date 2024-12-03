@@ -19,7 +19,7 @@ import { detailsLoading, getUsersDetails } from 'src/redux/slices/user';
 import SevekSummary from 'src/sections/@dashboard/user/list/SevekPitsCount';
 import SevekPitsList from 'src/sections/@dashboard/user/list/SevekPitsList';
 import noImage from 'src/assets/images/noImage.jpg';
-import { SkeletonProduct } from 'src/components/skeleton';
+import { SkeletonPostItem, SkeletonProduct } from 'src/components/skeleton';
 
 export default function SevekDetails() {
   const { themeStretch } = useSettings();
@@ -92,7 +92,7 @@ export default function SevekDetails() {
             { title: 'Total Farmer Count', total: farmerCount },
           ].map((item, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <SevekSummary title={item.title} total={item.total} />
+              <SevekSummary title={item.title} total={item.total} isLoading={isDetailsLoading} />
             </Grid>
           ))}
         </Grid>

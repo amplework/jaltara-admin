@@ -93,7 +93,7 @@ export default function CropList() {
     getCropsList();
   };
 
-  const { cropListData, cropsDetails } = useSelector((state) => state.crops);
+  const { cropListData, cropsDetails,isLoading } = useSelector((state) => state.crops);
 
   const onSearch = () => {
     getCropsList(state.filterName, state.filterStatus);
@@ -302,6 +302,7 @@ export default function CropList() {
 
       <MasterDataForm
         openModal={state.openModal}
+        isLoading={isLoading}
         handleClose={handleClose}
         onSubmit={onSubmit}
         methods={methods}

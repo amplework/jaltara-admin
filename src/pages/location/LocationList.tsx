@@ -34,9 +34,8 @@ const TABLE_HEAD = [
   { id: 'district', label: 'District', align: 'left' },
   { id: 'state', label: 'State', align: 'left' },
   { id: 'noUser', label: 'No Of User', align: 'left' },
-//   { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
-  { id: 'delete', label: 'delete', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function LocationList() {
@@ -70,6 +69,7 @@ export default function LocationList() {
   }, []);
 
   const { pitListData } = useSelector((state) => state.pits);
+  
   const onSearch = () => {
     const statgesSearch = state.selectStages;
     getPitsList(filterName, filterVillage, statgesSearch);
@@ -96,25 +96,40 @@ export default function LocationList() {
     (!pitListData?.length && !!filterName) ||
     (!pitListData?.length && !!filterStatus);
 
+    const onhandleDeleteRow = (id: string) => {
+      console.log('delte');
+      
+      // dispatch(deletePits(id))
+      //   .then((res) => {
+      //     if (res?.data?.statusCode === 200) {
+      //       enqueueSnackbar(res?.data?.message, {
+      //         variant: 'success',
+      //       });
+      //       getPitsList();
+      //     } else {
+      //       getPitsList();
+      //     }
+      //   })
+      //   .catch(() => {
+      //     console.log('error');
+      //   });
+    };
+  
   return (
     <Page title="location">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Location"
-          links={[
-            // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { href: PATH_DASHBOARD.sevak.root },
-          ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.sevak.new}
-              startIcon={<Iconify icon={'eva:plus-fill'} />}
-            >
-              New Location
-            </Button>
-          }
+          heading="Location List"
+          links={[{ href: PATH_DASHBOARD.location.list }]}
+          // action={
+          //   <Button
+          //     variant="contained"
+          //     startIcon={<Iconify icon={'eva:plus-fill'} />}
+          //     // onClick={handleAddUser}
+          //   >
+          //     New Location
+          //   </Button>
+          // }
         />
 
         <Card>
@@ -143,7 +158,13 @@ export default function LocationList() {
                   {pitListData?.length
                     ? pitListData
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row: PitItem) => <LocationTableRow key={row.id} row={row} />)
+                        .map((row: PitItem) => (
+                          <LocationTableRow
+                            key={row.id}
+                            row={row}
+                            onhandleDeleteRow={onhandleDeleteRow}
+                          />
+                        ))
                     : null}
 
                   <TableNoData isNotFound={isNotFound} />

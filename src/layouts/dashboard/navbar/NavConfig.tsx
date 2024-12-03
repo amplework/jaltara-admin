@@ -17,7 +17,7 @@ const ICONS = {
   farmer: getIcon('game-icons:farmer'),
   pit: getIcon('tabler:shovel-pitchforks'),
   well: getIcon('game-icons:well'),
-  location: getIcon('subway:location'),
+  location: getIcon('hugeicons:location-09'),
   tools: getIcon('la:tools'),
   masterdata: getIcon('eos-icons:big-data'),
 };

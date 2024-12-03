@@ -42,6 +42,16 @@ export default function UserTableRow({
     setOpenMenuActions(null);
   };
 
+  const handleStatusColor = (status?: string) => {
+    if (status === 'active') {
+      return theme.palette.success.darker;
+    } else if (status === 'inactive') {
+      return theme.palette.error.main;
+    } else {
+      return theme.palette.warning.main;
+    }
+  };
+
   return (
     <TableRow hover sx={{ cursor: 'pointer' }}>
       <TableCell
@@ -49,23 +59,28 @@ export default function UserTableRow({
         onClick={() => handleShowDetails && handleShowDetails(id)}
       >
         <Typography variant="subtitle2" noWrap>
-          {name}
+          {name || '--'}
         </Typography>
       </TableCell>
 
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {phone}
+          {phone || '--'}
         </Typography>
       </TableCell>
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
-          {village?.name}
+          {village?.name || '--'}
         </Typography>
       </TableCell>
 
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+        <Typography
+          variant="subtitle2"
+          noWrap
+          color={handleStatusColor(status)}
+          sx={{ letterSpacing: '1px',textTransform:"capitalize" }}
+        >
           {status}
         </Typography>
       </TableCell>
