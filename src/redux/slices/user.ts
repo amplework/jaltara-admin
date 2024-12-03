@@ -10,7 +10,7 @@ import { CildEntitiesType, UserList } from 'src/@types/user';
 
 const initialState: UserList = {
   isLoading: false,
-  isDetailsLoading:false,
+  isDetailsLoading: false,
   error: null,
   userListData: [],
   statesList: [],
@@ -77,7 +77,7 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
-    // only for loader 
+    // only for loader
     detailsLoading(state) {
       state.isDetailsLoading = true;
     },
@@ -122,7 +122,7 @@ const slice = createSlice({
     //get user Details
     getUserDetails(state, action) {
       state.isLoading = false;
-      state.isDetailsLoading=false;
+      state.isDetailsLoading = false;
       state.usersDetails = action.payload;
     },
     //empty village list
@@ -257,7 +257,7 @@ export const {
   emptyDistrictList,
   emptyTalukList,
   startLoading,
-  detailsLoading
+  detailsLoading,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -301,6 +301,7 @@ export function getDistrictList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
     axios.get(`/geographic-entities/${id}`).then((response) => {
+      console.log('response', response);
       if (response?.status === 200) {
         dispatch(slice.actions.setDistrictList(response?.data?.data));
       }
@@ -374,7 +375,7 @@ export function editSevekDetails(payload?: any, id?: string) {
 export function getUsersDetails(id?: any) {
   return async () => {
     dispatch(slice.actions.startLoading());
-    dispatch(slice.actions.detailsLoading())
+    dispatch(slice.actions.detailsLoading());
     try {
       return await axios.get(`/sevak-details/${id}`).then((res) => {
         dispatch(slice.actions.getUserDetails(res?.data?.data));

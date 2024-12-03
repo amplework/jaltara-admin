@@ -105,6 +105,7 @@ export default function SevekCreate() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  
   const getAssignVillageData = (value: string) => {
     return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
   };

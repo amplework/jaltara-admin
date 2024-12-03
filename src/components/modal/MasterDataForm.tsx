@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Divider, Modal, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Container, Divider, Modal, Stack, Typography, useTheme } from '@mui/material';
 import React, { useEffect } from 'react';
 import Iconify from '../Iconify';
 import { FormProvider } from '../hook-form';
@@ -7,7 +7,7 @@ import { CropItem } from 'src/@types/crops';
 import { ChallangesItem } from 'src/@types/challanges';
 import { startLoading } from 'src/redux/slices/crops';
 import { useDispatch } from 'src/redux/store';
-import { SkeletonProduct } from '../skeleton';
+import { SkeletonPost, SkeletonProduct } from '../skeleton';
 
 interface MasterDataFormProps {
   openModal: boolean;
@@ -20,7 +20,7 @@ interface MasterDataFormProps {
   handleCropDetails?: any;
   cropDetails?: CropItem | ChallangesItem;
   disabled?: boolean;
-  isLoading?:boolean
+  isLoading?: boolean;
 }
 
 const style = {
@@ -45,7 +45,7 @@ const MasterDataForm = ({
   handleCropDetails,
   title = 'Add New Crop',
   disabled,
-  isLoading
+  isLoading,
 }: MasterDataFormProps) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -58,7 +58,6 @@ const MasterDataForm = ({
   }, [id]);
 
   const {
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -69,63 +68,79 @@ const MasterDataForm = ({
       aria-describedby="modal-description"
       open={openModal}
       onClose={handleClose}
-      disableEnforceFocus={false} 
+      disableEnforceFocus={false}
       disableAutoFocus={false}
       sx={{ outline: 0 }}
     >
-      <Box sx={style}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          {/* Header */}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            // mb={2}
-            borderRadius={'10px 10px 0 0'}
-            p={2}
-            bgcolor={theme.palette.primary.lighter}
-          >
-            <Typography variant="h6">{title}</Typography>
-            <LoadingButton
-              onClick={handleClose}
-              sx={{
-                minWidth: 0,
-                padding: 0,
-                display: 'flex',
-                alignItems: 'center',
-                bgcolor: theme.palette.common.white,
-              }}
+      <Container
+        sx={{
+          maxWidth: {
+            xl: '2600px',
+            position: 'relative',
+            borderRadius: '20px',
+            height: '100%',
+          },
+        }}
+      >
+        <Box sx={style}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            {/* Header */}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderRadius={'10px 10px 0 0'}
+              p={2}
+              bgcolor={theme.palette.primary.lighter}
             >
-              <Iconify
-                icon="iconamoon:close-bold"
-                width={24}
-                height={24}
-                color={theme.palette.common.black}
-              />
-            </LoadingButton>
-          </Box>
+              <Typography variant="h6">{title}</Typography>
+              <LoadingButton
+                onClick={handleClose}
+                sx={{
+                  minWidth: 0,
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  bgcolor: theme.palette.common.white,
+                }}
+              >
+                <Iconify
+                  icon="iconamoon:close-bold"
+                  width={24}
+                  height={24}
+                  color={theme.palette.common.black}
+                />
+              </LoadingButton>
+            </Box>
 
-          <Divider />
-          {/* Content */}
-          <Box mt={2}>{children}</Box>
+            <Divider />
+            {/* Content */}
+            {isLoading ? (
+              <SkeletonPost />
+            ) : (
+              <Box mt={2} sx={{ minHeight: 300 }}>
+                {children}
+              </Box>
+            )}
 
-          {/* Footer */}
-          <Divider />
-          <Stack direction="row" spacing={2} justifyContent="flex-end" p={2}>
-            <LoadingButton variant="outlined" onClick={handleClose}>
-              Cancel
-            </LoadingButton>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              disabled={disabled}
-              startIcon={<Iconify icon="mingcute:user-add-fill" />}
-            >
-              {id ? 'Edit Crop' : 'Add New'}
-            </LoadingButton>
-          </Stack>
-        </FormProvider>
-      </Box>
+            {/* Footer */}
+            <Divider />
+            <Stack direction="row" spacing={2} justifyContent="flex-end" p={2}>
+              <LoadingButton variant="outlined" onClick={handleClose}>
+                Cancel
+              </LoadingButton>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                disabled={disabled}
+                startIcon={<Iconify icon="mingcute:user-add-fill" />}
+              >
+                {id ? 'Edit Crop' : 'Add New'}
+              </LoadingButton>
+            </Stack>
+          </FormProvider>
+        </Box>
+      </Container>
     </Modal>
   );
 };

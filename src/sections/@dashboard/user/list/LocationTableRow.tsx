@@ -7,16 +7,24 @@ import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import { PitItem } from 'src/@types/pits';
 import { formatedDate } from 'src/utils/formateDate';
+import { LocationListing } from 'src/@types/location';
+import { getEntityName } from 'src/utils/common';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: PitItem | null;
+  row: LocationListing | null;
   handleShowDetails?: (id: any) => void;
   onhandleDeleteRow?: (id: any) => void;
+  onhandleEditDetails?: (id: any) => void;
 };
 
-export default function LocationTableRow({ row, handleShowDetails, onhandleDeleteRow }: Props) {
+export default function LocationTableRow({
+  row,
+  handleShowDetails,
+  onhandleDeleteRow,
+  onhandleEditDetails,
+}: Props) {
   const theme = useTheme();
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,7 +34,11 @@ export default function LocationTableRow({ row, handleShowDetails, onhandleDelet
     setOpenMenuActions(null);
   };
 
-  const { farmer, village, level, stages, id } = row || {};
+  const { id, name, farmerCount, checkUpperGeo } = row || {};
+
+  const stateName = getEntityName('state', checkUpperGeo);
+  const districtName = getEntityName('district', checkUpperGeo);
+  const talukName = getEntityName('taluk', checkUpperGeo);
 
   return (
     <TableRow
@@ -36,31 +48,31 @@ export default function LocationTableRow({ row, handleShowDetails, onhandleDelet
     >
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="subtitle2" noWrap>
-          {farmer?.name}
+          {name}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {village?.name}
+          {talukName?.id ? talukName?.name : '--'}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {level}
+          {districtName?.id ? districtName?.name : '--'}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {stages?.[0]?.stageName}
+          {stateName?.id ? stateName?.name : '--'}
         </Typography>
       </TableCell>
 
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {formatedDate(stages?.[0]?.created)}
+          {farmerCount || '--'}
         </Typography>
       </TableCell>
 
@@ -80,6 +92,15 @@ export default function LocationTableRow({ row, handleShowDetails, onhandleDelet
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  onhandleEditDetails && onhandleEditDetails(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
               </MenuItem>
             </>
           }

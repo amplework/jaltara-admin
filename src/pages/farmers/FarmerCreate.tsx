@@ -277,7 +277,6 @@ export default function FarmerCreate() {
   };
 
   const handleVillageSelect = (id: string) => {
-    // setValue('selectVillage', '');
     setState((prev: any) => ({ ...prev, villageId: id }));
   };
 

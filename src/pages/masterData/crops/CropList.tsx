@@ -70,8 +70,6 @@ export default function CropList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  
-
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
