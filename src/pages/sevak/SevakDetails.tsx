@@ -4,8 +4,6 @@ import { Card, Container, Grid, Typography, Box, TableContainer, TableBody } fro
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useSettings from '../../hooks/useSettings';
-// redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
 // components
@@ -22,7 +20,6 @@ import noImage from 'src/assets/images/noImage.jpg';
 import { SkeletonPostItem, SkeletonProduct } from 'src/components/skeleton';
 
 export default function SevekDetails() {
-  const { themeStretch } = useSettings();
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -77,7 +74,7 @@ export default function SevekDetails() {
 
   return (
     <Page title="Sevek Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Sevek Details"
           links={[

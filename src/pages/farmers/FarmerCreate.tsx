@@ -5,9 +5,7 @@ import { Card, Container, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useSettings from '../../hooks/useSettings';
-// _mock_
-import { _userList } from '../../_mock';
+
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
@@ -56,7 +54,7 @@ const content2 = [
 ];
 
 export default function FarmerCreate() {
-  const { themeStretch } = useSettings();
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -285,7 +283,7 @@ export default function FarmerCreate() {
 
   return (
     <Page title="Create farmer">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           // heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
           heading={!id ? 'Create a new Farmer' : 'Edit Farmer details'}
@@ -442,7 +440,7 @@ export default function FarmerCreate() {
                     >
                       {/* {!isEdit ? 'Create sevek' : 'Edit sevek'} */}
                       {id ? 'Edit sevek' : 'Add New'}
-                    </LoadingButton>  
+                    </LoadingButton>
                   </Stack>
                 </Card>
               )}

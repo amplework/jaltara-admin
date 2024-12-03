@@ -14,10 +14,7 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
-// @types
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -74,8 +71,6 @@ export default function PitList() {
   ];
 
   const navigate = useNavigate();
-
-  const { themeStretch } = useSettings();
 
   const [filterName, setFilterName] = useState('');
 
@@ -143,7 +138,7 @@ export default function PitList() {
 
   return (
     <Page title="Pits List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs heading="Pits List" links={[{ href: PATH_DASHBOARD.pits.list }]} />
 
         <Card>

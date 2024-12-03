@@ -36,7 +36,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 // redux
 import { store, persistor } from './redux/store';
 // contexts
-import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 
 // Check our docs
@@ -62,13 +61,11 @@ root.render(
       <ReduxProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SettingsProvider>
               <CollapseDrawerProvider>
                 <BrowserRouter>
                   <App />
                 </BrowserRouter>
               </CollapseDrawerProvider>
-            </SettingsProvider>
           </LocalizationProvider>
         </PersistGate>
       </ReduxProvider>

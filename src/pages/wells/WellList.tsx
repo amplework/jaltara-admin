@@ -14,10 +14,7 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Scrollbar from '../../components/Scrollbar';
@@ -59,8 +56,6 @@ export default function WellList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
-
-  const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
 
@@ -122,7 +117,7 @@ export default function WellList() {
 
   return (
     <Page title="Well: List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Well List"
           links={[{ href: PATH_DASHBOARD.wells.list }]}

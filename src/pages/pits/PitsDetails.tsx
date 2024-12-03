@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Card, Container, Grid, Typography, Box, TableContainer, TableBody } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-import useSettings from '../../hooks/useSettings';
 // redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
@@ -20,7 +18,6 @@ import { getPitDetails, startLoading } from 'src/redux/slices/pits';
 import { SkeletonProduct } from 'src/components/skeleton';
 
 export default function PitsDetails() {
-  const { themeStretch } = useSettings();
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -61,7 +58,7 @@ export default function PitsDetails() {
 
   return (
     <Page title="Pits Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Pits Details"
           links={[{ name: 'pits List', href: PATH_DASHBOARD.pits.list }, { name: 'Pits Details' }]}

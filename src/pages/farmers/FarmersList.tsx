@@ -15,11 +15,8 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
+
 import useTable from '../../hooks/useTable';
-// @types
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -46,7 +43,7 @@ export default function FarmersList() {
   const { dense, page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
     useTable();
 
-  const { themeStretch } = useSettings();
+  
 
   const navigate = useNavigate();
 
@@ -118,7 +115,7 @@ export default function FarmersList() {
 
   return (
     <Page title="Farmer List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Farmer List"
           links={[{ href: PATH_DASHBOARD.farmers.list }]}

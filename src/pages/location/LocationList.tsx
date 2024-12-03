@@ -18,7 +18,7 @@ import { getPitsList } from 'src/redux/slices/pits';
 import { PitItem } from 'src/@types/pits';
 import PitTableRow from 'src/sections/@dashboard/user/list/PitTableRow';
 import useTable from 'src/hooks/useTable';
-import useSettings from 'src/hooks/useSettings';
+
 import useTabs from 'src/hooks/useTabs';
 import Page from 'src/components/Page';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
@@ -52,7 +52,7 @@ export default function LocationList() {
     onChangeRowsPerPage,
   } = useTable();
 
-  const { themeStretch } = useSettings();
+  
 
   const [filterName, setFilterName] = useState('');
 
@@ -117,7 +117,7 @@ export default function LocationList() {
   
   return (
     <Page title="location">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Location List"
           links={[{ href: PATH_DASHBOARD.location.list }]}

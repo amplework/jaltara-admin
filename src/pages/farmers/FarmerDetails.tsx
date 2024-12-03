@@ -16,7 +16,7 @@ import {
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useSettings from '../../hooks/useSettings';
+
 // redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
@@ -47,7 +47,7 @@ const TABLE_HEAD = [
 ];
 
 export default function FarmerDetails() {
-  const { themeStretch } = useSettings();
+  
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -110,7 +110,7 @@ export default function FarmerDetails() {
 
   return (
     <Page title="Farmer Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Farmer Details"
           links={[

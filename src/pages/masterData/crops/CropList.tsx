@@ -16,7 +16,7 @@ import {
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
 import useTabs from '../../../hooks/useTabs';
-import useSettings from '../../../hooks/useSettings';
+
 import useTable from '../../../hooks/useTable';
 // components
 import Page from '../../../components/Page';
@@ -70,7 +70,7 @@ export default function CropList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { themeStretch } = useSettings();
+  
 
   const dispatch = useDispatch();
 
@@ -227,7 +227,7 @@ export default function CropList() {
   };
   return (
     <Page title="Crops List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Crops List"
           links={[{ href: PATH_DASHBOARD.masterdata.create }]}

@@ -15,10 +15,7 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
 import useTable from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -56,8 +53,6 @@ export default function UserList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
-
-  const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
 
@@ -107,7 +102,7 @@ export default function UserList() {
     dispatch(emptyStatesDetails(null));
     navigate(PATH_DASHBOARD.sevak.edit(id));
   };
-  
+
   const onhandleDeleteRow = (id: string) => {
     dispatch(deleteSevak(id))
       .then((res) => {
@@ -131,7 +126,7 @@ export default function UserList() {
 
   return (
     <Page title="Sevaks List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Sevaks List"
           links={[{ href: PATH_DASHBOARD.sevak.root }]}

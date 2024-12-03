@@ -4,8 +4,6 @@ import { Card, Container, Grid, Typography, Box, TableContainer, TableBody } fro
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
-import useSettings from '../../hooks/useSettings';
-// redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getWellsDetails, startLoading } from 'src/redux/slices/wells';
@@ -21,7 +19,6 @@ import Scrollbar from 'src/components/Scrollbar';
 import { SkeletonProduct } from 'src/components/skeleton';
 
 export default function WellsDetails() {
-  const { themeStretch } = useSettings();
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -59,7 +56,7 @@ export default function WellsDetails() {
 
   return (
     <Page title="Wells Details">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Wells Details"
           links={[

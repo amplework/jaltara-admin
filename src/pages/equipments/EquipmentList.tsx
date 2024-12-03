@@ -15,10 +15,8 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useSettings from '../../hooks/useSettings';
+
 import useTable from '../../hooks/useTable';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
@@ -59,7 +57,7 @@ export default function EquipmentList() {
 
   const navigate = useNavigate();
 
-  const { themeStretch } = useSettings();
+  
 
   const dispatch = useDispatch();
 
@@ -130,7 +128,7 @@ export default function EquipmentList() {
   };
   return (
     <Page title="equipments List">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Equipments List"
           links={[{ href: PATH_DASHBOARD.equipments.list }]}

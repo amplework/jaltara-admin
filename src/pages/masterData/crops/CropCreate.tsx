@@ -5,9 +5,7 @@ import { Card, Container, Grid } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // hooks
-import useSettings from '../../../hooks/useSettings';
-// _mock_
-import { _userList } from '../../../_mock';
+
 // components
 import Page from '../../../components/Page';
 import HeaderBreadcrumbs from '../../../components/HeaderBreadcrumbs';
@@ -22,9 +20,6 @@ import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'src/redux/store';
 import Iconify from 'src/components/Iconify';
-import { addNewFarmer, editNewFarmer } from 'src/redux/slices/farmers';
-import { EquipmentItem } from 'src/@types/equipment';
-import { addEditEquipment, getEquipmentsDetails } from 'src/redux/slices/equipment';
 import { addEditCrops, getCropsDetails, startLoading } from 'src/redux/slices/crops';
 import { CropItem } from 'src/@types/crops';
 import { SkeletonProduct } from 'src/components/skeleton';
@@ -41,7 +36,7 @@ const languageList = [
 ];
 
 export default function CropCreate() {
-  const { themeStretch } = useSettings();
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -139,7 +134,7 @@ export default function CropCreate() {
 
   return (
     <Page title="Create Crop">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading={!id ? 'Create a new crop' : 'Edit crop details'}
           links={[

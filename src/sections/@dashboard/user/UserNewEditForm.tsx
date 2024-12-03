@@ -14,8 +14,6 @@ import { fData } from '../../../utils/formatNumber';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // @types
 import { UserManager } from '../../../@types/user';
-// _mock
-import { countries } from '../../../_mock';
 // components
 import Label from '../../../components/Label';
 import { CustomFile } from '../../../components/upload';
@@ -144,14 +142,14 @@ export default function UserNewEditForm({ isEdit, currentUser }: Props) {
             >
               <RHFTextField name="name" label="Full Name" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
-              <RHFSelect name="country" label="Country" placeholder="Country">
+              {/* <RHFSelect name="country" label="Country" placeholder="Country">
                 <option value="" />
                 {countries.map((option) => (
                   <option key={option.code} value={option.label}>
                     {option.label}
                   </option>
                 ))}
-              </RHFSelect>
+              </RHFSelect> */}
 
               <RHFTextField name="state" label="State/Region" />
               <RHFTextField name="city" label="City" />

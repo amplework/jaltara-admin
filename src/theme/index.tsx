@@ -8,8 +8,6 @@ import {
   StyledEngineProvider,
 } from '@mui/material/styles';
 // hooks
-import useSettings from '../hooks/useSettings';
-//
 import palette from './palette';
 import typography from './typography';
 import breakpoints from './breakpoints';
@@ -23,9 +21,7 @@ type Props = {
 };
 
 export default function ThemeProvider({ children }: Props) {
-  const { themeMode, themeDirection } = useSettings();
-
-  const isLight = themeMode === 'light';
+  const isLight =true;
 
   const themeOptions: ThemeOptions = useMemo(
     () => ({
@@ -33,11 +29,10 @@ export default function ThemeProvider({ children }: Props) {
       typography,
       breakpoints,
       shape: { borderRadius: 8 },
-      direction: themeDirection,
       shadows: isLight ? shadows.light : shadows.dark,
       customShadows: isLight ? customShadows.light : customShadows.dark,
     }),
-    [isLight, themeDirection]
+    [isLight]
   );
 
   const theme = createTheme(themeOptions);

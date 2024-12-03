@@ -4,9 +4,7 @@ import { SnackbarProvider, SnackbarKey } from 'notistack';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import { Box, GlobalStyles, Collapse } from '@mui/material';
-// hooks
-import useSettings from '../hooks/useSettings';
-// theme
+// hooks// theme
 import { ColorSchema } from '../theme/palette';
 //
 import Iconify from './Iconify';
@@ -62,9 +60,8 @@ type Props = {
 };
 
 export default function NotistackProvider({ children }: Props) {
-  const { themeDirection } = useSettings();
 
-  const isRTL = themeDirection === 'rtl';
+  const isRTL = 'rtl';
 
   const notistackRef = useRef<any>(null);
 

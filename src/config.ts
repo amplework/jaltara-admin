@@ -1,8 +1,6 @@
 // @mui
 import { enUS, frFR, zhCN, viVN, arSD } from '@mui/material/locale';
 // components
-import { SettingsValueProps } from './components/settings/type';
-// routes
 import { PATH_DASHBOARD } from './routes/paths';
 import Iconify from './components/Iconify';
 
@@ -66,15 +64,6 @@ export const ICON = {
 // SETTINGS
 // Please remove `localStorage` when you change settings.
 // ----------------------------------------------------------------------
-
-export const defaultSettings: SettingsValueProps = {
-  themeMode: 'light',
-  themeDirection: 'ltr',
-  themeContrast: 'default',
-  themeLayout: 'horizontal',
-  themeColorPresets: 'default',
-  themeStretch: true,
-};
 
 // MULTI LANGUAGES
 // Please remove `localStorage` when you change settings.
