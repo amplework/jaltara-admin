@@ -4,11 +4,10 @@ import { TableRow, TableCell } from '@mui/material';
 // ----------------------------------------------------------------------
 
 type Props = {
-  height?: number;
-  emptyRows: number;
+  emptyRows: any;
 };
 
-export default function TableEmptyRows({ emptyRows, height }: Props) {
+export default function TableEmptyRows({ emptyRows }: Props) {
   if (!emptyRows) {
     return null;
   }
@@ -16,9 +15,7 @@ export default function TableEmptyRows({ emptyRows, height }: Props) {
   return (
     <TableRow
       sx={{
-        ...(height && {
-          height: height * emptyRows,
-        }),
+        height: 52,
       }}
     >
       <TableCell colSpan={9} />

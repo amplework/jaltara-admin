@@ -9,6 +9,7 @@ import {
   Container,
   TableContainer,
   TablePagination,
+  Button,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getPitsList } from 'src/redux/slices/pits';
@@ -22,17 +23,25 @@ import Scrollbar from 'src/components/Scrollbar';
 import { TableHeadCustom, TableNoData } from 'src/components/table';
 import LocationTableRow from 'src/sections/@dashboard/user/list/LocationTableRow';
 import {
+  addLocationsDetails,
   editLocationsDetails,
   getLocationDetails,
   getLocationList,
 } from 'src/redux/slices/locations';
-import { LocationDetails, LocationListing } from 'src/@types/location';
+import { LocationAdd, LocationListing } from 'src/@types/location';
 import MasterDataForm from 'src/components/modal/MasterDataForm';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { emptyDistrictList, getStatesList } from 'src/redux/slices/user';
-import LocationForm from './LocationForm';
+import {
+  emptyDistrictList,
+  getDistrictList,
+  getStatesList,
+  getTalukList,
+  getVillageList,
+} from 'src/redux/slices/user';
 import { useSnackbar } from 'notistack';
+import Iconify from 'src/components/Iconify';
+import GeoLocationAdd from './GeoLocationAdd';
 import { getEntityName } from 'src/utils/common';
 
 const TABLE_HEAD = [
@@ -61,6 +70,11 @@ export default function LocationList() {
     selectStages: '',
     openModal: false,
     villageId: null,
+    parentId: '',
+    stateId: '',
+    districtId: '',
+    talukId: '',
+    isLoading: false,
   });
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -75,12 +89,13 @@ export default function LocationList() {
   };
 
   const handleLocationDetails = () => {
+    setState((prev: any) => ({ ...prev, isLoading: true }));
+
     getLocationDetails(state?.id);
   };
 
   const { locationList, isLoading, locationData } = useSelector((state) => state.locations);
-
-  console.log('locationData', locationData);
+  const { districtList, talukList } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(emptyDistrictList(null));
@@ -88,41 +103,83 @@ export default function LocationList() {
       const stateName = getEntityName('state', locationData?.checkUpperGeo);
       const districtName = getEntityName('district', locationData?.checkUpperGeo);
       const talukName = getEntityName('taluk', locationData?.checkUpperGeo);
-      const villageName = getEntityName('village', locationData?.checkUpperGeo);
-      setValue('selectStates', stateName?.name);
-      setValue('selectDistrict', districtName?.name);
-      setValue('selectTaluk', talukName?.name);
-      setValue('selectVillage', villageName?.name);
+      const villagetName = getEntityName('village', locationData?.checkUpperGeo);
+
+      setValue('selectStates', stateName?.id);
+      setValue('location', locationData?.checkUpperGeo?.entityType);
+      setValue('name', locationData?.checkUpperGeo?.name);
+
+      if (locationData && stateName?.id) {
+        getDistrictList(stateName?.id);
+
+        if (locationData && districtName?.id && districtList?.childEntities) {
+          getTalukList(districtName?.id);
+          setValue('selectDistrict', districtName?.id || '');
+          // setState((prev: any) => ({ ...prev, parentId: stateName?.id }));
+          if (talukName && locationData && talukList?.childEntities) {
+            getVillageList(talukName?.id);
+            setValue('selectTaluk', talukName?.id || '');
+            // setState((prev: any) => ({ ...prev, isLoading: false, parentId: districtName?.id }));
+            setState((prev: any) => ({ ...prev, isLoading: false }));
+
+            if (villagetName && locationData) {
+              setValue('name', locationData?.checkUpperGeo?.name);
+              setState((prev: any) => ({
+                ...prev,
+                // parentId: talukName?.id,
+                isLoading: false,
+              }));
+            } else {
+              setValue('name', locationData?.checkUpperGeo?.name);
+              setState((prev: any) => ({
+                ...prev,
+                // parentId: talukName?.id,
+                isLoading: false,
+              }));
+            }
+          } else {
+            setState((prev: any) => ({ ...prev, isLoading: false }));
+            setValue('selectTaluk', locationData?.checkUpperGeo?.id || '');
+          }
+        } else if (locationData && stateName?.id && !districtName?.id) {
+          setValue('selectDistrict', locationData?.checkUpperGeo?.id || '');
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+        }
+      }
     }
   }, [locationData?.id, state?.id]);
 
-  const getAssignVillageData = (value: string) => {
-    return locationData?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
-  };
-
   const defaultValues = useMemo(
     () => ({
+      location: '',
       selectStates: '',
       selectDistrict: '',
       selectTaluk: '',
-      selectVillage: '',
+      name: '',
     }),
-    [locationList]
+    []
   );
 
   const NewLocationSchema = Yup.object().shape({
-    selectStates: Yup.string().required('States is required'),
+    location: Yup.string().required('States is required'),
+    name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
+    selectStates: Yup.string(),
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
-    selectVillage: Yup.string(),
   });
 
-  const methods = useForm<LocationDetails>({
+  const methods = useForm<LocationAdd>({
     resolver: yupResolver(NewLocationSchema),
     defaultValues,
   });
 
-  const { setValue } = methods;
+  const {
+    reset,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
 
   const onSearch = () => {
     const statgesSearch = state.selectStages;
@@ -144,7 +201,14 @@ export default function LocationList() {
     (!locationList?.length && !!filterStatus);
 
   const onhandleDeleteRow = () => {
-    console.log('delte');
+    console.log('delete');
+  };
+
+  const handleLocationChange = () => {
+    setValue('selectStates', '');
+    setValue('selectDistrict', '');
+    setValue('selectTaluk', '');
+    setValue('name', '');
   };
 
   const onhandleEditDetails = (id: string) => {
@@ -155,20 +219,76 @@ export default function LocationList() {
     setState((prev) => ({ ...prev, openModal: false, id: '' }));
   };
 
-  const onSubmit = async () => {
-    try {
-      if (state.id) {
-        dispatch(editLocationsDetails(state.id)).then((res: any) => {
-          if (res?.data?.statusCode === 200) {
-            enqueueSnackbar(res?.data?.message, {
-              variant: 'success',
-            });
-            handleLocationList();
-          }
-        });
-      }
-    } catch (error) {
-      console.error(error);
+  const handleAddUser = () => {
+    setState((prev) => ({ ...prev, openModal: true, id: '' }));
+    setValue('location', '');
+    handleLocationChange();
+  };
+
+  const handleStatesSelect = (id: any) => {
+    setState((prev: any) => ({ ...prev, parentId: id, stateId: id }));
+    getDistrictList(id);
+    setValue('selectDistrict', '');
+    setValue('selectTaluk', '');
+    setValue('name', '');
+  };
+
+  const handleDistrictSelect = (id: any) => {
+    setState((prev: any) => ({ ...prev, parentId: id, districtId: id }));
+    getTalukList(id);
+    setValue('selectTaluk', '');
+    setValue('name', '');
+  };
+
+  const handleTalukSelect = (id: string) => {
+    setState((prev: any) => ({ ...prev, parentId: id, talukId: id }));
+    setValue('name', '');
+  };
+
+  const onSubmit = async (data?: LocationAdd) => {
+    const payload = {
+      name: data?.name,
+      entityType: data?.location,
+      ...(state?.parentId && { parentId: state?.parentId }),
+    };
+
+    if (state?.id) {
+      dispatch(editLocationsDetails(payload, state?.id)).then((res: any) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleLocationList();
+          handleClose();
+          dispatch(emptyDistrictList(null));
+        } else if (res?.data?.statusCode === 409) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+        } else if (res?.data?.statusCode === 422) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'error',
+          });
+        }
+      });
+    } else {
+      dispatch(addLocationsDetails(payload)).then((res: any) => {
+        if (res?.data?.statusCode === 201) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleLocationList();
+          handleClose();
+        } else if (res?.data?.statusCode === 409) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+        } else if (res?.data?.statusCode === 422) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'error',
+          });
+        }
+      });
     }
   };
 
@@ -178,6 +298,15 @@ export default function LocationList() {
         <HeaderBreadcrumbs
           heading="Location List"
           links={[{ href: PATH_DASHBOARD.location.list }]}
+          action={
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon={'eva:plus-fill'} />}
+              onClick={handleAddUser}
+            >
+              New Geolocation
+            </Button>
+          }
         />
 
         <Card>
@@ -187,7 +316,7 @@ export default function LocationList() {
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
-            placeholderText={'Search by Sevek name'}
+            placeholderText={'Search by state name'}
             placeholderTextSecond={'Search by village name'}
           />
 
@@ -235,7 +364,7 @@ export default function LocationList() {
           </Box>
         </Card>
       </Container>
-      <MasterDataForm
+      {/* <MasterDataForm
         openModal={state.openModal}
         isLoading={isLoading}
         handleClose={handleClose}
@@ -246,6 +375,44 @@ export default function LocationList() {
         title={state.id ? 'Edit Crop Details' : 'Create New Crop'}
       >
         <LocationForm statusList={locationData} />
+      </MasterDataForm> */}
+
+      {/* <LocationAddForm
+        openModal={state.openModal}
+        methods={methods}
+        handleClose={handleClose}
+        handleLocationList={handleLocationList}
+        onSubmit={onSubmit}
+        title={state.id ? 'Edit Geo Location' : 'Create New Geo Location'}
+
+      >
+        <LocationAdd
+          methods={methods}
+          handleLocationChange={handleLocationChange}
+          handleStatesSelect={handleStatesSelect}
+          handleDistrictSelect={handleDistrictSelect}
+          handleTalukSelect={handleTalukSelect}
+        />
+      </LocationAddForm> */}
+
+      <MasterDataForm
+        openModal={state.openModal}
+        isLoading={isLoading}
+        handleClose={handleClose}
+        onSubmit={onSubmit}
+        methods={methods}
+        id={state?.id}
+        handleCropDetails={handleLocationDetails}
+        title={state.id ? 'Edit Geo Location' : 'Create New Geo Location'}
+      >
+        <GeoLocationAdd
+          state={state}
+          methods={methods}
+          handleLocationChange={handleLocationChange}
+          handleStatesSelect={handleStatesSelect}
+          handleDistrictSelect={handleDistrictSelect}
+          handleTalukSelect={handleTalukSelect}
+        />
       </MasterDataForm>
     </Page>
   );

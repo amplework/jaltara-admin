@@ -1,11 +1,9 @@
-import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, Box } from '@mui/material';
+import { TableRow, TableCell, Typography } from '@mui/material';
 // components
-import Iconify from '../../../../components/Iconify';
 import { formatedDate } from 'src/utils/formateDate';
-import { Stage, WellsItem } from 'src/@types/wells';
+import { Stage } from 'src/@types/wells';
 import Image from 'src/components/Image';
 
 // ----------------------------------------------------------------------
@@ -17,7 +15,7 @@ type Props = {
   sevek?: boolean;
 };
 
-export default function WellsDetailsRow({ row, index, pit, sevek }: Props) {
+export default function WellsDetailsRow({ row, pit }: Props) {
 
   const theme = useTheme();
 

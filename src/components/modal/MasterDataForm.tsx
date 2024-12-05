@@ -93,7 +93,7 @@ const MasterDataForm = ({
               p={2}
               bgcolor={theme.palette.primary.lighter}
             >
-              <Typography variant="h6">{title}</Typography>
+              <Typography variant="h6" color={theme.palette.grey[0]} sx={{ letterSpacing:"0.7px" }}>{title}</Typography>
               <LoadingButton
                 onClick={handleClose}
                 sx={{
@@ -118,7 +118,10 @@ const MasterDataForm = ({
             {isLoading ? (
               <SkeletonPost />
             ) : (
-              <Box mt={2} sx={{ minHeight: 300 }}>
+              <Box
+                mt={2}
+                //  sx={{ minHeight: 300 }}
+              >
                 {children}
               </Box>
             )}

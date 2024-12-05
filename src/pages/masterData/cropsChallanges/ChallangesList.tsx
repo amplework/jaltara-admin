@@ -43,8 +43,10 @@ import ChallengesForm from '../form/ChallengesForm';
 // ----------------------------------------------------------------------
 
 export const statusList = [
-  { id: 'active', label: 'Active', name: 'active', value: 'active' },
-  { id: 'inactive', label: 'Inactive', name: 'inactive', value: 'inactive' },
+  { id: 'state', label: 'State', name: 'State', value: 'state' },
+  { id: 'district', label: 'District', name: 'District', value: 'district' },
+  { id: 'taluk', label: 'Taluk', name: 'Taluk', value: 'taluk' },
+  { id: 'village', label: 'Village', name: 'Village', value: 'village' },
 ];
 
 const TABLE_HEAD = [
@@ -66,8 +68,6 @@ export default function ChallangesList() {
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
-
-  
 
   const dispatch = useDispatch();
 

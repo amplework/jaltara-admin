@@ -1,15 +1,12 @@
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // @types
 import { UserItem } from '../../../../@types/user';
 // components
-import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-import palette from 'src/theme/palette';
-import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +76,7 @@ export default function UserTableRow({
           variant="subtitle2"
           noWrap
           color={handleStatusColor(status)}
-          sx={{ letterSpacing: '1px',textTransform:"capitalize" }}
+          sx={{ letterSpacing: '1px', textTransform: 'capitalize' }}
         >
           {status}
         </Typography>
@@ -94,6 +91,15 @@ export default function UserTableRow({
             <>
               <MenuItem
                 onClick={() => {
+                  onhandleEditDetails && onhandleEditDetails(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   onhandleDeleteRow && onhandleDeleteRow(id);
                   handleCloseMenu();
                 }}
@@ -101,15 +107,6 @@ export default function UserTableRow({
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onhandleEditDetails && onhandleEditDetails(id);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
               </MenuItem>
             </>
           }

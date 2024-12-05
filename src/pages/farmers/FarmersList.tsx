@@ -43,8 +43,6 @@ export default function FarmersList() {
   const { dense, page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
     useTable();
 
-  
-
   const navigate = useNavigate();
 
   const dispatch = useDispatch();

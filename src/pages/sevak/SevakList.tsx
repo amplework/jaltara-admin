@@ -15,13 +15,13 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useTable from '../../hooks/useTable';
+import useTable, { emptyRows } from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { TableNoData, TableHeadCustom } from '../../components/table';
+import { TableNoData, TableHeadCustom, TableEmptyRows } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
 import {
@@ -136,7 +136,7 @@ export default function UserList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddUser}
             >
-              New Sevak
+              Add Sevak
             </Button>
           }
         />
@@ -182,6 +182,7 @@ export default function UserList() {
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
+              
             </TableContainer>
           </Scrollbar>
 

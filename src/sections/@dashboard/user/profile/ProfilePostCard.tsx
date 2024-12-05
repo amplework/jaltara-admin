@@ -1,33 +1,20 @@
 import { useState, useRef } from 'react';
 // @mui
 import {
-  Box,
   Link,
   Card,
-  Stack,
-  Paper,
-  Avatar,
-  Checkbox,
-  TextField,
   Typography,
   CardHeader,
   IconButton,
-  AvatarGroup,
-  InputAdornment,
-  FormControlLabel,
 } from '@mui/material';
 // @types
 import { UserPost } from '../../../../@types/user';
 // hooks
 import useAuth from '../../../../hooks/useAuth';
 // utils
-import { fDate } from '../../../../utils/formatTime';
-import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
-import Image from '../../../../components/Image';
 import Iconify from '../../../../components/Iconify';
 import MyAvatar from '../../../../components/MyAvatar';
-import { EmojiPicker } from '../../../../components/emoji-picker';
 
 // ----------------------------------------------------------------------
 

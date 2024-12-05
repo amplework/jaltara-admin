@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Container, Grid } from '@mui/material';
+import { Card, Container, Grid, InputAdornment } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { SkeletonProduct } from 'src/components/skeleton';
+import { getEntityName } from 'src/utils/common';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -67,8 +68,12 @@ export default function SevekCreate() {
     useSelector((state) => state.user);
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
-    phoneNumber: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
+    name: Yup.string()
+      .required('Sevak name is required')
+      .matches(/^[^\s].*$/, 'First Characters space not allowed.'),
+    phoneNumber: Yup.string()
+      .required('Phone number is required')
+      .matches(/^\d{10}$/, 'Only numbers are allowed and limit is 10 digits'),
     status: Yup.string().required('Status is required'),
     language: Yup.string().required('Language is required'),
     selectStates: Yup.string().required('States is required'),
@@ -105,7 +110,7 @@ export default function SevekCreate() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  
+
   const getAssignVillageData = (value: string) => {
     return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
   };
@@ -122,9 +127,13 @@ export default function SevekCreate() {
   ]);
 
   const setVillageData = async () => {
-    const stateIdData = getAssignVillageData('state');
-    const districtIdData = getAssignVillageData('district');
-    const talukIdData = getAssignVillageData('taluk');
+    // const stateIdData = getAssignVillageData('state');
+    // const districtIdData = getAssignVillageData('district');
+    // const talukIdData = getAssignVillageData('taluk');
+    const stateIdData = getEntityName('state', usersDetails?.checkUpperGeo);
+    const districtIdData = getEntityName('district', usersDetails?.checkUpperGeo);
+    const talukIdData = getEntityName('taluk', usersDetails?.checkUpperGeo);
+    const villagetName = getEntityName('village', usersDetails?.checkUpperGeo);
     const isDistrict = usersDetails?.checkUpperGeo?.entityType === 'district';
     const isVillage = usersDetails?.checkUpperGeo?.entityType === 'village';
     const isTaluk = usersDetails?.checkUpperGeo?.entityType === 'taluk';
@@ -134,40 +143,40 @@ export default function SevekCreate() {
     setValue('language', usersDetails?.language);
     setValue('selectStates', stateIdData?.id || '');
     // setValue('photo', usersDetails?.name || '');
-
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
       setState((prev: any) => ({ ...prev, villageId: stateIdData?.id }));
-    }
 
-    if (districtIdData && usersDetails && districtList?.childEntities && !isDistrict) {
-      getTalukList(districtIdData?.id);
-      setValue('selectDistrict', districtIdData?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: districtIdData?.id }));
-    }
-
-    if (talukIdData && usersDetails && talukList?.childEntities && !isTaluk) {
-      getVillageList(talukIdData?.id);
-      setValue('selectTaluk', talukIdData?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: talukIdData?.id }));
-    }
-
-    if (isDistrict) {
-      getTalukList(usersDetails?.checkUpperGeo?.id);
-      setValue('selectDistrict', usersDetails?.checkUpperGeo?.id);
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
-    }
-
-    if (isVillage) {
-      getVillageList(usersDetails?.checkUpperGeo?.id);
-      setValue('selectTaluk', usersDetails?.checkUpperGeo?.id);
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
-    }
-
-    if (isTaluk) {
-      getVillageList(usersDetails?.checkUpperGeo?.id);
-      setValue('selectTaluk', usersDetails?.checkUpperGeo?.id || '');
-      setState((prev: any) => ({ ...prev, villageId: usersDetails?.checkUpperGeo?.id }));
+      if (usersDetails && districtIdData?.id && districtList?.childEntities) {
+        getTalukList(districtIdData?.id);
+        setValue('selectDistrict', districtIdData?.id || '');
+        setState((prev: any) => ({ ...prev, villageId: districtIdData?.id }));
+        if (talukIdData && usersDetails && talukList?.childEntities) {
+          getVillageList(talukIdData?.id);
+          setValue('selectTaluk', talukIdData?.id || '');
+          setState((prev: any) => ({ ...prev, villageId: talukIdData?.id, isLoading: false }));
+          if (isVillage && usersDetails) {
+            setValue('selectVillage', usersDetails?.checkUpperGeo?.id);
+            setState((prev: any) => ({
+              ...prev,
+              villageId: usersDetails?.checkUpperGeo?.id,
+              isLoading: false,
+            }));
+          } else {
+            setValue('selectVillage', usersDetails?.checkUpperGeo?.id);
+            setState((prev: any) => ({
+              ...prev,
+              villageId: usersDetails?.checkUpperGeo?.id,
+              isLoading: false,
+            }));
+          }
+        } else {
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+          setValue('selectTaluk', usersDetails?.checkUpperGeo?.id || '');
+        }
+      } else if (usersDetails && stateIdData?.id && !districtIdData?.id) {
+        setValue('selectDistrict', usersDetails?.checkUpperGeo?.id || '');
+      }
     }
   };
 
@@ -228,6 +237,7 @@ export default function SevekCreate() {
   };
 
   const handleStatesSelect = (id: any) => {
+    setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
@@ -272,10 +282,10 @@ export default function SevekCreate() {
     <Page title="Create sevak">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading={!id ? 'Create a new sevak' : 'Edit sevak details'}
+          heading={!id ? 'Add sevak' : 'Edit sevak details'}
           links={[
             { name: 'Sevak List', href: PATH_DASHBOARD.sevak.list },
-            { name: !id ? 'Create a new sevak' : 'Edit sevak' },
+            { name: !id ? 'Add sevak' : 'Edit sevak' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -292,11 +302,17 @@ export default function SevekCreate() {
                       display: 'grid',
                       columnGap: 2,
                       rowGap: 3,
-                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                      gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
                     }}
                   >
                     <RHFTextField name="name" label="Full Name" />
-                    <RHFTextField name="phoneNumber" label="Phone Number" />
+                    <RHFTextField
+                      name="phoneNumber"
+                      label="Phone Number"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                      }}
+                    />
                     <RHFSelectDropdown
                       name="status"
                       label={'Select Status'}
@@ -311,7 +327,7 @@ export default function SevekCreate() {
                     />
                   </Box>
                   <Typography variant="h4" py={2}>
-                    Assign village
+                    Assign Location
                   </Typography>
                   <Box
                     sx={{
@@ -373,9 +389,11 @@ export default function SevekCreate() {
                       type="submit"
                       variant="contained"
                       loading={isSubmitting}
-                      startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                      startIcon={
+                        <Iconify icon={!id ? 'mingcute:user-add-fill' : 'fa-solid:user-edit'} />
+                      }
                     >
-                      {id ? 'Edit sevek' : 'Add New'}
+                      {id ? 'Save' : 'Add'}
                     </LoadingButton>
                   </Stack>
                 </Card>

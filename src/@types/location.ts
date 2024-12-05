@@ -36,3 +36,12 @@ export type LocationDetails = {
   selectTaluk: string;
   selectVillage: string;
 };
+
+export type LocationAdd = {
+  location: string;
+  name:string
+  selectStates?:string;
+  selectDistrict?:string;
+  selectTaluk?:string
+};
+

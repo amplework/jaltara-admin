@@ -31,6 +31,7 @@ export default function SevekDetails() {
   }, [id, dispatch]);
 
   const { usersDetails, isDetailsLoading } = useSelector((state) => state.user);
+  console.log('usersDetails', usersDetails);
 
   const {
     photo,
@@ -46,9 +47,9 @@ export default function SevekDetails() {
   } = usersDetails;
 
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
-  ? [...checkUpperGeo.parents].reverse()
-  : [];
-  
+    ? [...checkUpperGeo.parents].reverse()
+    : [];
+
   const TABLE_HEAD = [
     { id: 'photo', label: 'Photo', align: 'left' },
     { id: 'status ', label: 'Status', align: 'left' },
@@ -61,7 +62,7 @@ export default function SevekDetails() {
 
   const details = [
     { label: 'Name', value: name },
-    { label: 'language', value: language },
+    { label: 'Language', value: language },
     { label: 'Phone', value: phone },
     { label: 'Status', value: status },
     {
@@ -73,13 +74,13 @@ export default function SevekDetails() {
   ];
 
   return (
-    <Page title="Sevek Details">
+    <Page title="Sevak Details">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Sevek Details"
           links={[
-            { name: 'sevek List', href: PATH_DASHBOARD.sevak.list },
-            { name: 'Sevek Details' },
+            { name: 'sevak List', href: PATH_DASHBOARD.sevak.list },
+            { name: 'Sevak Details' },
           ]}
         />
         <Grid container spacing={3} pb={2}>
@@ -117,7 +118,7 @@ export default function SevekDetails() {
               {/* Details Section */}
               <Grid item xs={12} sm={6} md={8}>
                 <Typography variant="h5" gutterBottom>
-                  Sevek Information
+                  Sevak Information
                 </Typography>
                 <Box
                   sx={{
@@ -127,7 +128,7 @@ export default function SevekDetails() {
                     mt: 2,
                   }}
                 >
-                  {details.map(({ label, value }) => (
+                  {details?.map(({ label, value }) => (
                     <Box
                       key={label}
                       display="flex"
@@ -137,7 +138,7 @@ export default function SevekDetails() {
                       <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
                         {label} :
                       </Typography>
-                      <Typography variant="body1">{value}</Typography>
+                      <Typography variant="body1" sx={{ textTransform:"capitalize" }}>{value}</Typography>
                     </Box>
                   ))}
                 </Box>
@@ -163,7 +164,6 @@ export default function SevekDetails() {
                   <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
                     <Table size={'medium'}>
                       <TableHeadCustom headLabel={TABLE_HEAD} />
-
                       <TableBody>
                         {stages?.length
                           ? stages.map((row: any, index: number) => (

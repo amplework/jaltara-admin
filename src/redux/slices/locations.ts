@@ -95,11 +95,26 @@ export function getLocationDetails(id?: string) {
   }
 }
 
-export function editLocationsDetails( id?: string) {
+export function addLocationsDetails(payload?:any, id?: string) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      return await axios.patch(`/geographic-entities/${id}`).then((res) => {
+      return await axios.post(`/geographic-entities`,payload).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
+
+export function editLocationsDetails(payload?:any, id?: string) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.patch(`/geographic-entities/${id}`,payload).then((res) => {
         return res;
       });
     } catch (error) {

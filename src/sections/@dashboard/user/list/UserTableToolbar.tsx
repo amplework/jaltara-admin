@@ -1,4 +1,4 @@
-import { Stack, InputAdornment, TextField, MenuItem, Button, Select } from '@mui/material';
+import { Stack, TextField, MenuItem, Button, Select } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import { InputLabel } from '@mui/material';
@@ -45,6 +45,7 @@ export default function UserTableToolbar({
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
         placeholder={placeholderText}
+        
       />
       {!challenges && (
         <TextField

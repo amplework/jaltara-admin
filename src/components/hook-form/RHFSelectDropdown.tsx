@@ -46,7 +46,7 @@ const RHFSelectDropdown = ({
       onClick={onClick}
       SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
     >
-      {options?.length &&
+      {(options?.length &&
         options?.map((option: any, index: any) => {
           return (
             <MenuItem
@@ -64,7 +64,8 @@ const RHFSelectDropdown = ({
               {option?.name}
             </MenuItem>
           );
-        })}
+        })) ||
+        null}
       {defaultMessage && !options?.length && (
         <Typography
           sx={{

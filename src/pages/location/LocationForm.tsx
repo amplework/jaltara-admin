@@ -7,8 +7,6 @@ interface LocationFormProp {
   statusList?: any;
 }
 const LocationForm = ({ statusList }: LocationFormProp) => {
-  console.log('statusList', statusList);
-
   const { checkUpperGeo } = statusList;
   const stateName = getEntityName('state', checkUpperGeo);
   const districtName = getEntityName('district', checkUpperGeo);
@@ -38,54 +36,6 @@ const LocationForm = ({ statusList }: LocationFormProp) => {
       {villageName?.id && (
         <RHFTextField name="selectVillage" label={'Select Village'} placeholder={'Village'} />
       )}
-
-      {/* <RHFSelectDropdown
-        name="selectStates"
-        label={'Select States'}
-        placeholder={'States'}
-        options={statesList}
-        onChange={handleStatesSelect}
-      /> */}
-
-      {/* {districtList?.childEntities?.length ? (
-        <RHFSelectDropdown
-          name="selectDistrict"
-          label={'Select District'}
-          placeholder={'District'}
-          options={districtList?.childEntities}
-          defaultMessage="Please Select State"
-          onChange={handleDistrictSelect}
-          //   disabled={state.isLoading}
-        />
-      ) : (
-        ''
-      )} */}
-
-      {/* {talukList?.childEntities?.length ? (
-        <RHFSelectDropdown
-          name="selectTaluk"
-          label={'Select Taluk'}
-          placeholder={'Taluk'}
-          options={talukList?.childEntities || []}
-          defaultMessage="Please Select District"
-          onChange={handleTalukSelect}
-        />
-      ) : (
-        ''
-      )} */}
-
-      {/* {villageList?.childEntities?.length ? (
-        <RHFSelectDropdown
-          name="selectVillage"
-          label={'Select Village'}
-          placeholder={'Village'}
-          options={villageList?.childEntities}
-          defaultMessage="Please Select Village"
-          onChange={handleVillageSelect}
-        />
-      ) : (
-        ''
-      )} */}
     </Box>
   );
 };
