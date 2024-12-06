@@ -31,31 +31,14 @@ import { useSnackbar } from 'notistack';
 const TABLE_HEAD = [
   { id: 'village', label: 'Village name', align: 'left' },
   { id: 'level', label: 'Level', align: 'left' },
-  { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
+  { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
-  // { id: 'edit', label: 'edit', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function WellList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable();
+  const { page, order, orderBy, rowsPerPage, setPage, onChangePage, onChangeRowsPerPage } =
+    useTable();
 
   const navigate = useNavigate();
 
@@ -69,7 +52,7 @@ export default function WellList() {
 
   const [filterRole, setFilterRole] = useState('all');
 
-  const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
+  const { currentTab: filterStatus } = useTabs('all');
 
   useEffect(() => {
     getWillsList();
@@ -110,7 +93,7 @@ export default function WellList() {
           getWillsList();
         }
       })
-      .catch((error) => {
+      .catch(() => {
         console.log('error');
       });
   };
@@ -139,7 +122,7 @@ export default function WellList() {
             onFilterVillage={handleFilterRole}
             onFilterName={handleFilterName}
             onSearch={onSearch}
-            placeholderText={'Search by Sevek name'}
+            placeholderText={'Search by sevak name'}
             placeholderTextSecond={'Search by village name'}
             pits={false}
           />

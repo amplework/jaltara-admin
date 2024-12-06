@@ -33,7 +33,7 @@ export default function EquipmentTableRow({
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   };
-  const { name, equipment, status,id } = row || {};
+  const { name, equipment, status, id } = row || {};
 
   return (
     <TableRow hover>
@@ -61,6 +61,15 @@ export default function EquipmentTableRow({
             <>
               <MenuItem
                 onClick={() => {
+                  onhandleEditDetails && onhandleEditDetails(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   onhandleDeleteRow && onhandleDeleteRow(id);
                   handleCloseMenu();
                 }}
@@ -68,15 +77,6 @@ export default function EquipmentTableRow({
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onhandleEditDetails && onhandleEditDetails(id);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
               </MenuItem>
             </>
           }

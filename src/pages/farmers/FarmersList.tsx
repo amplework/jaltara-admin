@@ -123,7 +123,7 @@ export default function FarmersList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddUser}
             >
-              New Farmer
+              Add Farmer
             </Button>
           }
         />

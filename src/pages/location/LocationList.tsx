@@ -94,7 +94,7 @@ export default function LocationList() {
     getLocationDetails(state?.id);
   };
 
-  const { locationList, isLoading, locationData } = useSelector((state) => state.locations);
+  const { locationList, locationData } = useSelector((state) => state.locations);
   const { districtList, talukList } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -258,6 +258,7 @@ export default function LocationList() {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
+          setState((prev: any) => ({ ...prev, isLoading: false }));
           handleLocationList();
           handleClose();
           dispatch(emptyDistrictList(null));
@@ -265,10 +266,21 @@ export default function LocationList() {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+
         } else if (res?.data?.statusCode === 422) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'error',
           });
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+        }
+        else
+        {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'error',
+          });
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+          handleClose();
         }
       });
     } else {
@@ -364,40 +376,10 @@ export default function LocationList() {
           </Box>
         </Card>
       </Container>
-      {/* <MasterDataForm
-        openModal={state.openModal}
-        isLoading={isLoading}
-        handleClose={handleClose}
-        onSubmit={onSubmit}
-        methods={methods}
-        id={state.id}
-        handleCropDetails={handleLocationDetails}
-        title={state.id ? 'Edit Crop Details' : 'Create New Crop'}
-      >
-        <LocationForm statusList={locationData} />
-      </MasterDataForm> */}
-
-      {/* <LocationAddForm
-        openModal={state.openModal}
-        methods={methods}
-        handleClose={handleClose}
-        handleLocationList={handleLocationList}
-        onSubmit={onSubmit}
-        title={state.id ? 'Edit Geo Location' : 'Create New Geo Location'}
-
-      >
-        <LocationAdd
-          methods={methods}
-          handleLocationChange={handleLocationChange}
-          handleStatesSelect={handleStatesSelect}
-          handleDistrictSelect={handleDistrictSelect}
-          handleTalukSelect={handleTalukSelect}
-        />
-      </LocationAddForm> */}
 
       <MasterDataForm
         openModal={state.openModal}
-        isLoading={isLoading}
+        isLoading={state.isLoading}
         handleClose={handleClose}
         onSubmit={onSubmit}
         methods={methods}

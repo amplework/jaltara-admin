@@ -138,7 +138,7 @@ export default function EquipmentList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddEquipment}
             >
-              New Equipment
+              Add Equipment
             </Button>
           }
         />
@@ -151,7 +151,7 @@ export default function EquipmentList() {
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
             placeholderText={'Search by names'}
-            placeholderTextSecond={'Search by equipments'}
+            placeholderTextSecond={'Search by equipment'}
           />
 
           <Scrollbar>

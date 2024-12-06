@@ -85,7 +85,7 @@ export function getPitsList(name?: string, village?: string, statgesSearch?: str
   dispatch(slice.actions.startLoading());
   let payload = {
     ...(village?.length && { villageName: village }),
-    ...(name?.length && { name: name }),
+    ...(name?.length && { farmerName: name }),
     ...(statgesSearch?.length && { stageName: statgesSearch }),
   };
   try {

@@ -48,26 +48,26 @@ export default function FarmerTableRow({
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell >
         <Typography variant="subtitle2" noWrap>
-          {land}
+          {land ? land : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell >
         <Typography variant="subtitle2" noWrap>
           {village ? village?.name : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
-          {language}
+      <TableCell >
+        <Typography variant="subtitle2" noWrap sx={{ textTransform:'capitalize' }}>
+          {language ? language : '--'}
         </Typography>
       </TableCell>
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell >
         <Typography variant="subtitle2" noWrap>
-          {totalPits}
+          {totalPits ? totalPits : '--'}
         </Typography>
       </TableCell>
       <TableCell align="left">
@@ -79,6 +79,15 @@ export default function FarmerTableRow({
             <>
               <MenuItem
                 onClick={() => {
+                  onhandleEditDetails && onhandleEditDetails(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   onhandleDeleteRow && onhandleDeleteRow(id);
                   handleCloseMenu();
                 }}
@@ -87,20 +96,10 @@ export default function FarmerTableRow({
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onhandleEditDetails && onhandleEditDetails(id);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
-              </MenuItem>
             </>
           }
         />
       </TableCell>
-
     </TableRow>
   );
 }

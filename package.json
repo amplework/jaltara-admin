@@ -4,6 +4,7 @@
   "version": "3.5.0",
   "description": "React Scripts & Typescript",
   "private": true,
+  "homepage": "http://localhost/jaltara/",
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",

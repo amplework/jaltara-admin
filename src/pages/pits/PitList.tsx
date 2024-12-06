@@ -33,9 +33,8 @@ const TABLE_HEAD = [
   { id: 'village', label: 'Village name', align: 'left' },
   { id: 'number of pits', label: 'Pit level', align: 'left' },
   { id: 'stage name', label: 'Stage name', align: 'left' },
-  { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
+  { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
   { id: 'last update', label: 'Last update', align: 'left' },
-  // { id: 'edit', label: 'edit', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
@@ -148,7 +147,7 @@ export default function PitList() {
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
-            placeholderText={'Search by Sevek name'}
+            placeholderText={'Search by farmer name'}
             placeholderTextSecond={'Search by village name'}
             pits={true}
             stagesName={stagesName}

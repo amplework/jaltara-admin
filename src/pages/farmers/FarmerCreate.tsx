@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Container, Grid } from '@mui/material';
+import { Card, Container, Grid, InputAdornment } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -14,7 +14,13 @@ import { useSnackbar } from 'notistack';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, RHFSelectDropdown, RHFSwitch, RHFTextField } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFRadioGroup,
+  RHFSelectDropdown,
+  RHFSwitch,
+  RHFTextField,
+} from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -37,6 +43,10 @@ import {
   startLoading,
 } from 'src/redux/slices/farmers';
 import { SkeletonProduct } from 'src/components/skeleton';
+import { getCropsList } from 'src/redux/slices/crops';
+import RHFMultiSelectDropdown from 'src/components/hook-form/RHFMultiSelectDropdown';
+import { getCropsChallengesList } from 'src/redux/slices/challanges';
+import RHFMultiSelect from 'src/components/hook-form/RHFMultiSelect';
 
 const languageList = [
   { id: 'hindi', label: 'Hindi', name: 'hindi' },
@@ -44,6 +54,10 @@ const languageList = [
   { id: 'english', label: 'English', name: 'english' },
 ];
 
+const OPTION = [
+  { label: 'Yes', value: 'true' },
+  { label: 'No', value: 'false' },
+];
 const content = [
   '(i) telling us where to dig',
   '(ii) collecting rocks/stones',
@@ -54,7 +68,6 @@ const content2 = [
 ];
 
 export default function FarmerCreate() {
-  
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -62,6 +75,12 @@ export default function FarmerCreate() {
 
   const [state, setState] = useState<any>({
     villageId: null,
+    selectedValues: [],
+    selectCropItem: [],
+    selectedItems: [],
+    selectChallangesValue: [],
+    selectChallangesItems: [],
+    selectCropChallangesItems: [],
   });
 
   useEffect(() => {
@@ -70,26 +89,41 @@ export default function FarmerCreate() {
       dispatch(getFarmerDetails(id));
     }
     getStatesList();
+    getCropsList();
+    getCropsChallengesList();
   }, []);
 
   const { statesList, districtList, talukList, villageList, usersDetails } = useSelector(
     (state) => state.user
   );
 
+  const { cropListData, cropsDetails } = useSelector((state) => state.crops);
+
+  const { challengesListData } = useSelector((state) => state.challenges);
+
   const { farmersDetails, isLoading } = useSelector((state) => state.farmer);
 
   const NewFarmerSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
-    phone: Yup.string().required('Phone number is required').max(10, 'Limit of 10 digit'),
-    // status: Yup.string().required('Status is required'),
-    land: Yup.number()
-      .required('Land(arces) is required')
-      .typeError('land count must be a number')
-      .positive('land count must be a positive number'),
-    familyMemberNumber: Yup.number()
-      .required('Family Count is required')
-      .typeError('Family count must be a number')
-      .positive('Family count must be a positive number'),
+    name: Yup.string()
+      .required('Farmer name is required')
+      .max(50, 'Limit of 50 characters')
+      .matches(/^[^\s].*$/, 'First character cannot be a space.')
+      .matches(/^[A-Za-z\s]+$/, 'Only alphabetic characters are allowed.'),
+    phone: Yup.string()
+      .required('Phone number is required')
+      .matches(/^\d{10}$/, 'Only numbers are allowed and limit is 10 digits'), // status: Yup.string().required('Status is required'),
+    land: Yup.string()
+      .required('This field is required')
+      .matches(
+        /^\d{1,6}(\.\d{0,6})?$/,
+        'Only numbers are allowed, with a maximum of 6 digits and an optional decimal point.'
+      ),
+    familyMemberNumber: Yup.string()
+      .required('Family count is required')
+      .matches(
+        /^\d{1,2}$/, // Matches up to 2 digits
+        'Only numbers are allowed, and the maximum number is 2 digits.'
+      ),
     language: Yup.string().required('Language is required'),
     farmAvailableDate: Yup.string().required('date is required').nullable(),
     selectStates: Yup.string().required('States is required'),
@@ -104,7 +138,13 @@ export default function FarmerCreate() {
       then: Yup.string().required('Village is required'),
       otherwise: Yup.string(),
     }),
-    isParticipate: Yup.boolean().required('Participate is required'),
+    isParticipate: Yup.string().required('Participate is required').nullable(),
+    crops: Yup.array()
+      .of(Yup.string().required('Each crop must be selected'))
+      .min(1, 'At least one crop must be selected'),
+    farmingChallenge: Yup.array()
+      .of(Yup.string().required('Each crop challanges must be selected'))
+      .min(1, 'At least one crop must be selected'),
   });
 
   const defaultValues = useMemo(
@@ -120,7 +160,9 @@ export default function FarmerCreate() {
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: '',
-      isParticipate: true,
+      isParticipate: '',
+      crops: [],
+      farmingChallenge: [],
     }),
     [usersDetails]
   );
@@ -131,8 +173,10 @@ export default function FarmerCreate() {
   });
 
   const {
+    watch,
     setValue,
     handleSubmit,
+    clearErrors,
     formState: { isSubmitting },
   } = methods;
 
@@ -158,7 +202,20 @@ export default function FarmerCreate() {
     setValue('language', farmersDetails?.language);
     setValue('farmAvailableDate', farmersDetails?.farmAvailableDate);
     setValue('isParticipate', farmersDetails?.isParticipate);
+    setValue('crops', farmersDetails?.crops?.map((item: any) => item?.id) || []);
+    setValue(
+      'farmingChallenge',
+      farmersDetails?.farmingChallenge?.map((item: any) => item?.id) || []
+    );
+
     setValue('selectStates', stateIdData?.id);
+    setState((prev: any) => ({
+      ...prev,
+      selectedValues: farmersDetails?.crops?.map((item: any) => item?.id) || [],
+      selectChallangesValue: farmersDetails?.farmingChallenge?.map((item: any) => item?.id) || [],
+      selectCropItem: farmersDetails?.crops?.map((item: any) => item) || [],
+      selectCropChallangesItems: farmersDetails?.farmingChallenge?.map((item: any) => item) || [],
+    }));
 
     if (farmersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
@@ -207,6 +264,7 @@ export default function FarmerCreate() {
         farmAvailableDate: farmersDetails?.farmAvailableDate,
         land: Number(farmersDetails?.land),
         status: farmersDetails?.status,
+        isParticipate: Boolean(farmersDetails?.isParticipate),
       };
 
       let payload: any = {
@@ -218,9 +276,12 @@ export default function FarmerCreate() {
         farmAvailableDate: data?.farmAvailableDate,
         land: Number(data?.land),
         status: data?.status,
-        isParticipate: data?.isParticipate,
+        isParticipate: Boolean(data?.isParticipate),
+        crops: state?.selectedItems?.length ? state?.selectedItems : state?.selectCropItem,
+        farmingChallenge: state?.selectChallangesItems?.length
+          ? state?.selectChallangesItems
+          : state.selectCropChallangesItems,
       };
-
       Object.keys(payload).forEach((key) => {
         if (payload[key] === previousState[key]) {
           delete payload[key];
@@ -256,6 +317,7 @@ export default function FarmerCreate() {
   };
 
   const handleStatesSelect = (id: any) => {
+    clearErrors("selectDistrict");
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
@@ -264,6 +326,7 @@ export default function FarmerCreate() {
   };
 
   const handleDistrictSelect = (id: any) => {
+    clearErrors("selectTaluk");
     setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
@@ -272,6 +335,7 @@ export default function FarmerCreate() {
 
   const handleTalukSelect = (id: string) => {
     setState((prev: any) => ({ ...prev, villageId: id }));
+    clearErrors("selectVillage");
     setValue('selectVillage', '');
     getVillageList(id);
   };
@@ -280,16 +344,38 @@ export default function FarmerCreate() {
     setState((prev: any) => ({ ...prev, villageId: id }));
   };
 
+  const handleChange = (newSelectedValues: any[]) => {
+    const names = cropListData
+      ?.filter((item: any) => newSelectedValues.includes(item?.id))
+      .map((item) => item);
+
+    setState((prev: any) => ({
+      ...prev,
+      selectedValues: newSelectedValues,
+      selectedItems: names,
+    }));
+  };
+
+  const handleCropChallangesChange = (newSelectedValues: any[]) => {
+    const names = challengesListData
+      ?.filter((item: any) => newSelectedValues?.includes(item?.id))
+      ?.map((item: any) => item);
+
+    setState((prev: any) => ({
+      ...prev,
+      selectChallangesValue: newSelectedValues,
+      selectChallangesItems: names,
+    }));
+  };
+
   return (
     <Page title="Create farmer">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          // heading={!isEdit ? 'Create a new sevek' : 'Edit sevek details'}
-          heading={!id ? 'Create a new Farmer' : 'Edit Farmer details'}
+          heading={!id ? 'Add Farmer' : 'Edit Farmer details'}
           links={[
             { name: 'Farmer List', href: PATH_DASHBOARD.sevak.list },
-            // { name: !isEdit ? 'New sevek' : 'Edit sevek' },
-            { name: !id ? 'Create a new farmer' : 'Edit farmer' },
+            { name: !id ? 'Add Farmer' : 'Edit Farmer' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -310,18 +396,45 @@ export default function FarmerCreate() {
                     }}
                   >
                     <RHFTextField name="name" label="Farmer Name" />
-                    <RHFTextField name="phone" label="Phone Number" />
+                    <RHFTextField
+                      name="phone"
+                      label="Phone Number"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                      }}
+                    />
+
                     <RHFTextField name="land" label="Land (arces)" />
                     <RHFTextField name="familyMemberNumber" label="Family Count" />
-                    <RHFDatePicker name="farmAvailableDate" label="Farm Available Date" />
+                    <RHFDatePicker
+                      name="farmAvailableDate"
+                      label="Farm Available Date"
+                      minDate={new Date()}
+                    />
                     <RHFSelectDropdown
                       name="language"
                       label={'Select Language'}
                       placeholder={'Language'}
                       options={languageList}
                     />
+                    <RHFMultiSelectDropdown
+                      name="crops"
+                      label={'Select Crops'}
+                      placeholder={'Crops'}
+                      options={cropListData}
+                      onChange={handleChange}
+                      selectedValues={state.selectedValues}
+                    />
+                    <RHFMultiSelect
+                      name="farmingChallenge"
+                      label={'Select Crops Challanges'}
+                      placeholder={'Crops Challanges'}
+                      options={challengesListData}
+                      onChange={handleCropChallangesChange}
+                      selectedValues={state.selectChallangesValue}
+                    />
                     <Box width="100%">
-                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                      <Box display="flex" alignItems="center">
                         <Box display="flex" flexWrap="wrap" flex="1">
                           {content2?.map((text, index) => (
                             <Typography
@@ -337,44 +450,48 @@ export default function FarmerCreate() {
                             </Typography>
                           ))}
                         </Box>
-                        <RHFSwitch
-                          name="isParticipate"
-                          labelPlacement="end"
-                          label=""
-                          sx={{
-                            mx: 0,
-                            justifyContent: 'flex-end',
-                            flexShrink: 0,
-                            '& .MuiSwitch-switchBase': {
-                              color: '#ccc',
-                            },
-                            '& .MuiSwitch-switchBase.Mui-checked': {
-                              color: '#a2a',
-                            },
-                            '& .MuiSwitch-track': {
-                              backgroundColor: '#ddd',
-                              opacity: 1,
-                            },
-                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                              backgroundColor: '#a2a',
-                            },
-                          }}
-                        />
                       </Box>
 
                       {content?.map((text, index) => (
-                        <Typography
-                          key={index}
-                          variant={index === 0 ? 'subtitle2' : 'body2'}
-                          sx={{ mb: 0.5 }}
-                        >
+                        <Typography key={index} variant={'body2'} sx={{ mb: 0.5 }}>
                           {text}
                         </Typography>
                       ))}
+                      {/* <RHFSwitch
+                        name="isParticipate"
+                        labelPlacement="end"
+                        label=""
+                        sx={{
+                          mx: 0,
+                          justifyContent: 'flex-end',
+                          flexShrink: 0,
+                          '& .MuiSwitch-switchBase': {
+                            color: '#ccc',
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#a2a',
+                          },
+                          '& .MuiSwitch-track': {
+                            backgroundColor: '#ddd',
+                            opacity: 1,
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#a2a',
+                          },
+                        }}
+                      /> */}
+                      <RHFRadioGroup
+                        name="isParticipate"
+                        options={OPTION}
+                        sx={{
+                          '& .MuiFormControlLabel-root': { mr: 4 },
+                        }}
+                      />
                     </Box>
                   </Box>
+
                   <Typography variant="h4" py={2}>
-                    Select State
+                    Assign Location
                   </Typography>
                   <Box
                     sx={{
@@ -437,8 +554,7 @@ export default function FarmerCreate() {
                       loading={isSubmitting}
                       startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
                     >
-                      {/* {!isEdit ? 'Create sevek' : 'Edit sevek'} */}
-                      {id ? 'Edit sevek' : 'Add New'}
+                      {id ? 'Save' : 'Add'}
                     </LoadingButton>
                   </Stack>
                 </Card>

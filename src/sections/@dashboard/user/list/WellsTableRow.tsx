@@ -28,26 +28,29 @@ export default function WellsTableRow({ row, handleShowDetails, onhandleDeleteRo
   const { village, level, stages, id } = row || {};
 
   return (
-    <TableRow hover sx={{ cursor: 'pointer' }}>
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+    <TableRow hover sx={{ cursor: 'default' }}>
+      <TableCell
+        onClick={() => handleShowDetails && handleShowDetails(id)}
+        sx={{ cursor: 'pointer' }}
+      >
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {village?.name}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap >
           {level}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {stages?.[0]?.updatedbySevek?.name ? stages?.[0]?.updatedbySevek?.name : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
           {formatedDate(stages?.[0]?.created)}
         </Typography>

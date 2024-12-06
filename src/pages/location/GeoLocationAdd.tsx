@@ -2,7 +2,6 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { RHFSelectDropdown, RHFTextField } from 'src/components/hook-form';
 import { useSelector } from 'src/redux/store';
-import { getEntityName } from 'src/utils/common';
 
 export const LocationList = [
   { id: 'state', label: 'State', name: 'State', value: 'state' },

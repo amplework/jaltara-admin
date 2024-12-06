@@ -285,7 +285,7 @@ export default function SevekCreate() {
           heading={!id ? 'Add sevak' : 'Edit sevak details'}
           links={[
             { name: 'Sevak List', href: PATH_DASHBOARD.sevak.list },
-            { name: !id ? 'Add sevak' : 'Edit sevak' },
+            { name: !id ? 'Add Sevak' : 'Edit Sevak' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -342,6 +342,7 @@ export default function SevekCreate() {
                       label={'Select States'}
                       placeholder={'States'}
                       options={statesList}
+                      defaultMessage="Please Select State"
                       onChange={handleStatesSelect}
                     />
                     {districtList?.childEntities?.length ? (

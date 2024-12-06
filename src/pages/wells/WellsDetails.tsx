@@ -39,18 +39,19 @@ export default function WellsDetails() {
 
   const TABLE_HEAD = [
     { id: 'photo', label: 'Photo', align: 'left' },
-    { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
+    { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
     { id: 'last update', label: 'Last update', align: 'left' },
   ];
+  console.log('plotSize', plotSize);
 
   const details = [
     { label: 'Description', value: description },
     { label: 'GPS Location', value: gpsLocation },
     { label: 'Level', value: level },
-    { label: 'Plot Size', value: `${plotSize} sq. ft.` },
+    { label: 'Plot Size', value: `${plotSize ? `${plotSize} sq.ft.` : 'N/A'} ` },
     {
       label: 'Village',
-      value: `${checkUpperGeo?.name} ${reverseGeoLocations?.map((item: any) => item?.name)}`,
+      value: `${checkUpperGeo?.name},${reverseGeoLocations?.map((item: any) => item?.name)}`,
     },
   ];
 
@@ -98,17 +99,25 @@ export default function WellsDetails() {
                       mt: 2,
                     }}
                   >
-                    {details.map(({ label, value }) => (
+                    {details?.map(({ label, value }) => (
                       <Box
                         key={label}
                         display="flex"
                         // justifyContent="space-between"
                         alignItems="center"
                       >
-                        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ fontWeight: 'bold', minWidth: 120, textTransform: 'capitalize' }}
+                        >
                           {label} :
                         </Typography>
-                        <Typography variant="body1">{value}</Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{ ...(label === 'Plot Size' ? {} : { textTransform: 'capitalize' }) }}
+                        >
+                          {value}
+                        </Typography>
                       </Box>
                     ))}
                   </Box>

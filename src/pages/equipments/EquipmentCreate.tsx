@@ -35,7 +35,6 @@ const languageList = [
 ];
 
 export default function EquipmentCreate() {
-  
   const { id } = useParams();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -132,13 +131,13 @@ export default function EquipmentCreate() {
   };
 
   return (
-    <Page title="Create Equipment">
+    <Page title="Create Equipments">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading={!id ? 'Create a new equipment' : 'Edit equipment details'}
+          heading={!id ? 'Add equipment' : 'Edit equipment details'}
           links={[
-            { name: 'equipment List', href: PATH_DASHBOARD.sevak.list },
-            { name: !id ? 'Create a new equipment' : 'Edit equipment' },
+            { name: 'Equipment List', href: PATH_DASHBOARD.sevak.list },
+            { name: !id ? 'Add equipment' : 'Edit equipment details' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -177,9 +176,11 @@ export default function EquipmentCreate() {
                         equipmentDetails?.status === watch('status') &&
                         equipmentDetails?.equipment === watch('equipment')
                       }
-                      startIcon={<Iconify icon={'mingcute:user-add-fill'} />}
+                      startIcon={
+                        <Iconify icon={!id ? 'mingcute:user-add-fill' : 'fa-solid:user-edit'} />
+                      }
                     >
-                      {id ? 'Edit sevak' : 'Add New'}
+                      {id ? 'Save' : 'Add'}
                     </LoadingButton>
                   </Stack>
                 </Card>

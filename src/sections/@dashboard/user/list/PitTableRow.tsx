@@ -32,43 +32,43 @@ export default function PitTableRow({ row, handleShowDetails, onhandleDeleteRow 
   const { farmer, village, level, stages, id } = row || {};
 
   return (
-    <TableRow hover sx={{ cursor: 'pointer' }}>
+    <TableRow hover sx={{ cursor: 'default' }}>
       <TableCell
-        sx={{ display: 'flex', alignItems: 'center' }}
+        sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
         onClick={() => handleShowDetails && handleShowDetails(id)}
       >
         {/* <Avatar alt={} src={''} sx={{ mr: 2 }} /> */}
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize', }}>
           {farmer?.name}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {village?.name}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
           {level}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {stages?.[0]?.stageName}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+      <TableCell>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {stages?.[0]?.updatedbySevek?.name ? stages?.[0]?.updatedbySevek?.name : '--'}
         </Typography>
       </TableCell>
 
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {formatedDate(stages?.[0]?.created)}
         </Typography>
       </TableCell>

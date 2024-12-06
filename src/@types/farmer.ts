@@ -44,6 +44,8 @@ export type FarmerDetailsType = {
   familyMemberNumber: Number;
   farmAvailableDate: string;
   isParticipate: Boolean;
+  crops:string[];
+  farmingChallenge: string[]
 };
 
 interface Parent {

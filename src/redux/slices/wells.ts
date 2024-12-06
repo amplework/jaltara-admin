@@ -79,7 +79,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getWellsUserDetails,startLoading } = slice.actions;
+export const { getWellsUserDetails, startLoading } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ export function getWillsList(name?: string, village?: string) {
 
   let payload = {
     ...(village?.length && { villageName: village }),
-    ...(name?.length && { name: name }),
+    ...(name?.length && { sevakName: name }),
   };
   try {
     axios.get('/wells', { params: payload }).then((response) => {

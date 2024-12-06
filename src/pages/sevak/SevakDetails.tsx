@@ -77,9 +77,9 @@ export default function SevekDetails() {
     <Page title="Sevak Details">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading="Sevek Details"
+          heading="Sevak Details"
           links={[
-            { name: 'sevak List', href: PATH_DASHBOARD.sevak.list },
+            { name: 'Sevak List', href: PATH_DASHBOARD.sevak.list },
             { name: 'Sevak Details' },
           ]}
         />
@@ -101,18 +101,37 @@ export default function SevekDetails() {
           ) : (
             <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
-              <Grid item xs={12} sm={6} md={4}>
-                <Image
-                  src={photo ? photo : noImage}
-                  alt="sevek Image"
+              <Grid item xs={12} sm={6} md={4} display={"flex"} justifyContent={"center"}>
+                <Box
                   sx={{
-                    width: '100%',
-                    height: 'auto',
+                    width: 300,
+                    height: 300,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     borderRadius: 2,
-                    objectFit: 'cover',
+                    overflow: 'hidden',
                     boxShadow: 3,
+                    transition: 'box-shadow 0.3s ease-in-out',
+                    '&:hover': {
+                      boxShadow: 6,
+                    },
                   }}
-                />
+                >
+                  <Image
+                    src={photo ? photo : noImage}
+                    alt={photo ? 'Uploaded Image' : 'No Image Available'}
+                    sx={{
+                      width: '70%',
+                      height: 'auto',
+                      objectFit: 'cover',
+                      transition: 'transform 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                      },
+                    }}
+                  />
+                </Box>
               </Grid>
 
               {/* Details Section */}
@@ -138,7 +157,9 @@ export default function SevekDetails() {
                       <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
                         {label} :
                       </Typography>
-                      <Typography variant="body1" sx={{ textTransform:"capitalize" }}>{value}</Typography>
+                      <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
+                        {value}
+                      </Typography>
                     </Box>
                   ))}
                 </Box>

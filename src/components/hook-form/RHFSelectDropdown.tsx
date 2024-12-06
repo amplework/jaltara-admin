@@ -18,6 +18,16 @@ type Props = {
   defaultMessage?: string;
 };
 
+const ITEM_HEIGHT = 48; 
+const ITEM_PADDING_TOP = 8; 
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP, // Max height for dropdown
+      width: 250, // Optional width adjustment
+    },
+  },
+};
 const RHFSelectDropdown = ({
   disabled,
   onClick,
@@ -44,7 +54,7 @@ const RHFSelectDropdown = ({
       label={label}
       placeholder={placeholder}
       onClick={onClick}
-      SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+      SelectProps={{ native: false, sx: { textTransform: 'capitalize' },MenuProps }}
     >
       {(options?.length &&
         options?.map((option: any, index: any) => {
@@ -59,6 +69,9 @@ const RHFSelectDropdown = ({
                 borderRadius: 0.75,
                 typography: 'body2',
                 textTransform: 'capitalize',
+                minHeight: ITEM_HEIGHT,
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               {option?.name}

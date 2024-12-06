@@ -16,12 +16,9 @@ type Props = {
 };
 
 export default function WellsDetailsRow({ row, pit }: Props) {
-
   const theme = useTheme();
 
   const { created, photo, updatedbySevek, stageName } = row || {};
-
-  
 
   return (
     <TableRow>
@@ -41,14 +38,14 @@ export default function WellsDetailsRow({ row, pit }: Props) {
 
       {pit ? (
         <TableCell>
-          <Typography variant="subtitle2" noWrap>
+          <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
             {stageName ? stageName : '--'}
           </Typography>
         </TableCell>
       ) : null}
 
       <TableCell>
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {updatedbySevek?.name ? updatedbySevek?.name : '--'}
         </Typography>
       </TableCell>

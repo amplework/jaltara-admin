@@ -40,7 +40,7 @@ export default function PitsDetails() {
   const TABLE_HEAD = [
     { id: 'photo', label: 'Photo', align: 'left' },
     { id: 'stage ', label: 'Stage Name', align: 'left' },
-    { id: 'update by sevek', label: 'Update by sevek', align: 'left' },
+    { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
     { id: 'last update', label: 'Last update', align: 'left' },
   ];
 
@@ -49,10 +49,10 @@ export default function PitsDetails() {
     { label: 'Stage', value: stageName },
     { label: 'GPS Location', value: gpsLocation },
     { label: 'Level', value: level },
-    { label: 'Plot Size', value: `${plotSize} sq. ft.` },
+    { label: 'Plot Size', value: `${plotSize} sq.ft.` },
     {
       label: 'Village',
-      value: `${checkUpperGeo?.name} ${reverseGeoLocations?.map((item: any) => item?.name)}`,
+      value: `${checkUpperGeo?.name},${reverseGeoLocations?.map((item: any) => item?.name)}`,
     },
   ];
 
@@ -61,7 +61,7 @@ export default function PitsDetails() {
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
           heading="Pits Details"
-          links={[{ name: 'pits List', href: PATH_DASHBOARD.pits.list }, { name: 'Pits Details' }]}
+          links={[{ name: 'Pits List', href: PATH_DASHBOARD.pits.list }, { name: 'Pits Details' }]}
         />
         <Card sx={{ p: 3 }}>
           {isLoading ? (
@@ -97,7 +97,7 @@ export default function PitsDetails() {
                       mt: 2,
                     }}
                   >
-                    {details.map(({ label, value }) => (
+                    {details?.map(({ label, value }) => (
                       <Box
                         key={label}
                         display="flex"
@@ -107,7 +107,14 @@ export default function PitsDetails() {
                         <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
                           {label} :
                         </Typography>
-                        <Typography variant="body1">{value}</Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            ...(label === 'Plot Size' ? {} : { textTransform: 'capitalize' }),
+                          }}
+                        >
+                          {value}
+                        </Typography>
                       </Box>
                     ))}
                   </Box>
@@ -133,7 +140,7 @@ export default function PitsDetails() {
 
                         <TableBody>
                           {stages?.length
-                            ? stages.map((row: any, index: number) => (
+                            ? stages?.map((row: any, index: number) => (
                                 <WellsDetailsRow key={row.id} row={row} index={index} pit={true} />
                               ))
                             : null}
