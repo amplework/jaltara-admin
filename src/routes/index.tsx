@@ -132,29 +132,6 @@ export default function Router() {
             },
           ],
         },
-        // {
-        //   path: 'masterdata',
-        //   children: [
-        //     {
-        //       path: 'croplist',
-        //       element: <CropList />,
-        //       children: [
-        //         {
-        //           path: 'create',
-        //           element: <CropCreate />,
-        //         },
-        //         {
-        //           path: 'edit',
-        //           element: <LocationList />,
-        //         },
-        //       ],
-        //     },
-        //     {
-        //       path: 'challanges',
-        //       element: <CropList />,
-        //     },
-        //   ],
-        // },
         {
           path: 'masterdata',
           children: [
@@ -173,6 +150,22 @@ export default function Router() {
             {
               path: 'challanges',
               element: <Challanges />,
+            },
+            {
+              path: 'tutorial',
+              element: <Tutorial />,
+            },
+            {
+              path: 'tutorial-create',
+              element: <TutorialCreate />,
+            },
+            {
+              path: 'tutorial-edit/:id',
+              element: <TutorialCreate />,
+            },
+            {
+              path: 'tutorial-details/:id',
+              element: <TutorialDetails />,
             },
           ],
         },
@@ -226,7 +219,9 @@ const PitsDetails = Loadable(lazy(() => import('../pages/pits/PitsDetails')));
 // master data
 const CropList = Loadable(lazy(() => import('../pages/masterData/crops/CropList')));
 const CropCreate = Loadable(lazy(() => import('../pages/masterData/crops/CropCreate')));
-const Challanges = Loadable(lazy(() => import('../pages/masterData/cropsChallanges/ChallangesList')));
+const Challanges = Loadable(
+  lazy(() => import('../pages/masterData/cropsChallanges/ChallangesList'))
+);
 
 // Challanges
 // farmer
@@ -242,6 +237,11 @@ const LocationList = Loadable(lazy(() => import('../pages/location/LocationList'
 // equipent
 const EquipmentList = Loadable(lazy(() => import('../pages/equipments/EquipmentList')));
 const EquipmentCreate = Loadable(lazy(() => import('../pages/equipments/EquipmentCreate')));
+// tutorial
+const Tutorial = Loadable(lazy(() => import('../pages/tutorials/TutorialList')));
+const TutorialCreate = Loadable(lazy(() => import('../pages/tutorials/TutorialCreate')));
+const TutorialDetails = Loadable(lazy(() => import('../pages/tutorials/TutorialDetails')));
+
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

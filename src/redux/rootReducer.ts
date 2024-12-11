@@ -10,6 +10,7 @@ import farmerReducer from './slices/farmers';
 import wellsReducer from './slices/wells';
 import challengesReducer from './slices/challanges';
 import locationsReducer from './slices/locations';
+import tutorialReducer from './slices/tutorial';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,9 @@ const rootReducer = combineReducers({
   farmer: farmerReducer,
   wells: wellsReducer,
   challenges:challengesReducer,
-  locations:locationsReducer
+  locations:locationsReducer,
+  tutorials:tutorialReducer
+
 });
 
 export { rootPersistConfig, rootReducer };

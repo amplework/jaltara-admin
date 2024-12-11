@@ -90,7 +90,6 @@ export default function LocationList() {
 
   const handleLocationDetails = () => {
     setState((prev: any) => ({ ...prev, isLoading: true }));
-
     getLocationDetails(state?.id);
   };
 
@@ -100,6 +99,7 @@ export default function LocationList() {
   useEffect(() => {
     dispatch(emptyDistrictList(null));
     if (locationData?.id && state?.id) {
+      setState((prev: any) => ({ ...prev, isLoading: true }));
       const stateName = getEntityName('state', locationData?.checkUpperGeo);
       const districtName = getEntityName('district', locationData?.checkUpperGeo);
       const talukName = getEntityName('taluk', locationData?.checkUpperGeo);
@@ -161,11 +161,23 @@ export default function LocationList() {
   );
 
   const NewLocationSchema = Yup.object().shape({
-    location: Yup.string().required('States is required'),
+    location: Yup.string().required('Location is required'),
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
-    selectStates: Yup.string(),
-    selectDistrict: Yup.string(),
-    selectTaluk: Yup.string(),
+    selectStates: Yup.string().when('location', {
+      is: (value: any) => value === 'district' || value === 'taluk' || value === 'village', // Check if location is 'district' or 'taluk'
+      then: Yup.string().required('State is required'), // State becomes required
+      otherwise: Yup.string(), // No validation otherwise
+    }),
+    selectDistrict: Yup.string().when('location', {
+      is: (value: any) => value === 'taluk' || value === 'village', // Check if location is 'taluk'
+      then: Yup.string().required('District is required'), // District becomes required
+      otherwise: Yup.string(), // No validation otherwise
+    }),
+    selectTaluk: Yup.string().when('location', {
+      is: (value: any) => value === 'village', // Check if location is 'taluk'
+      then: Yup.string().required('Taluk is required'), // District becomes required
+      otherwise: Yup.string(), // No validation otherwise
+    }),
   });
 
   const methods = useForm<LocationAdd>({
@@ -176,10 +188,14 @@ export default function LocationList() {
   const {
     reset,
     watch,
+    setError,
+    clearErrors,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const fieldsToClear = ['location', 'name', 'selectDistrict', 'selectStates', 'selectTaluk'];
 
   const onSearch = () => {
     const statgesSearch = state.selectStages;
@@ -205,18 +221,22 @@ export default function LocationList() {
   };
 
   const handleLocationChange = () => {
-    setValue('selectStates', '');
-    setValue('selectDistrict', '');
-    setValue('selectTaluk', '');
-    setValue('name', '');
+    getStatesList();
+      setValue('selectStates', '');
+      setValue('selectDistrict', '');
+      setValue('selectTaluk', '');
+      setValue('name', '');
   };
 
   const onhandleEditDetails = (id: string) => {
-    setState((prev) => ({ ...prev, openModal: true, id: id }));
+    // dispatch(emptyDistrictList(null));
+    setState((prev) => ({ ...prev, openModal: true, id: id, isLoading: true }));
   };
 
   const handleClose = () => {
-    setState((prev) => ({ ...prev, openModal: false, id: '' }));
+    dispatch(emptyDistrictList(null));
+    setState((prev) => ({ ...prev, openModal: false, id: '', isLoading: false }));
+    fieldsToClear.forEach((field: any) => clearErrors(field));
   };
 
   const handleAddUser = () => {
@@ -267,15 +287,12 @@ export default function LocationList() {
             variant: 'success',
           });
           setState((prev: any) => ({ ...prev, isLoading: false }));
-
         } else if (res?.data?.statusCode === 422) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'error',
           });
           setState((prev: any) => ({ ...prev, isLoading: false }));
-        }
-        else
-        {
+        } else {
           enqueueSnackbar(res?.data?.message, {
             variant: 'error',
           });
@@ -316,7 +333,7 @@ export default function LocationList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddUser}
             >
-              New Geolocation
+              Add Geolocation
             </Button>
           }
         />
@@ -385,7 +402,7 @@ export default function LocationList() {
         methods={methods}
         id={state?.id}
         handleCropDetails={handleLocationDetails}
-        title={state.id ? 'Edit Geo Location' : 'Create New Geo Location'}
+        title={state.id ? 'Edit village location' : 'Add Geo Location'}
       >
         <GeoLocationAdd
           state={state}
@@ -394,6 +411,7 @@ export default function LocationList() {
           handleStatesSelect={handleStatesSelect}
           handleDistrictSelect={handleDistrictSelect}
           handleTalukSelect={handleTalukSelect}
+          isLoading={state.isLoading}
         />
       </MasterDataForm>
     </Page>

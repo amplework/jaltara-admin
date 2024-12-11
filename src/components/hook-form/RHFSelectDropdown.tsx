@@ -16,15 +16,16 @@ type Props = {
   onChange?: any;
   onAdd?: VoidFunction;
   defaultMessage?: string;
+  value?: string;
 };
 
-const ITEM_HEIGHT = 48; 
-const ITEM_PADDING_TOP = 8; 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP, // Max height for dropdown
-      width: 250, // Optional width adjustment
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
     },
   },
 };
@@ -40,9 +41,11 @@ const RHFSelectDropdown = ({
   options,
   sx,
   onAdd,
+  value,
   defaultMessage,
 }: Props) => {
   const theme = useTheme();
+  console.log('value ----------------->', value);
 
   return (
     <RHFSelect
@@ -52,12 +55,15 @@ const RHFSelectDropdown = ({
       name={name}
       id={id}
       label={label}
+      value={value} // Bind value here
       placeholder={placeholder}
       onClick={onClick}
-      SelectProps={{ native: false, sx: { textTransform: 'capitalize' },MenuProps }}
+      SelectProps={{ native: false, sx: { textTransform: 'capitalize' }, MenuProps }}
     >
       {(options?.length &&
         options?.map((option: any, index: any) => {
+          console.log('name',option?.name);
+          
           return (
             <MenuItem
               key={index}

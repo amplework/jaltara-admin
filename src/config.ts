@@ -8,7 +8,7 @@ import Iconify from './components/Iconify';
 // ----------------------------------------------------------------------
 
 // export const HOST_API = process.env.REACT_APP_HOST_API_KEY || '';
-export const HOST_API = "http://192.168.0.136:3000"
+export const HOST_API = "http://192.168.0.137:3000"
 
 // export const HOST_API = process.env.PUBLIC_URL;
 // console.log('hostApi',HOST_API);

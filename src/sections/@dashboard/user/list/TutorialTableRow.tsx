@@ -1,31 +1,32 @@
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+import { Avatar, Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+// @types
 // components
-import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
-import { PitItem } from 'src/@types/pits';
+import { CropItem } from 'src/@types/crops';
+import _ from 'lodash';
 import { formatedDate } from 'src/utils/formateDate';
-import { LocationListing } from 'src/@types/location';
-import { getEntityName } from 'src/utils/common';
+import { TableMoreMenu } from 'src/components/table';
+import Iconify from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: LocationListing | null;
+  row: any | null;
+  onDeleteRow?: (id: any) => void;
+  onEditRow?: (id: any) => void;
   handleShowDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
-  onhandleEditDetails?: (id: any) => void;
 };
 
-export default function LocationTableRow({
+export default function TutorialTableRow({
   row,
+  onDeleteRow,
   handleShowDetails,
-  onhandleDeleteRow,
-  onhandleEditDetails,
+  onEditRow,
 }: Props) {
   const theme = useTheme();
+
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
@@ -34,48 +35,25 @@ export default function LocationTableRow({
     setOpenMenuActions(null);
   };
 
-  const { id, name, farmerCount, checkUpperGeo } = row || {};
-
-  const stateName = getEntityName('state', checkUpperGeo);
-  const districtName = getEntityName('district', checkUpperGeo);
-  const talukName = getEntityName('taluk', checkUpperGeo);
+  const { subject, status, id, videos } = row || {};
 
   return (
-    <TableRow
-      hover
-      onClick={() => handleShowDetails && handleShowDetails(id)}
-      sx={{ cursor: 'pointer' }}
-    >
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="subtitle2" noWrap>
-          {name}
+    <TableRow hover>
+      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+        <Typography variant="subtitle2" noWrap sx={{ cursor: 'pointer' }}>
+          {_.capitalize(subject) || 'N/A'}
         </Typography>
       </TableCell>
-
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {talukName?.id ? talukName?.name : '--'}
+          {_.capitalize(videos?.length) || 'N/A'}
         </Typography>
       </TableCell>
-
       <TableCell>
         <Typography variant="subtitle2" noWrap>
-          {districtName?.id ? districtName?.name : '--'}
+          {_.capitalize(status) || 'N/A'}
         </Typography>
       </TableCell>
-
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {stateName?.id ? stateName?.name : '--'}
-        </Typography>
-      </TableCell>
-
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {farmerCount || '--'}
-        </Typography>
-      </TableCell>
-
       <TableCell align="left">
         <TableMoreMenu
           open={openMenu}
@@ -85,7 +63,7 @@ export default function LocationTableRow({
             <>
               <MenuItem
                 onClick={() => {
-                  onhandleEditDetails && onhandleEditDetails(id);
+                  onEditRow && onEditRow(id);
                   handleCloseMenu();
                 }}
               >
@@ -94,7 +72,7 @@ export default function LocationTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onDeleteRow && onDeleteRow(id);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

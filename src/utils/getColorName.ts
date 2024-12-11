@@ -34,3 +34,12 @@ export default function getColorName(hex: string) {
 
   return color;
 }
+
+
+export function getRandomExtremelyLightColor() {
+  const r = Math.floor(Math.random() * 26 + 230); // Red: 230-255
+  const g = Math.floor(Math.random() * 26 + 230); // Green: 230-255
+  const b = Math.floor(Math.random() * 26 + 230); // Blue: 230-255
+
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}

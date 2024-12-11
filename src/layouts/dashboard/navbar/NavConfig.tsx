@@ -63,6 +63,7 @@ const navConfig = [
         children: [
           { title: 'crops', path:PATH_DASHBOARD.masterdata.cropList},
           { title: 'farmer challanges', path: PATH_DASHBOARD.masterdata.challangesList },
+          { title: 'Tutorial', path: PATH_DASHBOARD.masterdata.tutorial },
         ],
       },
     ],

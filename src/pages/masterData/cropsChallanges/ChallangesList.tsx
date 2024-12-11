@@ -42,6 +42,11 @@ import ChallengesForm from '../form/ChallengesForm';
 
 // ----------------------------------------------------------------------
 
+export const statusChallangesList = [
+  { id: 'active', label: 'Active', name: 'active' },
+  { id: 'inactive', label: 'Inactive', name: 'inactive' },
+];
+
 export const statusList = [
   { id: 'state', label: 'State', name: 'State', value: 'state' },
   { id: 'district', label: 'District', name: 'District', value: 'district' },
@@ -218,7 +223,7 @@ export default function ChallangesList() {
     <Page title="Crop Challanges List">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading="Crop Challanges List"
+          heading="Farmer Challanges List"
           links={[{ href: PATH_DASHBOARD.masterdata.create }]}
           action={
             <Button
@@ -226,7 +231,7 @@ export default function ChallangesList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddCrop}
             >
-              Create New Challanges
+            Add Challanges
             </Button>
           }
         />
@@ -296,14 +301,14 @@ export default function ChallangesList() {
         methods={methods}
         id={state.id}
         handleCropDetails={handleCropDetails}
-        title={state.id ? 'Edit Crop Challenges Details' : 'Create New Crop Challenges'}
+        title={state.id ? 'Edit Farmer Challenges Details' : 'Add New Farmer Challenges'}
         cropDetails={challengesDetails}
         disabled={
           challengesDetails?.challenge === watch('challenge') &&
           challengesDetails?.status === watch('status')
         }
       >
-        <ChallengesForm statusList={statusList} methods={methods} />
+        <ChallengesForm statusList={statusChallangesList} methods={methods} />
       </MasterDataForm>
     </Page>
   );

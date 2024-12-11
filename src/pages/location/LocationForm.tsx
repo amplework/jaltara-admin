@@ -12,8 +12,6 @@ const LocationForm = ({ statusList }: LocationFormProp) => {
   const districtName = getEntityName('district', checkUpperGeo);
   const talukName = getEntityName('taluk', checkUpperGeo);
   const villageName = getEntityName('village', checkUpperGeo);
-  console.log('villageName', villageName);
-
   return (
     <Box
       sx={{

@@ -49,7 +49,6 @@ const MasterDataForm = ({
 }: MasterDataFormProps) => {
   const theme = useTheme();
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (id) {
       dispatch(startLoading());
@@ -93,7 +92,13 @@ const MasterDataForm = ({
               p={2}
               bgcolor={theme.palette.primary.lighter}
             >
-              <Typography variant="h6" color={theme.palette.grey[0]} sx={{ letterSpacing:"0.7px" }}>{title}</Typography>
+              <Typography
+                variant="h6"
+                color={theme.palette.grey[0]}
+                sx={{ letterSpacing: '0.7px' }}
+              >
+                {title}
+              </Typography>
               <LoadingButton
                 onClick={handleClose}
                 sx={{
@@ -136,9 +141,9 @@ const MasterDataForm = ({
                 type="submit"
                 variant="contained"
                 disabled={disabled}
-                startIcon={<Iconify icon="mingcute:user-add-fill" />}
+                startIcon={<Iconify icon={!id ? 'mingcute:user-add-fill' : 'fa-solid:user-edit'} />}
               >
-                {id ? 'Edit Crop' : 'Add New'}
+                {id ? 'Save' : 'Add'}
               </LoadingButton>
             </Stack>
           </FormProvider>

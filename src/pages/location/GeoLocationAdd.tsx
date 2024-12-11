@@ -18,6 +18,7 @@ interface LocationFormProp {
   handleTalukSelect?: any;
   methods?: any;
   state?: any;
+  isLoading?: boolean;
 }
 const GeoLocationAdd = ({
   statusList,
@@ -27,9 +28,12 @@ const GeoLocationAdd = ({
   handleStatesSelect,
   methods,
   state,
+  isLoading,
 }: LocationFormProp) => {
   const { statesList, districtList, talukList } = useSelector((state) => state.user);
   const { watch } = methods;
+  console.log('isloading', isLoading);
+
   return (
     <Box
       sx={{
@@ -54,23 +58,27 @@ const GeoLocationAdd = ({
           name="selectStates"
           label={'Select States'}
           placeholder={'States'}
-          options={statesList||[]}
+          options={statesList || []}
           onChange={handleStatesSelect}
+          disabled={state?.id ? true : false}
         />
       )}
 
       {['taluk', 'village']?.includes(watch('location')) &&
         watch('selectStates') &&
-        districtList?.childEntities?.length && (
+        Array?.isArray(districtList?.childEntities) &&
+        districtList?.childEntities?.length > 0 && (
           <RHFSelectDropdown
             name="selectDistrict"
-            label={'Select District'}
-            placeholder={'District'}
-            options={districtList?.childEntities||[]}
+            label="Select District"
+            placeholder="District"
+            options={districtList?.childEntities || []}
             defaultMessage="Please Select State"
             onChange={handleDistrictSelect}
+            disabled={state?.id ? true : false}
           />
         )}
+
       {['village']?.includes(watch('location')) &&
         watch('selectStates') &&
         watch('selectDistrict') && (
@@ -81,6 +89,7 @@ const GeoLocationAdd = ({
             options={talukList?.childEntities || []}
             defaultMessage="Please Select District"
             onChange={handleTalukSelect}
+            disabled={state?.id ? true : false}
           />
         )}
 

@@ -29,7 +29,7 @@ export default function RHFSelect({ name, children, onChange, ...other }: Props)
           SelectProps={{ native: true }}
           error={!!error}
           onChange={(event) => {
-            const value = event.target.value;
+            const value = event?.target.value;
             field.onChange(value);
             if (onChange) {
               onChange(value);

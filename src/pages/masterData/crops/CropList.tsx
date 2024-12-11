@@ -44,7 +44,7 @@ import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
-const statusList = [
+export const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
   { id: 'inactive', label: 'Inactive', name: 'inactive' },
 ];
@@ -235,7 +235,7 @@ export default function CropList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddCrop}
             >
-              New Crop
+              Add Crop
             </Button>
           }
         />
@@ -306,7 +306,7 @@ export default function CropList() {
         methods={methods}
         id={state.id}
         handleCropDetails={handleCropDetails}
-        title={state.id ? 'Edit Crop Details' : 'Create New Crop'}
+        title={state.id ? 'Edit Crop Details' : 'Add New Crop'}
         cropDetails={cropsDetails}
         disabled={cropsDetails?.name === watch('name') && cropsDetails?.status === watch('status')}
       >

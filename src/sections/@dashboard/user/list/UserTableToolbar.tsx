@@ -3,7 +3,7 @@ import { Stack, TextField, MenuItem, Button, Select } from '@mui/material';
 import Iconify from '../../../../components/Iconify';
 import { InputLabel } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
-import { statusList } from 'src/pages/masterData/cropsChallanges/ChallangesList';
+import { statusChallangesList, statusList } from 'src/pages/masterData/cropsChallanges/ChallangesList';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +21,7 @@ type Props = {
   onChange?: any;
   state?: any;
   onChallengesChange?: any;
+  challangesStatusList?:boolean
 };
 
 export default function UserTableToolbar({
@@ -36,6 +37,7 @@ export default function UserTableToolbar({
   onChange,
   state,
   challenges,
+  challangesStatusList
 }: Props) {
 
   return (
@@ -45,7 +47,6 @@ export default function UserTableToolbar({
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
         placeholder={placeholderText}
-        
       />
       {!challenges && (
         <TextField
@@ -98,7 +99,7 @@ export default function UserTableToolbar({
               <MenuItem value="" disabled>
                 Please select status
               </MenuItem>
-              {statusList?.map((stage: any) => (
+              {statusChallangesList?.map((stage: any) => (
                 <MenuItem key={stage.id} value={stage.value}>
                   {stage.label}
                 </MenuItem>
