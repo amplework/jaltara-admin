@@ -25,7 +25,7 @@ import Iconify from 'src/components/Iconify';
 import Scrollbar from 'src/components/Scrollbar';
 import { TableHeadCustom, TableNoData } from 'src/components/table';
 import TutorialTableRow from 'src/sections/@dashboard/user/list/TutorialTableRow';
-import { emptyTutorialDetails, getTutorialList } from 'src/redux/slices/tutorial';
+import { deleteTutorial, emptyTutorialDetails, getTutorialList } from 'src/redux/slices/tutorial';
 
 // ----------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ export default function TutorialsList() {
   };
 
   const onDeleteRow = (id: string) => {
-    dispatch(deleteCrops(id))
+    dispatch(deleteTutorial(id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
           enqueueSnackbar(res?.data?.message, {

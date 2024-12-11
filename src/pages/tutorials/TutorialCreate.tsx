@@ -34,6 +34,9 @@ const NewUserSchema = Yup.object().shape({
         url: Yup.string().required('Video URL is required'),
         thumbnail: Yup.string().required('Thumbnail is required'),
         status: Yup.string().required('Video status is required'),
+        name: Yup.string()
+          .required('Video name is required')
+          .matches(/^[^\s].*$/, 'First Characters space not allowed.'),
       })
     )
     .min(1, 'At least one video must be added'),
@@ -74,7 +77,7 @@ export default function LocationCreate() {
     subject: '',
     description: '',
     status: '',
-    videos: [{ url: '', thumbnail: '', status: '' }],
+    videos: [{ url: '', thumbnail: '', status: '', name: '' }],
   };
 
   const methods = useForm({
@@ -95,7 +98,7 @@ export default function LocationCreate() {
   console.log('videos --------->', videos);
 
   const handleAddVideos = () => {
-    const newVideo = { url: '', thumbnail: '', status: '' };
+    const newVideo = { url: '', thumbnail: '', status: '', name: '' };
 
     setValue('videos', [...videos, newVideo]);
     clearErrors('videos');
@@ -112,7 +115,11 @@ export default function LocationCreate() {
     }
   };
 
-  const handleVideoChange = (index: number, field: 'url' | 'thumbnail' | 'status', value: any) => {
+  const handleVideoChange = (
+    index: number,
+    field: 'url' | 'thumbnail' | 'status' | 'name',
+    value: any
+  ) => {
     const updatedVideos = [...videos];
 
     if (field === 'status') {
@@ -129,13 +136,13 @@ export default function LocationCreate() {
     let previousState: any = {
       subject: tutorialDetails?.subject,
       description: tutorialDetails?.description,
-      // status: tutorialDetails?.status,
+      status: tutorialDetails?.status,
     };
 
     let payload = {
       subject: data?.subject,
       description: data?.description,
-      // status: data?.status,
+      status: data?.status,
       videos: videos,
     };
 
@@ -177,7 +184,7 @@ export default function LocationCreate() {
 
   const handleDisabledVideos = () => {
     const nonEmptyObjects = videos.some(
-      (obj) => obj?.status === '' || obj?.thumbnail === '' || obj?.url === ''
+      (obj) => obj?.status === '' || obj?.thumbnail === '' || obj?.url === '' || obj?.name === ''
     );
     return nonEmptyObjects;
   };
@@ -205,7 +212,7 @@ export default function LocationCreate() {
                   }}
                 >
                   <RHFTextField name="subject" label="Subject Name" />
-                  <RHFTextField name="description" label="description Name" />
+                  <RHFTextField name="description" label="Description Name" />
                   {/* <RHFSelectDropdown
                     name="status"
                     label={'Select Status'}
@@ -274,6 +281,12 @@ export default function LocationCreate() {
                           gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                         }}
                       >
+                        <RHFTextField
+                          name={`videos[${index}].name`}
+                          label="Video Name"
+                          value={video.name}
+                          onChange={(e) => handleVideoChange(index, 'name', e.target.value)}
+                        />
                         <RHFTextField
                           name={`videos[${index}].url`}
                           label="Video URL"

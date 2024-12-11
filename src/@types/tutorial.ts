@@ -2,6 +2,7 @@ type Video = {
   url: string;
   status: string;
   thumbnail: string;
+  name:string
 };
 
 type Tutorial = {

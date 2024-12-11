@@ -118,3 +118,19 @@ export function AddTutorials(payload?: any, id?: string) {
     }
   };
 }
+
+// delete Tutorils 
+export function deleteTutorial(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/tutorials/${id}`).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}
