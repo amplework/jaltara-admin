@@ -47,6 +47,8 @@ export default function UserTableToolbar({
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
         placeholder={placeholderText}
+        
+
       />
       {!challenges && (
         <TextField

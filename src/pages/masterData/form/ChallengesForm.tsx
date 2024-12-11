@@ -3,9 +3,10 @@ import React from 'react';
 import { RHFSelectDropdown, RHFTextField } from 'src/components/hook-form';
 interface CropAddEditFormProp {
   statusList?: any;
-  methods?:any
+  methods?: any;
 }
-const ChallengesForm = ({ statusList }: CropAddEditFormProp) => {
+const ChallengesForm = ({ statusList, methods }: CropAddEditFormProp) => {
+  const { watch } = methods;
   return (
     <Box
       sx={{
@@ -13,7 +14,7 @@ const ChallengesForm = ({ statusList }: CropAddEditFormProp) => {
         columnGap: 2,
         rowGap: 3,
         gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
-        p:2
+        p: 2,
       }}
     >
       <RHFTextField name="challenge" label="Crop Challenges" />
@@ -21,6 +22,7 @@ const ChallengesForm = ({ statusList }: CropAddEditFormProp) => {
         name="status"
         label={'Status'}
         placeholder={'Status'}
+        value={watch('status')}
         options={statusList}
       />
       {/* <RHFTextField name="equipment" label="Equipment Name" /> */}

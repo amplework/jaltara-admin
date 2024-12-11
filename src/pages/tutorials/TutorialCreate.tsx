@@ -71,8 +71,6 @@ export default function LocationCreate() {
     setValue('videos', tutorialDetails?.videos);
   };
 
-  console.log('tutorialDetails', tutorialDetails);
-
   const defaultValues = {
     subject: '',
     description: '',
@@ -95,7 +93,6 @@ export default function LocationCreate() {
   } = methods;
 
   const videos = watch('videos');
-  console.log('videos --------->', videos);
 
   const handleAddVideos = () => {
     const newVideo = { url: '', thumbnail: '', status: '', name: '' };

@@ -66,6 +66,7 @@ export default function SevekCreate() {
 
   const { statesList, districtList, talukList, villageList, usersDetails, isDetailsLoading } =
     useSelector((state) => state.user);
+  console.log('statesList', statesList);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string()
@@ -131,6 +132,7 @@ export default function SevekCreate() {
     // const districtIdData = getAssignVillageData('district');
     // const talukIdData = getAssignVillageData('taluk');
     const stateIdData = getEntityName('state', usersDetails?.checkUpperGeo);
+
     const districtIdData = getEntityName('district', usersDetails?.checkUpperGeo);
     const talukIdData = getEntityName('taluk', usersDetails?.checkUpperGeo);
     const villagetName = getEntityName('village', usersDetails?.checkUpperGeo);
@@ -179,6 +181,7 @@ export default function SevekCreate() {
       }
     }
   };
+  console.log('watch ---->', watch('selectStates'));
 
   const onSubmit = async (data: CreateUserType) => {
     try {
@@ -237,6 +240,8 @@ export default function SevekCreate() {
   };
 
   const handleStatesSelect = (id: any) => {
+    console.log('id', id);
+
     setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
@@ -317,12 +322,14 @@ export default function SevekCreate() {
                       name="status"
                       label={'Select Status'}
                       placeholder={'Status'}
+                      value={watch('status')}
                       options={statusList}
                     />
                     <RHFSelectDropdown
                       name="language"
                       label={'Select Language'}
                       placeholder={'Language'}
+                      value={watch('language')}
                       options={languageList}
                     />
                   </Box>
@@ -342,6 +349,7 @@ export default function SevekCreate() {
                       label={'Select States'}
                       placeholder={'States'}
                       options={statesList}
+                      value={watch('selectStates')}
                       defaultMessage="Please Select State"
                       onChange={handleStatesSelect}
                     />
@@ -350,6 +358,7 @@ export default function SevekCreate() {
                         name="selectDistrict"
                         label={'Select District'}
                         placeholder={'District'}
+                        value={watch('selectDistrict')}
                         options={districtList?.childEntities}
                         defaultMessage="Please Select State"
                         onChange={handleDistrictSelect}
@@ -364,6 +373,7 @@ export default function SevekCreate() {
                         name="selectTaluk"
                         label={'Select Taluk'}
                         placeholder={'Taluk'}
+                        value={watch('selectTaluk')}
                         options={talukList?.childEntities || []}
                         defaultMessage="Please Select District"
                         onChange={handleTalukSelect}
@@ -377,6 +387,7 @@ export default function SevekCreate() {
                         name="selectVillage"
                         label={'Select Village'}
                         placeholder={'Village'}
+                        value={watch('selectVillage')}
                         options={villageList?.childEntities}
                         defaultMessage="Please Select Village"
                         onChange={handleVillageSelect}

@@ -27,7 +27,7 @@ export default function ChallangesTableRow({
   row,
   onEditRow,
   handleShowDetails,
-  onDeleteRow
+  onDeleteRow,
 }: Props) {
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,7 +40,7 @@ export default function ChallangesTableRow({
   const { status, challenge, id } = row || {};
 
   return (
-    <TableRow hover >
+    <TableRow hover>
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
           {challenge}
@@ -60,6 +60,15 @@ export default function ChallangesTableRow({
             <>
               <MenuItem
                 onClick={() => {
+                  onEditRow && onEditRow(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   onDeleteRow && onDeleteRow(id);
                   handleCloseMenu();
                 }}
@@ -67,15 +76,6 @@ export default function ChallangesTableRow({
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onEditRow && onEditRow(id);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
               </MenuItem>
             </>
           }

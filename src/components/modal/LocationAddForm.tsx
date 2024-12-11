@@ -46,12 +46,12 @@ const style = {
 const LocationAddForm = ({
   openModal,
   handleClose,
-    children,
-    // methods,
-    // onSubmit,
-    id,
-    cropDetails,
-    handleCropDetails,
+  children,
+  // methods,
+  // onSubmit,
+  id,
+  cropDetails,
+  handleCropDetails,
   title = 'Add New Geo Location',
   handleLocationList,
 }: //   disabled,
@@ -75,7 +75,7 @@ LocationAddForm) => {
       selectStates: '',
       selectDistrict: '',
       selectTaluk: '',
-      name:''
+      name: '',
     }),
     []
   );
@@ -213,6 +213,7 @@ LocationAddForm) => {
                 name="location"
                 label={'Select location'}
                 placeholder={'location'}
+                value={watch('location')}
                 options={statusList}
                 onChange={handleLocationChange}
               />
@@ -222,6 +223,7 @@ LocationAddForm) => {
                   name="selectStates"
                   label={'Select States'}
                   placeholder={'States'}
+                  value={watch('selectStates')}
                   options={statesList}
                   onChange={handleStatesSelect}
                 />
@@ -234,6 +236,7 @@ LocationAddForm) => {
                     name="selectDistrict"
                     label={'Select District'}
                     placeholder={'District'}
+                    value={watch('selectDistrict')}
                     options={districtList?.childEntities}
                     defaultMessage="Please Select State"
                     onChange={handleDistrictSelect}
@@ -246,6 +249,7 @@ LocationAddForm) => {
                     name="selectTaluk"
                     label={'Select Taluk'}
                     placeholder={'Taluk'}
+                    value={watch('selectTaluk')}
                     options={talukList?.childEntities || []}
                     defaultMessage="Please Select District"
                     onChange={handleTalukSelect}

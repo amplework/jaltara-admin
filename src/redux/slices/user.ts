@@ -301,7 +301,6 @@ export function getDistrictList(id?: any) {
   dispatch(slice.actions.startLoading());
   try {
     axios.get(`/geographic-entities/${id}`).then((response) => {
-      console.log('response distric', response);
       if (response?.status === 200) {
         dispatch(slice.actions.setDistrictList(response?.data?.data));
       }

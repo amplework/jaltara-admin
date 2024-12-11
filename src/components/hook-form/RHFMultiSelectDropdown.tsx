@@ -47,8 +47,6 @@ const RHFMultiSelectDropdown = ({
       ? selectedValues.filter((value) => value !== id)
       : [...selectedValues, id];
 
-      console.log('updatedValues',selectedValues);
-      
     onChange?.(updatedValues);
   };
   

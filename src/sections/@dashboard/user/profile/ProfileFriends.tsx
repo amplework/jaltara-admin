@@ -95,12 +95,10 @@ function FriendCard({ friend }: FriendCardProps) {
 
   const handleDelete = () => {
     handleCloseMenu();
-    console.log('DELETE', name);
   };
 
   const handleEdit = () => {
     handleCloseMenu();
-    console.log('EDIT', name);
   };
 
   return (

@@ -50,8 +50,6 @@ const RHFMultiSelect = ({
 
     onChange?.(updatedValues);
   };
-  console.log('------------>', selectedValues);
-
   return (
     <RHFSelect
       fullWidth
@@ -68,8 +66,6 @@ const RHFMultiSelect = ({
           const selectedNames = selected
             .map((id: any) => options?.find((option: any) => option?.id === id)?.challenge)
             .filter(Boolean);
-            console.log('selectedNames',selectedNames);
-            
           return selectedNames.length > 0 ? selectedNames.join(', ') : placeholder;
         },
         MenuProps,

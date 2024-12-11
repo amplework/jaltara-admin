@@ -164,7 +164,9 @@ export default function CropCreate() {
                       name="status"
                       label={'Status'}
                       placeholder={'Status'}
+                      value={watch('status')}
                       options={statusList}
+
                     />
                     {/* <RHFTextField name="equipment" label="Equipment Name" /> */}
                   </Box>

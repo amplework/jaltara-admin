@@ -29,8 +29,6 @@ export default function TutorialDetails() {
 
   const { tutorialDetails } = useSelector((state) => state.tutorials);
   const { subject, status, description, videos } = tutorialDetails;
-  console.log('tutorialDetails', tutorialDetails);
-
   const getDetails = () => {
     dispatch(getTutorialsDetails(id));
   };

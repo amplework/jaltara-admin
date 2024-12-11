@@ -162,6 +162,7 @@ export default function EquipmentCreate() {
                       name="status"
                       label={'Status'}
                       placeholder={'Status'}
+                      value={watch('status')}
                       options={statusList}
                     />
                     <RHFTextField name="equipment" label="Equipment Name" />

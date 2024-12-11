@@ -75,7 +75,6 @@ export default function FarmerDetails() {
     crops,
     pits,
   } = farmersDetails;
-  console.log('farmersDetails------>', farmersDetails);
 
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
     ? [...checkUpperGeo.parents].reverse()

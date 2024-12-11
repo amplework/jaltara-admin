@@ -59,7 +59,6 @@ export default function UserList() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [filterName, setFilterName] = useState('');
-
   const [filterVillage, setFilterVillage] = useState('');
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -74,8 +73,14 @@ export default function UserList() {
     getUsersList(filterName, filterVillage);
   };
 
-  const handleFilterName = (filterName: string) => {
-    setFilterName(filterName);
+  const handleEmptySerachBox = (name: string) => {
+    if (filterName?.length === 1 && name === '') {
+      getUsersList();
+    }
+  };
+  const handleFilterName = (Name: string) => {
+    setFilterName(Name);
+    handleEmptySerachBox(Name);
   };
 
   const handleFilterRole = (filterVillage: string) => {
@@ -182,7 +187,6 @@ export default function UserList() {
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
-              
             </TableContainer>
           </Scrollbar>
 

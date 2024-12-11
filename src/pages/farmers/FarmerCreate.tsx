@@ -47,6 +47,7 @@ import { getCropsList } from 'src/redux/slices/crops';
 import RHFMultiSelectDropdown from 'src/components/hook-form/RHFMultiSelectDropdown';
 import { getCropsChallengesList } from 'src/redux/slices/challanges';
 import RHFMultiSelect from 'src/components/hook-form/RHFMultiSelect';
+import { getEntityName } from 'src/utils/common';
 
 const languageList = [
   { id: 'hindi', label: 'Hindi', name: 'hindi' },
@@ -191,9 +192,12 @@ export default function FarmerCreate() {
   }, [farmersDetails]);
 
   const handleState = () => {
-    const stateIdData = getAssignVillageData('state');
-    const districtIdData: any = getAssignVillageData('district');
-    const talukIdData = getAssignVillageData('taluk');
+    // const stateIdData = getAssignVillageData('state');
+    // const districtIdData: any = getAssignVillageData('district');
+    // const talukIdData = getAssignVillageData('taluk');
+    const stateIdData = getEntityName('state', farmersDetails?.checkUpperGeo);
+    const districtIdData = getEntityName('district', farmersDetails?.checkUpperGeo);
+    const talukIdData = getEntityName('taluk', farmersDetails?.checkUpperGeo);
     const isVillage = farmersDetails?.checkUpperGeo?.entityType === 'village';
     setValue('name', farmersDetails?.name);
     setValue('phone', farmersDetails?.phone);
@@ -202,13 +206,15 @@ export default function FarmerCreate() {
     setValue('language', farmersDetails?.language);
     setValue('farmAvailableDate', farmersDetails?.farmAvailableDate);
     setValue('isParticipate', farmersDetails?.isParticipate);
+
     setValue('crops', farmersDetails?.crops?.map((item: any) => item?.id) || []);
+
     setValue(
       'farmingChallenge',
       farmersDetails?.farmingChallenge?.map((item: any) => item?.id) || []
     );
 
-    setValue('selectStates', stateIdData?.id);
+    setValue('selectStates', stateIdData?.id || '');
     setState((prev: any) => ({
       ...prev,
       selectedValues: farmersDetails?.crops?.map((item: any) => item?.id) || [],
@@ -317,7 +323,7 @@ export default function FarmerCreate() {
   };
 
   const handleStatesSelect = (id: any) => {
-    clearErrors("selectDistrict");
+    clearErrors('selectDistrict');
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
@@ -326,7 +332,7 @@ export default function FarmerCreate() {
   };
 
   const handleDistrictSelect = (id: any) => {
-    clearErrors("selectTaluk");
+    clearErrors('selectTaluk');
     setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectTaluk', '');
     setValue('selectVillage', '');
@@ -335,7 +341,7 @@ export default function FarmerCreate() {
 
   const handleTalukSelect = (id: string) => {
     setState((prev: any) => ({ ...prev, villageId: id }));
-    clearErrors("selectVillage");
+    clearErrors('selectVillage');
     setValue('selectVillage', '');
     getVillageList(id);
   };
@@ -367,6 +373,8 @@ export default function FarmerCreate() {
       selectChallangesItems: names,
     }));
   };
+
+  console.log('ssssssssssssss', watch('selectStates'));
 
   return (
     <Page title="Create farmer">
@@ -414,6 +422,7 @@ export default function FarmerCreate() {
                     <RHFSelectDropdown
                       name="language"
                       label={'Select Language'}
+                      value={watch('language')}
                       placeholder={'Language'}
                       options={languageList}
                     />
@@ -506,12 +515,23 @@ export default function FarmerCreate() {
                       label={'Select States'}
                       placeholder={'States'}
                       options={statesList}
+                      value={watch('selectStates')}
                       onChange={handleStatesSelect}
                     />
+                    {/* <RHFSelectDropdown
+                      name="selectStates"
+                      label={'Select States'}
+                      value={watch('selectStates')}
+                      placeholder={'States'}
+                      options={statesList}
+                      defaultMessage="Please Select State"
+                      onChange={handleStatesSelect}
+                    /> */}
                     {districtList?.childEntities?.length ? (
                       <RHFSelectDropdown
                         name="selectDistrict"
                         label={'Select District'}
+                        value={watch('selectDistrict')}
                         placeholder={'District'}
                         options={districtList?.childEntities}
                         defaultMessage="Please Select State"
@@ -526,6 +546,7 @@ export default function FarmerCreate() {
                         name="selectTaluk"
                         label={'Select Taluk'}
                         placeholder={'Taluk'}
+                        value={watch('selectTaluk')}
                         options={talukList?.childEntities || []}
                         defaultMessage="Please Select District"
                         onChange={handleTalukSelect}
@@ -538,6 +559,7 @@ export default function FarmerCreate() {
                         name="selectVillage"
                         label={'Select Village'}
                         placeholder={'Village'}
+                        value={watch('selectVillage')}
                         options={villageList?.childEntities}
                         defaultMessage="Please Select Village"
                         onChange={handleVillageSelect}

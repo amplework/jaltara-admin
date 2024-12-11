@@ -58,6 +58,15 @@ export default function CropTableRow({ row, onDeleteRow, handleShowDetails, onEd
             <>
               <MenuItem
                 onClick={() => {
+                  onEditRow && onEditRow(id);
+                  handleCloseMenu();
+                }}
+              >
+                <Iconify icon={'eva:edit-fill'} />
+                Edit
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
                   onDeleteRow && onDeleteRow(id);
                   handleCloseMenu();
                 }}
@@ -65,15 +74,6 @@ export default function CropTableRow({ row, onDeleteRow, handleShowDetails, onEd
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Delete
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  onEditRow && onEditRow(id);
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={'eva:edit-fill'} />
-                Edit
               </MenuItem>
             </>
           }
