@@ -45,6 +45,7 @@ export default function SevekDetails() {
     wellCount,
     farmerCount,
   } = usersDetails;
+  console.log('language', language);
 
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
     ? [...checkUpperGeo.parents].reverse()
@@ -62,7 +63,10 @@ export default function SevekDetails() {
 
   const details = [
     { label: 'Name', value: name },
-    { label: 'Language', value: language },
+    {
+      label: 'Language',
+      value: language === 'mr' ? 'मराठी' : language === 'hi' ? 'हिन्दी' : 'English',
+    },
     { label: 'Phone', value: phone },
     { label: 'Status', value: status },
     {
@@ -101,7 +105,7 @@ export default function SevekDetails() {
           ) : (
             <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
-              <Grid item xs={12} sm={6} md={4} display={"flex"} justifyContent={"center"}>
+              <Grid item xs={12} sm={6} md={4} display={'flex'} justifyContent={'center'}>
                 <Box
                   sx={{
                     width: 300,
@@ -187,7 +191,7 @@ export default function SevekDetails() {
                       <TableHeadCustom headLabel={TABLE_HEAD} />
                       <TableBody>
                         {stages?.length
-                          ? stages.map((row: any, index: number) => (
+                          ? stages?.map((row: any, index: number) => (
                               <SevekPitsList key={row.id} row={row} />
                             ))
                           : null}

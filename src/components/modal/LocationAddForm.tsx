@@ -102,7 +102,6 @@ LocationAddForm) => {
   } = methods;
 
   const handleLocationChange = () => {
-    console.log('location change');
     setValue('selectStates', '');
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');

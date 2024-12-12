@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Container, Grid } from '@mui/material';
+import { Card, Container, Grid, InputAdornment } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -18,7 +18,6 @@ import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'src/redux/store';
 import Iconify from 'src/components/Iconify';
-import { addNewFarmer, editNewFarmer } from 'src/redux/slices/farmers';
 import { EquipmentItem } from 'src/@types/equipment';
 import { addEditEquipment, getEquipmentsDetails, startLoading } from 'src/redux/slices/equipment';
 import { SkeletonProduct } from 'src/components/skeleton';
@@ -26,12 +25,6 @@ import { SkeletonProduct } from 'src/components/skeleton';
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
   { id: 'inactive', label: 'Inactive', name: 'inactive' },
-];
-
-const languageList = [
-  { id: 'hindi', label: 'Hindi', name: 'hindi' },
-  { id: 'marathi', label: 'Marathi', name: 'marathi' },
-  { id: 'english', label: 'English', name: 'english' },
 ];
 
 export default function EquipmentCreate() {
@@ -53,6 +46,7 @@ export default function EquipmentCreate() {
       name: '',
       status: '',
       equipment: '',
+      phone: '',
     }),
     [equipmentDetails]
   );
@@ -60,13 +54,17 @@ export default function EquipmentCreate() {
   const NewEquipmentSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').max(50, 'Limit of 50 characters'),
     status: Yup.string().required('Status is required'),
-    equipment: Yup.string().required('equipment is required').max(50, 'Limit of 50 characters'),
+    equipment: Yup.string().required('Number plate is required').max(50, 'Limit of 50 characters'),
+    phone: Yup.string()
+      .required('Phone number is required')
+      .matches(/^\d{10}$/, 'Only numbers are allowed and limit is 10 digits'),
   });
 
   useEffect(() => {
     setValue('name', equipmentDetails?.name);
     setValue('status', equipmentDetails?.status);
     setValue('equipment', equipmentDetails?.equipment);
+    setValue('phone', equipmentDetails?.phone);
   }, [equipmentDetails]);
 
   const methods = useForm<EquipmentItem>({
@@ -88,12 +86,14 @@ export default function EquipmentCreate() {
         name: equipmentDetails?.name,
         status: equipmentDetails?.status,
         equipment: equipmentDetails?.equipment,
+        phone: equipmentDetails?.phone,
       };
 
       let payload: any = {
         name: data?.name,
         status: data?.status,
         equipment: data?.equipment,
+        phone: data?.phone,
       };
 
       Object.keys(payload).forEach((key) => {
@@ -165,7 +165,14 @@ export default function EquipmentCreate() {
                       value={watch('status')}
                       options={statusList}
                     />
-                    <RHFTextField name="equipment" label="Equipment Name" />
+                    <RHFTextField name="equipment" label="Number Plate" />
+                    <RHFTextField
+                      name="phone"
+                      label="Phone Number"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                      }}
+                    />
                   </Box>
                   <Stack alignItems="flex-end" sx={{ mt: 3 }}>
                     <LoadingButton
@@ -175,7 +182,8 @@ export default function EquipmentCreate() {
                       disabled={
                         equipmentDetails?.name === watch('name') &&
                         equipmentDetails?.status === watch('status') &&
-                        equipmentDetails?.equipment === watch('equipment')
+                        equipmentDetails?.equipment === watch('equipment') &&
+                        equipmentDetails?.phone === watch('phone')
                       }
                       startIcon={
                         <Iconify icon={!id ? 'mingcute:user-add-fill' : 'fa-solid:user-edit'} />

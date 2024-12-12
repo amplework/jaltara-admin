@@ -9,11 +9,16 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CreateUserType } from 'src/@types/user';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, RHFSelectDropdown, RHFTextField } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFSelectDropdown,
+  RHFTextField,
+  RHFUploadSingleFile,
+} from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -34,16 +39,16 @@ import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { SkeletonProduct } from 'src/components/skeleton';
 import { getEntityName } from 'src/utils/common';
-
+import profilepic from 'src/assets/images/profile-background.jpg';
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
   { id: 'inactive', label: 'Inactive', name: 'inactive' },
 ];
 
 const languageList = [
-  { id: 'hindi', label: 'Hindi', name: 'hindi' },
-  { id: 'marathi', label: 'Marathi', name: 'marathi' },
-  { id: 'english', label: 'English', name: 'english' },
+  { id: 'hi', label: 'हिन्दी', name: 'हिन्दी' },
+  { id: 'mr', label: 'मराठी', name: 'मराठी' },
+  { id: 'en', label: 'English', name: 'english' },
 ];
 
 export default function SevekCreate() {
@@ -66,7 +71,6 @@ export default function SevekCreate() {
 
   const { statesList, districtList, talukList, villageList, usersDetails, isDetailsLoading } =
     useSelector((state) => state.user);
-  console.log('statesList', statesList);
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string()
@@ -81,7 +85,7 @@ export default function SevekCreate() {
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
     selectVillage: Yup.string(),
-    // photo: Yup.mixed().test('required', 'Photo is required', (value) => value !== ''),
+    photo: Yup.mixed(),
   });
 
   const defaultValues = useMemo(
@@ -94,7 +98,7 @@ export default function SevekCreate() {
       selectDistrict: '',
       selectTaluk: '',
       selectVillage: '',
-      // photo: '',
+      photo: '',
     }),
     [usersDetails]
   );
@@ -144,7 +148,8 @@ export default function SevekCreate() {
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
     setValue('selectStates', stateIdData?.id || '');
-    // setValue('photo', usersDetails?.name || '');
+    // setValue('photo', usersDetails?.photo || '');
+
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
       setState((prev: any) => ({ ...prev, villageId: stateIdData?.id }));
@@ -181,7 +186,6 @@ export default function SevekCreate() {
       }
     }
   };
-  console.log('watch ---->', watch('selectStates'));
 
   const onSubmit = async (data: CreateUserType) => {
     try {
@@ -198,6 +202,7 @@ export default function SevekCreate() {
         language: data?.language,
         status: data?.status,
         villageId: state?.villageId,
+        photo:data?.photo
       };
 
       Object.keys(payload).forEach((key) => {
@@ -240,8 +245,6 @@ export default function SevekCreate() {
   };
 
   const handleStatesSelect = (id: any) => {
-    console.log('id', id);
-
     setState((prev: any) => ({ ...prev, villageId: id }));
     setValue('selectDistrict', '');
     setValue('selectTaluk', '');
@@ -269,19 +272,16 @@ export default function SevekCreate() {
     setState((prev: any) => ({ ...prev, villageId: id }));
   };
 
-  // const handleDrop = useCallback(
-  //   (acceptedFiles: File[]) => {
-  //     const file = acceptedFiles[0];
-  //     console.log('file', file?.name);
-
-  //     if (file) {
-  //       const preview = URL.createObjectURL(file);
-  //       console.log('preview', preview);
-  //       // setValue('photo', preview);
-  //     }
-  //   },
-  //   [setValue]
-  // );
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        const preview = URL.createObjectURL(file);
+        setValue('photo', preview);
+      }
+    },
+    [setValue]
+  );
 
   return (
     <Page title="Create sevak">
@@ -296,6 +296,52 @@ export default function SevekCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
+              <Card
+                sx={{
+                  mb: 10,
+                  overflow: 'visible', // Allow the image to overflow outside the Card
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center', // Center content horizontally
+                  alignItems: 'center', // Center content vertically
+                  minHeight: '200px', // Adjust height based on content
+                  padding: 2,
+                  backgroundImage: `url(${profilepic})`,
+                  // backgroundImage: `url(${watch('photo')})`,
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <RHFUploadSingleFile
+                    name="photo"
+                    onDrop={handleDrop}
+                    sx={{
+                      zIndex: 9,
+                      mt: 5,
+                      position: 'absolute',
+                      bottom: '-60px',
+                      width: '200px',
+                      height: '200px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #e0e0e0',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </Box>
+              </Card>
+
               {isDetailsLoading ? (
                 <Card sx={{ p: 3 }}>
                   <SkeletonProduct />

@@ -19,6 +19,8 @@ const initialState: EquipmentList = {
     created: '',
     modified: '',
     status: '',
+    phone:'',
+    logs:[]
   },
 };
 
@@ -58,6 +60,8 @@ const slice = createSlice({
         created: '',
         modified: '',
         status: '',
+        phone: '',
+        logs:[]
       };
     },
   },
@@ -67,7 +71,8 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { getEquipments, equipmentsDetails,emptyEquipmentsDetails,startLoading } = slice.actions;
+export const { getEquipments, equipmentsDetails, emptyEquipmentsDetails, startLoading } =
+  slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -121,7 +126,6 @@ export function addEditEquipment(payload?: any, id?: string) {
   };
 }
 
-
 // delete element
 export function deleteEquipment(id?: any) {
   return async () => {
@@ -137,4 +141,3 @@ export function deleteEquipment(id?: any) {
     }
   };
 }
-

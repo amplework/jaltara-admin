@@ -50,9 +50,9 @@ import RHFMultiSelect from 'src/components/hook-form/RHFMultiSelect';
 import { getEntityName } from 'src/utils/common';
 
 const languageList = [
-  { id: 'hindi', label: 'Hindi', name: 'hindi' },
-  { id: 'marathi', label: 'Marathi', name: 'marathi' },
-  { id: 'english', label: 'English', name: 'english' },
+  { id: 'hi', label: 'हिन्दी', name: 'हिन्दी' },
+  { id: 'mr', label: 'मराठी', name: 'मराठी' },
+  { id: 'en', label: 'English', name: 'english' },
 ];
 
 const OPTION = [
@@ -260,6 +260,10 @@ export default function FarmerCreate() {
     }
   };
 
+  // console.log('farmersDetails', farmersDetails);
+  // console.log('----------->', farmersDetails?.isParticipate);
+  // console.log('isParticipate --->>>>>>', watch('isParticipate'));
+
   const onSubmit = async (data: FarmerDetailsType) => {
     try {
       let previousState: any = {
@@ -270,7 +274,7 @@ export default function FarmerCreate() {
         farmAvailableDate: farmersDetails?.farmAvailableDate,
         land: Number(farmersDetails?.land),
         status: farmersDetails?.status,
-        isParticipate: Boolean(farmersDetails?.isParticipate),
+        isParticipate: farmersDetails?.isParticipate,
       };
 
       let payload: any = {
@@ -282,17 +286,20 @@ export default function FarmerCreate() {
         farmAvailableDate: data?.farmAvailableDate,
         land: Number(data?.land),
         status: data?.status,
-        isParticipate: Boolean(data?.isParticipate),
+        isParticipate: data?.isParticipate === 'true' ? true : false,
         crops: state?.selectedItems?.length ? state?.selectedItems : state?.selectCropItem,
         farmingChallenge: state?.selectChallangesItems?.length
           ? state?.selectChallangesItems
           : state.selectCropChallangesItems,
       };
+
+
       Object.keys(payload).forEach((key) => {
         if (payload[key] === previousState[key]) {
           delete payload[key];
         }
       });
+      console.log('payload', payload);
 
       if (id) {
         dispatch(editNewFarmer(payload, id)).then((res: any) => {
@@ -374,7 +381,7 @@ export default function FarmerCreate() {
     }));
   };
 
-  console.log('ssssssssssssss', watch('selectStates'));
+  console.log('redio', watch('isParticipate'));
 
   return (
     <Page title="Create farmer">

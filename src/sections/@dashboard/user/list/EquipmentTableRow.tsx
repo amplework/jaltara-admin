@@ -15,14 +15,14 @@ type Props = {
   row: EquipmentItem | null;
   onhandleEditDetails?: (id: any) => void;
   onhandleDeleteRow?: (id: any) => void;
-  handleShowDetails?: (id: any) => void;
+  handleShowLogs?: (id: any) => void;
 };
 
 export default function EquipmentTableRow({
   row,
   onhandleEditDetails,
   onhandleDeleteRow,
-  handleShowDetails,
+  handleShowLogs,
 }: Props) {
   const theme = useTheme();
 
@@ -37,19 +37,19 @@ export default function EquipmentTableRow({
 
   return (
     <TableRow hover>
-      <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {_.capitalize(name) || 'N/A'}
+      <TableCell sx={{ cursor: 'pointer' }} onClick={() => handleShowLogs && handleShowLogs(id)}>
+        <Typography variant="subtitle2" noWrap sx={{textTransform: 'capitalize' }}>
+          {name || 'N/A'}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {_.capitalize(equipment) || 'N/A'}
+        <Typography variant="subtitle2" noWrap sx={{textTransform: 'capitalize' }}>
+          {equipment || 'N/A'}
         </Typography>
       </TableCell>
       <TableCell>
-        <Typography variant="subtitle2" noWrap>
-          {_.capitalize(status) || 'N/A'}
+        <Typography variant="subtitle2" noWrap sx={{textTransform: 'capitalize' }}>
+          {status || 'N/A'}
         </Typography>
       </TableCell>
       <TableCell align="left">

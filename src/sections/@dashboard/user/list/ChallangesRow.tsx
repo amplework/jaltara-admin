@@ -42,12 +42,12 @@ export default function ChallangesTableRow({
   return (
     <TableRow hover>
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
           {challenge}
         </Typography>
       </TableCell>
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform:"capitalize" }}>
           {status}
         </Typography>
       </TableCell>

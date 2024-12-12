@@ -57,8 +57,6 @@ export default function EquipmentList() {
 
   const navigate = useNavigate();
 
-  
-
   const dispatch = useDispatch();
 
   const [filterName, setFilterName] = useState('');
@@ -76,14 +74,14 @@ export default function EquipmentList() {
   }, []);
 
   const onSearch = () => {
-    getEquipmentsList(filterName);
+    getEquipmentsList(filterName,filterVillage);
   };
 
   const handleFilterName = (filterName: string) => {
     setFilterName(filterName);
   };
 
-  const handleFilterRole = (filterVillage: string) => {
+  const handleFilteRequipment = (filterVillage: string) => {
     setFilterVillage(filterVillage);
   };
 
@@ -118,8 +116,8 @@ export default function EquipmentList() {
       });
   };
 
-  const handleShowDetails = (id: string) => {
-    // navigate(PATH_DASHBOARD.farmers.details(id));
+  const handleShowLogs = (id: string) => {
+    navigate(PATH_DASHBOARD.equipments.logs(id));
   };
 
   const handleAddEquipment = () => {
@@ -148,7 +146,7 @@ export default function EquipmentList() {
             filterName={filterName}
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
-            onFilterVillage={handleFilterRole}
+            onFilterVillage={handleFilteRequipment}
             onSearch={onSearch}
             placeholderText={'Search by names'}
             placeholderTextSecond={'Search by equipment'}
@@ -175,7 +173,7 @@ export default function EquipmentList() {
                             row={row}
                             onhandleEditDetails={onhandleEditDetails}
                             onhandleDeleteRow={onhandleDeleteRow}
-                            handleShowDetails={handleShowDetails}
+                            handleShowLogs={handleShowLogs}
                           />
                         ))
                     : null}

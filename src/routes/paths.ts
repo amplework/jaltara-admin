@@ -72,6 +72,7 @@ export const PATH_DASHBOARD = {
     list: path('/equipment/list'),
     create: path('/equipment/create'),
     edit: (id: string) => path(`/equipment/edit/${id}`),
+    logs: (id: string) => path(`/equipment/logs/${id}`),
   },
   masterdata: {
     root: path('/masterdata'),

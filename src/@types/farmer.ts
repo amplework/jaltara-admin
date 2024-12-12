@@ -43,7 +43,7 @@ export type FarmerDetailsType = {
   land: Number;
   familyMemberNumber: Number;
   farmAvailableDate: string;
-  isParticipate: Boolean;
+  isParticipate: any;
   crops:string[];
   farmingChallenge: string[]
 };

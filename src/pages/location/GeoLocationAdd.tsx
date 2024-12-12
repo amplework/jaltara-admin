@@ -32,7 +32,6 @@ const GeoLocationAdd = ({
 }: LocationFormProp) => {
   const { statesList, districtList, talukList } = useSelector((state) => state.user);
   const { watch } = methods;
-  console.log('isloading', isLoading);
 
   return (
     <Box

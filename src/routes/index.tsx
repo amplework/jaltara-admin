@@ -121,6 +121,10 @@ export default function Router() {
               path: 'edit/:id',
               element: <EquipmentCreate />,
             },
+            {
+              path: 'logs/:id',
+              element: <EquipmentDetails />,
+            },
           ],
         },
         {
@@ -237,11 +241,11 @@ const LocationList = Loadable(lazy(() => import('../pages/location/LocationList'
 // equipent
 const EquipmentList = Loadable(lazy(() => import('../pages/equipments/EquipmentList')));
 const EquipmentCreate = Loadable(lazy(() => import('../pages/equipments/EquipmentCreate')));
+const EquipmentDetails = Loadable(lazy(() => import('../pages/equipments/EquipmentDetails')));
 // tutorial
 const Tutorial = Loadable(lazy(() => import('../pages/tutorials/TutorialList')));
 const TutorialCreate = Loadable(lazy(() => import('../pages/tutorials/TutorialCreate')));
 const TutorialDetails = Loadable(lazy(() => import('../pages/tutorials/TutorialDetails')));
-
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
