@@ -8,8 +8,6 @@ import {
   Box,
   TableContainer,
   TableBody,
-  List,
-  ListItemText,
   TableRow,
   TableCell,
   useTheme,
@@ -32,11 +30,11 @@ import noImage from 'src/assets/images/noImage.jpg';
 import { getFarmerDetails, startLoading } from 'src/redux/slices/farmers';
 import { formatedDate } from 'src/utils/formateDate';
 import FarmerPitsDetails from 'src/sections/@dashboard/user/list/FarmerPitsDetails';
-import { ListItem } from '@mui/material';
-import LogoOnlyLayout from 'src/layouts/LogoOnlyLayout';
-import Logo from 'src/components/Logo';
-import LoadingScreen from 'src/components/LoadingScreen';
 import { SkeletonProduct } from 'src/components/skeleton';
+import { getRandomExtremelyLightColor } from 'src/utils/getColorName';
+import ImageCard from 'src/components/common/cards/imageCard';
+import DetailsList from 'src/components/common/detailsListing/listing';
+import SelectedCrops from 'src/components/common/detailsListing/selectedCrops';
 
 const TABLE_HEAD = [
   { id: 'photo', label: 'Photo', align: 'left' },
@@ -118,14 +116,6 @@ export default function FarmerDetails() {
     },
   ];
 
-  function getRandomExtremelyLightColor() {
-    const r = Math.floor(Math.random() * 26 + 230); // Red: 230-255
-    const g = Math.floor(Math.random() * 26 + 230); // Green: 230-255
-    const b = Math.floor(Math.random() * 26 + 230); // Blue: 230-255
-
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-  }
-  
   return (
     <Page title="Farmer Details">
       <Container maxWidth={'xl'}>
@@ -141,39 +131,10 @@ export default function FarmerDetails() {
           {isLoading ? (
             <SkeletonProduct />
           ) : (
-            <Grid container spacing={4} justifyContent="center" >
+            <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
-              <Grid item xs={12} sm={6} md={4} display={"flex"} justifyContent={"center"} >
-                <Box
-                  sx={{
-                    width: 300,
-                    height: 300,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    boxShadow: 3,
-                    transition: 'box-shadow 0.3s ease-in-out',
-                    '&:hover': {
-                      boxShadow: 6,
-                    },
-                  }}
-                >
-                  <Image
-                    src={photo ? photo : noImage}
-                    alt={photo ? 'Uploaded Image' : 'No Image Available'}
-                    sx={{
-                      width: '70%',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      transition: 'transform 0.3s ease-in-out',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                  />
-                </Box>
+              <Grid item xs={12} sm={6} md={4} display={'flex'} justifyContent={'center'}>
+                <ImageCard src={photo ? photo : noImage} />
               </Grid>
 
               {/* Details Section */}
@@ -181,129 +142,24 @@ export default function FarmerDetails() {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
                   Farmer Information
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {details?.map(({ label, value }) => (
-                    <Box key={label} sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          fontWeight: 'bold',
-                          minWidth: 170,
-                          color: 'text.primary',
-                          textAlign: 'left',
-                        }}
-                      >
-                        {label} :
-                      </Typography>
-                      <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                        {value || 'N/A'}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
+                <DetailsList details={details} />
               </Grid>
             </Grid>
           )}
+
+          {/* crops and challanges Listing */}
           {isLoading ? (
             <SkeletonProduct />
           ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                mt: 2,
-                paddingLeft: 1,
-              }}
-            >
-              <Box>
-                <Box
-                  display={'flex'}
-                  justifyContent={'center'}
-                  sx={{
-                    boxShadow: '0px 4px 12px rgba(55, 155, 155, 0.3)',
-                    padding: 2,
-                    borderRadius: 1,
-                    bgcolor: 'rgba(209, 235, 230, 0.8)',
-                  }}
-                >
-                  <Typography variant="subtitle1" fontWeight="bold" sx={{ color: 'text.primary' }}>
-                    Crops
-                  </Typography>
-                </Box>
-                {cropDetails?.map(({ value }, index) => (
-                  <Box key={index} sx={{ my: 2 }}>
-                    {value && value.length > 0 ? (
-                      <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
-                        {value?.map((item: any, idx: number) => (
-                          <Typography
-                            key={idx}
-                            variant="body2"
-                            mx={1}
-                            sx={{
-                              bgcolor: getRandomExtremelyLightColor(),
-                              p: 2,
-                              mb: 1,
-                              borderRadius: '10px',
-                              textTransform: 'capitalize',
-                            }}
-                          >
-                            {item}
-                          </Typography>
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        N/A
-                      </Typography>
-                    )}
-                  </Box>
-                ))}
-              </Box>
-              <Box>
-                <Box
-                  display={'flex'}
-                  justifyContent={'center'}
-                  sx={{
-                    boxShadow: '0px 4px 12px rgba(55, 155, 155, 0.3)',
-                    padding: 2,
-                    borderRadius: 1,
-                    bgcolor: 'rgba(209, 235, 230, 0.8)',
-                  }}
-                >
-                  <Typography variant="subtitle1" fontWeight="bold" sx={{ color: 'text.primary' }}>
-                    Farming Challenges
-                  </Typography>
-                </Box>
-                {cropChallangesDetails?.map(({ value }, index) => (
-                  <Box key={index} sx={{ my: 2 }}>
-                    {value && value.length > 0 ? (
-                      <Box display={'flex'} sx={{ flexWrap: 'wrap' }}>
-                        {value?.map((item: any, idx: number) => (
-                          <Typography
-                            key={idx}
-                            variant="body2"
-                            mx={1}
-                            sx={{
-                              bgcolor: getRandomExtremelyLightColor(),
-                              p: 2,
-                              mb: 1,
-                              borderRadius: '10px',
-                              textTransform: 'capitalize',
-                            }}
-                          >
-                            {item}
-                          </Typography>
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        N/A
-                      </Typography>
-                    )}
-                  </Box>
-                ))}
-              </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2, pl: 1 }}>
+              <SelectedCrops
+                title="Crops"
+                data={crops?.map((item: any) => item?.name) || ['N/A']}
+              />
+              <SelectedCrops
+                title="Farming Challenges"
+                data={farmingChallenge?.map((item: any) => item?.challenge) || ['N/A']}
+              />
             </Box>
           )}
 

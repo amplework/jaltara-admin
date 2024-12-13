@@ -53,6 +53,7 @@ export default function EquipmentList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
+    setPage
   } = useTable();
 
   const navigate = useNavigate();
@@ -74,6 +75,7 @@ export default function EquipmentList() {
   }, []);
 
   const onSearch = () => {
+    setPage(0)
     getEquipmentsList(filterName,filterVillage);
   };
 

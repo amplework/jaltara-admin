@@ -243,9 +243,9 @@ const EquipmentList = Loadable(lazy(() => import('../pages/equipments/EquipmentL
 const EquipmentCreate = Loadable(lazy(() => import('../pages/equipments/EquipmentCreate')));
 const EquipmentDetails = Loadable(lazy(() => import('../pages/equipments/EquipmentDetails')));
 // tutorial
-const Tutorial = Loadable(lazy(() => import('../pages/tutorials/TutorialList')));
-const TutorialCreate = Loadable(lazy(() => import('../pages/tutorials/TutorialCreate')));
-const TutorialDetails = Loadable(lazy(() => import('../pages/tutorials/TutorialDetails')));
+const Tutorial = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialList')));
+const TutorialCreate = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialCreate')));
+const TutorialDetails = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialDetails')));
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

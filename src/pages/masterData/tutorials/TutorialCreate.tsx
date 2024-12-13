@@ -10,7 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from 'src/components/Iconify';
 import Page from 'src/components/Page';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 import { TutorialType } from 'src/@types/tutorial';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { AddTutorials, emptyTutorialDetails, getTutorialsDetails } from 'src/redux/slices/tutorial';

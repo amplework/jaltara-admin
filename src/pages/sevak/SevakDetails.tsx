@@ -9,15 +9,16 @@ import { useDispatch, useSelector } from 'src/redux/store';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import Image from 'src/components/Image';
 import { Table } from '@mui/material';
 import { TableHeadCustom } from 'src/components/table';
 import Scrollbar from 'src/components/Scrollbar';
 import { detailsLoading, getUsersDetails } from 'src/redux/slices/user';
-import SevekSummary from 'src/sections/@dashboard/user/list/SevekPitsCount';
 import SevekPitsList from 'src/sections/@dashboard/user/list/SevekPitsList';
 import noImage from 'src/assets/images/noImage.jpg';
-import { SkeletonPostItem, SkeletonProduct } from 'src/components/skeleton';
+import { SkeletonProduct } from 'src/components/skeleton';
+import SummaryCards from 'src/components/common/cards/summaryCard';
+import ImageCard from 'src/components/common/cards/imageCard';
+import DetailsList from 'src/components/common/detailsListing/listing';
 
 export default function SevekDetails() {
   const { id } = useParams();
@@ -45,7 +46,6 @@ export default function SevekDetails() {
     wellCount,
     farmerCount,
   } = usersDetails;
-  console.log('language', language);
 
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
     ? [...checkUpperGeo.parents].reverse()
@@ -77,6 +77,12 @@ export default function SevekDetails() {
     },
   ];
 
+  const cardDetails = [
+    { title: 'Total Pit Count', total: pitCount },
+    { title: 'Total Well Count', total: wellCount },
+    { title: 'Total Farmer Count', total: farmerCount },
+  ];
+
   return (
     <Page title="Sevak Details">
       <Container maxWidth={'xl'}>
@@ -87,17 +93,7 @@ export default function SevekDetails() {
             { name: 'Sevak Details' },
           ]}
         />
-        <Grid container spacing={3} pb={2}>
-          {[
-            { title: 'Total Pit Count', total: pitCount },
-            { title: 'Total Well Count', total: wellCount },
-            { title: 'Total Farmer Count', total: farmerCount },
-          ].map((item, index) => (
-            <Grid item xs={12} md={4} key={index}>
-              <SevekSummary title={item.title} total={item.total} isLoading={isDetailsLoading} />
-            </Grid>
-          ))}
-        </Grid>
+        <SummaryCards data={cardDetails} isLoading={isDetailsLoading} />
 
         <Card sx={{ p: 3 }}>
           {isDetailsLoading ? (
@@ -106,36 +102,7 @@ export default function SevekDetails() {
             <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
               <Grid item xs={12} sm={6} md={4} display={'flex'} justifyContent={'center'}>
-                <Box
-                  sx={{
-                    width: 300,
-                    height: 300,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    boxShadow: 3,
-                    transition: 'box-shadow 0.3s ease-in-out',
-                    '&:hover': {
-                      boxShadow: 6,
-                    },
-                  }}
-                >
-                  <Image
-                    src={photo ? photo : noImage}
-                    alt={photo ? 'Uploaded Image' : 'No Image Available'}
-                    sx={{
-                      width: '70%',
-                      height: 'auto',
-                      objectFit: 'cover',
-                      transition: 'transform 0.3s ease-in-out',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                      },
-                    }}
-                  />
-                </Box>
+                <ImageCard src={photo ? photo : noImage} />
               </Grid>
 
               {/* Details Section */}
@@ -143,30 +110,7 @@ export default function SevekDetails() {
                 <Typography variant="h5" gutterBottom>
                   Sevak Information
                 </Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    mt: 2,
-                  }}
-                >
-                  {details?.map(({ label, value }) => (
-                    <Box
-                      key={label}
-                      display="flex"
-                      // justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', minWidth: 120 }}>
-                        {label} :
-                      </Typography>
-                      <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                        {value}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
+                <DetailsList details={details} />
               </Grid>
             </Grid>
           )}

@@ -17,7 +17,6 @@ import {
   FormProvider,
   RHFSelectDropdown,
   RHFTextField,
-  RHFUploadSingleFile,
 } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
@@ -32,14 +31,12 @@ import {
   getTalukList,
   getUsersDetails,
   getVillageList,
-  startLoading,
 } from 'src/redux/slices/user';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { SkeletonProduct } from 'src/components/skeleton';
 import { getEntityName } from 'src/utils/common';
-import profilepic from 'src/assets/images/profile-background.jpg';
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
   { id: 'inactive', label: 'Inactive', name: 'inactive' },
@@ -85,7 +82,7 @@ export default function SevekCreate() {
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
     selectVillage: Yup.string(),
-    photo: Yup.mixed(),
+    // photo: Yup.mixed(),
   });
 
   const defaultValues = useMemo(
@@ -296,7 +293,7 @@ export default function SevekCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Card
+              {/* <Card
                 sx={{
                   mb: 10,
                   overflow: 'visible', // Allow the image to overflow outside the Card
@@ -340,7 +337,7 @@ export default function SevekCreate() {
                     }}
                   />
                 </Box>
-              </Card>
+              </Card> */}
 
               {isDetailsLoading ? (
                 <Card sx={{ p: 3 }}>

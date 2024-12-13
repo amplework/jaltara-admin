@@ -66,6 +66,7 @@ export default function CropList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
+    setPage
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -94,6 +95,7 @@ export default function CropList() {
   const { cropListData, cropsDetails,isLoading } = useSelector((state) => state.crops);
 
   const onSearch = () => {
+    setPage(0)
     getCropsList(state.filterName, state.filterStatus);
   };
 

@@ -61,8 +61,10 @@ export default function WellList() {
   const { wellsListData } = useSelector((state) => state.wells);
 
   const onSearch = () => {
+    setPage(0)
     getWillsList(filterName, filterVillage);
   };
+  
   const handleFilterName = (filterName: string) => {
     setFilterName(filterName);
     setPage(0);

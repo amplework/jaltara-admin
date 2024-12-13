@@ -196,8 +196,17 @@ export default function FarmerCreate() {
     // const districtIdData: any = getAssignVillageData('district');
     // const talukIdData = getAssignVillageData('taluk');
     const stateIdData = getEntityName('state', farmersDetails?.checkUpperGeo);
+
     const districtIdData = getEntityName('district', farmersDetails?.checkUpperGeo);
     const talukIdData = getEntityName('taluk', farmersDetails?.checkUpperGeo);
+    console.log(
+      'stateIdData',
+      stateIdData
+      // 'districtIdData',
+      // districtIdData,
+      // 'talukIdData',
+      // talukIdData
+    );
     const isVillage = farmersDetails?.checkUpperGeo?.entityType === 'village';
     setValue('name', farmersDetails?.name);
     setValue('phone', farmersDetails?.phone);
@@ -215,6 +224,7 @@ export default function FarmerCreate() {
     );
 
     setValue('selectStates', stateIdData?.id || '');
+
     setState((prev: any) => ({
       ...prev,
       selectedValues: farmersDetails?.crops?.map((item: any) => item?.id) || [],
@@ -259,9 +269,11 @@ export default function FarmerCreate() {
       }
     }
   };
+  console.log('farmersDetails --->>>>>>', farmersDetails);
 
-  // console.log('farmersDetails', farmersDetails);
-  // console.log('----------->', farmersDetails?.isParticipate);
+  console.log('state', statesList);
+  console.log('districtList', districtList?.childEntities);
+  console.log('----------->', watch('selectDistrict'));
   // console.log('isParticipate --->>>>>>', watch('isParticipate'));
 
   const onSubmit = async (data: FarmerDetailsType) => {
@@ -292,7 +304,6 @@ export default function FarmerCreate() {
           ? state?.selectChallangesItems
           : state.selectCropChallangesItems,
       };
-
 
       Object.keys(payload).forEach((key) => {
         if (payload[key] === previousState[key]) {
@@ -380,8 +391,6 @@ export default function FarmerCreate() {
       selectChallangesItems: names,
     }));
   };
-
-  console.log('redio', watch('isParticipate'));
 
   return (
     <Page title="Create farmer">

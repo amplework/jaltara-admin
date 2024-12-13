@@ -1,8 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { EventInput } from '@fullcalendar/common';
-// utils
 import axios from '../../utils/axios';
-//
 import { dispatch } from '../store';
 import { WellsData } from 'src/@types/wells';
 

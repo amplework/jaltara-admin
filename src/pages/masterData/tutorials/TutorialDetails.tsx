@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import Page from 'src/components/Page';
 import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useDispatch, useSelector } from 'src/redux/store';
 import { getTutorialsDetails } from 'src/redux/slices/tutorial';
 import ReactPlayer from 'react-player';

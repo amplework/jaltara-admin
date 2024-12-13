@@ -39,8 +39,16 @@ const TABLE_HEAD = [
 ];
 
 export default function PitList() {
-  const { page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
-    useTable();
+  const {
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    selected,
+    onChangePage,
+    onChangeRowsPerPage,
+    setPage,
+  } = useTable();
 
   const stagesName = [
     {
@@ -92,6 +100,7 @@ export default function PitList() {
   const { pitListData } = useSelector((state) => state.pits);
 
   const onSearch = () => {
+    setPage(0)
     const statgesSearch = state.selectStages;
     getPitsList(filterName, filterVillage, statgesSearch);
   };

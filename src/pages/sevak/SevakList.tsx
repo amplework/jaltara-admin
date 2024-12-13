@@ -15,15 +15,15 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useTabs from '../../hooks/useTabs';
-import useTable, { emptyRows } from '../../hooks/useTable';
+import useTable from '../../hooks/useTable';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { TableNoData, TableHeadCustom, TableEmptyRows } from '../../components/table';
+import { TableNoData, TableHeadCustom } from '../../components/table';
 // sections
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
+import { UserTableToolbar } from '../../sections/@dashboard/user/list';
 import {
   deleteSevak,
   emptyStatesDetails,
@@ -32,13 +32,8 @@ import {
 } from 'src/redux/slices/user';
 import { dispatch, useSelector } from 'src/redux/store';
 import { useSnackbar } from 'notistack';
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'phone', label: 'Phone', align: 'left' },
-  { id: 'village', label: 'Village', align: 'left' },
-  { id: 'status', label: 'status', align: 'left' },
-  { id: 'action', label: 'Action', align: 'left' },
-];
+import { sevekTableHeader } from 'src/mockUp/Sevak';
+import SevakTableRow from 'src/sections/@dashboard/user/list/SevakTableRow';
 
 // ----------------------------------------------------------------------
 
@@ -52,14 +47,14 @@ export default function UserList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
+    setPage,
   } = useTable();
 
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [filterName, setFilterName] = useState('');
-  const [filterVillage, setFilterVillage] = useState('');
+  const [state, setState] = useState({ name: '', village: '' });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -70,30 +65,27 @@ export default function UserList() {
   const { userListData } = useSelector((state) => state.user);
 
   const onSearch = () => {
-    getUsersList(filterName, filterVillage);
+    setPage(0);
+    getUsersList(state?.name, state?.village);
   };
 
   const handleEmptySerachBox = (name: string) => {
-    if (filterName?.length === 1 && name === '') {
+    if (state?.name?.length === 1 && name === '') {
       getUsersList();
     }
   };
   const handleFilterName = (Name: string) => {
-    setFilterName(Name);
+    setState((prev) => ({ ...prev, name: Name }));
     handleEmptySerachBox(Name);
   };
 
-  const handleFilterRole = (filterVillage: string) => {
-    setFilterVillage(filterVillage);
-  };
-
-  const handleEditRow = () => {
-    // navigate(PATH_DASHBOARD.sevak.edit(paramCase(id)));
+  const handleFilterRole = (village: string) => {
+    setState((prev) => ({ ...prev, village: village }));
   };
 
   const isNotFound =
-    (!userListData?.length && !!filterName) ||
-    (!userListData?.length && !!filterVillage) ||
+    (!userListData?.length && !!state?.name) ||
+    (!userListData?.length && !!state?.village) ||
     (!userListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
@@ -148,8 +140,8 @@ export default function UserList() {
 
         <Card>
           <UserTableToolbar
-            filterName={filterName}
-            filterVillage={filterVillage}
+            filterName={state?.name}
+            filterVillage={state?.village}
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}
@@ -163,7 +155,7 @@ export default function UserList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={sevekTableHeader}
                   rowCount={userListData?.length}
                   numSelected={selected.length}
                 />
@@ -173,7 +165,7 @@ export default function UserList() {
                     ? userListData
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
-                          <UserTableRow
+                          <SevakTableRow
                             key={row.id}
                             row={row}
                             selected={selected.includes(row.id)}

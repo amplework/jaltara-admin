@@ -7,6 +7,7 @@ import { UserItem } from '../../../../@types/user';
 // components
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
+import { languageList } from 'src/mockUp/Sevak';
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +21,7 @@ type Props = {
   handleShowDetails?: (id: any) => void;
 };
 
-export default function UserTableRow({
+export default function SevakTableRow({
   row,
   onhandleEditDetails,
   onhandleDeleteRow,
@@ -29,7 +30,7 @@ export default function UserTableRow({
   const theme = useTheme();
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
-  const { name, village, phone, status, id } = row || {};
+  const { name, village, phone, status, id,language } = row || {};
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
@@ -65,6 +66,13 @@ export default function UserTableRow({
           {phone || '--'}
         </Typography>
       </TableCell>
+
+      <TableCell >
+        <Typography variant="subtitle2" noWrap>
+        {language ? languageList.find((item) => item?.id === language)?.label || '--' : '--'}
+        </Typography>
+      </TableCell>
+
       <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
         <Typography variant="subtitle2" noWrap>
           {village?.name || '--'}

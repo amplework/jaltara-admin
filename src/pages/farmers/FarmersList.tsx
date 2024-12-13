@@ -40,8 +40,17 @@ const TABLE_HEAD = [
 ];
 
 export default function FarmersList() {
-  const { dense, page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
-    useTable();
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    selected,
+    onChangePage,
+    onChangeRowsPerPage,
+    setPage,
+  } = useTable();
 
   const navigate = useNavigate();
 
@@ -49,9 +58,7 @@ export default function FarmersList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [filterName, setFilterName] = useState('');
-
-  const [filterVillage, setFilterVillage] = useState('');
+  const [state, setState] = useState({ name: '', village: '' });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -62,20 +69,21 @@ export default function FarmersList() {
   const { farmerListData } = useSelector((state) => state.farmer);
 
   const onSearch = () => {
-    getFarmerList(filterName, filterVillage);
+    setPage(0);
+    getFarmerList(state?.name, state?.village);
   };
 
   const handleFilterName = (filterName: string) => {
-    setFilterName(filterName);
+    setState((prev) => ({ ...prev, name: filterName }));
   };
 
   const handleFilterRole = (filterVillage: string) => {
-    setFilterVillage(filterVillage);
+    setState((prev) => ({ ...prev, village: filterVillage }));
   };
 
   const isNotFound =
-    (!farmerListData?.length && !!filterName) ||
-    (!farmerListData?.length && !!filterVillage) ||
+    (!farmerListData?.length && !!state?.name) ||
+    (!farmerListData?.length && !!state?.village) ||
     (!farmerListData?.length && !!filterStatus);
 
   const handleAddUser = () => {
@@ -130,8 +138,8 @@ export default function FarmersList() {
 
         <Card>
           <UserTableToolbar
-            filterName={filterName}
-            filterVillage={filterVillage}
+            filterName={state?.name}
+            filterVillage={state?.village}
             onFilterName={handleFilterName}
             onFilterVillage={handleFilterRole}
             onSearch={onSearch}

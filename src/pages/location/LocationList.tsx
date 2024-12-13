@@ -54,7 +54,7 @@ const TABLE_HEAD = [
 ];
 
 export default function LocationList() {
-  const { page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage } =
+  const { page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage,setPage } =
     useTable();
 
   const [filterName, setFilterName] = useState('');
@@ -198,6 +198,7 @@ export default function LocationList() {
   const fieldsToClear = ['location', 'name', 'selectDistrict', 'selectStates', 'selectTaluk'];
 
   const onSearch = () => {
+    setPage(0)
     const statgesSearch = state.selectStages;
     getPitsList(filterName, filterVillage, statgesSearch);
   };

@@ -5,6 +5,7 @@ import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
 import { FarmerListData } from 'src/@types/farmer';
+import { languageList } from 'src/mockUp/Sevak';
 
 // ----------------------------------------------------------------------
 
@@ -48,24 +49,24 @@ export default function FarmerTableRow({
         </Typography>
       </TableCell>
 
-      <TableCell >
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
           {land ? land : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell >
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
           {village ? village?.name : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell >
-        <Typography variant="subtitle2" noWrap sx={{ textTransform:'capitalize' }}>
-          {language ? language : '--'}
+      <TableCell>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
+          {language ? languageList.find((item) => item?.id === language)?.label || '--' : '--'}
         </Typography>
       </TableCell>
-      <TableCell >
+      <TableCell>
         <Typography variant="subtitle2" noWrap>
           {totalPits ? totalPits : '--'}
         </Typography>

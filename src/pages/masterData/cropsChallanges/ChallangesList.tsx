@@ -70,6 +70,7 @@ export default function ChallangesList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
+    setPage
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -96,6 +97,7 @@ export default function ChallangesList() {
   const { challengesListData, challengesDetails } = useSelector((state) => state.challenges);
 
   const onSearch = () => {
+    setPage(0)
     getCropsChallengesList(state.filterChallenge, state.filterStatus);
   };
 
