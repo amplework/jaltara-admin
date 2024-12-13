@@ -24,8 +24,9 @@ const ImageCard = ({ src }: { src: string | null }) => {
             src={src ? src : noImage}
             alt={src ? 'Uploaded Image' : 'No Image Available'}
             sx={{
-              width: '70%',
+              width: '90%',
               height: 'auto',
+              borderRadius:"10PX",
               objectFit: 'cover',
               transition: 'transform 0.3s ease-in-out',
               '&:hover': {

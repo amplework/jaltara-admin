@@ -10,13 +10,15 @@ import { getWellsDetails, startLoading } from 'src/redux/slices/wells';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import Image from 'src/components/Image';
-import { formatedDate } from 'src/utils/formateDate';
 import { Table } from '@mui/material';
 import { TableHeadCustom } from 'src/components/table';
 import WellsDetailsRow from 'src/sections/@dashboard/user/list/WellsDetails';
 import Scrollbar from 'src/components/Scrollbar';
 import { SkeletonProduct } from 'src/components/skeleton';
+import { wellDetailseHeader } from 'src/mockUp/Well';
+import ImageCard from 'src/components/common/cards/imageCard';
+import noImage from 'src/assets/images/noImage.jpg';
+import DetailsList from 'src/components/common/detailsListing/listing';
 
 export default function WellsDetails() {
   const { id } = useParams();
@@ -36,13 +38,6 @@ export default function WellsDetails() {
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
     ? [...checkUpperGeo.parents].reverse()
     : [];
-
-  const TABLE_HEAD = [
-    { id: 'photo', label: 'Photo', align: 'left' },
-    { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
-    { id: 'last update', label: 'Last update', align: 'left' },
-  ];
-  console.log('plotSize', plotSize);
 
   const details = [
     { label: 'Description', value: description },
@@ -72,18 +67,8 @@ export default function WellsDetails() {
             <>
               <Grid container spacing={4} justifyContent="center">
                 {/* Image Section */}
-                <Grid item xs={12} sm={6} md={4}>
-                  <Image
-                    src={photo}
-                    alt="Well Image"
-                    sx={{
-                      width: '100%',
-                      height: 'auto',
-                      borderRadius: 2,
-                      objectFit: 'cover',
-                      boxShadow: 3,
-                    }}
-                  />
+                <Grid item xs={12} sm={6} md={4} display={'flex'} justifyContent={'center'}>
+                  <ImageCard src={photo ? photo : noImage} />
                 </Grid>
 
                 {/* Details Section */}
@@ -91,36 +76,7 @@ export default function WellsDetails() {
                   <Typography variant="h5" gutterBottom>
                     Well Information
                   </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 2,
-                      mt: 2,
-                    }}
-                  >
-                    {details?.map(({ label, value }) => (
-                      <Box
-                        key={label}
-                        display="flex"
-                        // justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontWeight: 'bold', minWidth: 120, textTransform: 'capitalize' }}
-                        >
-                          {label} :
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          sx={{ ...(label === 'Plot Size' ? {} : { textTransform: 'capitalize' }) }}
-                        >
-                          {value}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Box>
+                  <DetailsList details={details} />
                 </Grid>
               </Grid>
               {/* stages Section */}
@@ -139,7 +95,7 @@ export default function WellsDetails() {
                   <Scrollbar>
                     <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
                       <Table size={'medium'}>
-                        <TableHeadCustom headLabel={TABLE_HEAD} />
+                        <TableHeadCustom headLabel={wellDetailseHeader} />
 
                         <TableBody>
                           {stages?.length

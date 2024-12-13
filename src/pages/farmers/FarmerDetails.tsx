@@ -14,15 +14,12 @@ import {
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
-
 // redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import Image from 'src/components/Image';
 import { Table } from '@mui/material';
 import { TableHeadCustom } from 'src/components/table';
 import Scrollbar from 'src/components/Scrollbar';
@@ -31,19 +28,11 @@ import { getFarmerDetails, startLoading } from 'src/redux/slices/farmers';
 import { formatedDate } from 'src/utils/formateDate';
 import FarmerPitsDetails from 'src/sections/@dashboard/user/list/FarmerPitsDetails';
 import { SkeletonProduct } from 'src/components/skeleton';
-import { getRandomExtremelyLightColor } from 'src/utils/getColorName';
 import ImageCard from 'src/components/common/cards/imageCard';
 import DetailsList from 'src/components/common/detailsListing/listing';
 import SelectedCrops from 'src/components/common/detailsListing/selectedCrops';
+import { farmerLogsHeader } from 'src/mockUp/Farmer';
 
-const TABLE_HEAD = [
-  { id: 'photo', label: 'Photo', align: 'left' },
-  { id: 'name ', label: 'Name', align: 'left' },
-  { id: 'level ', label: 'Level', align: 'left' },
-  { id: 'plot ', label: 'Plot Size', align: 'left' },
-  { id: 'stage ', label: 'Stage Name', align: 'left' },
-  { id: 'last update', label: 'Last update', align: 'left' },
-];
 
 export default function FarmerDetails() {
   const { id } = useParams();
@@ -77,24 +66,6 @@ export default function FarmerDetails() {
   const reverseGeoLocations = Array.isArray(checkUpperGeo?.parents)
     ? [...checkUpperGeo.parents].reverse()
     : [];
-
-  const cropDetails = [
-    {
-      value:
-        crops && Array.isArray(crops) && crops.length > 0
-          ? crops.map((item: any, index: number) => `${item.name || 'N/A'}`)
-          : ['N/A'],
-    },
-  ];
-  const cropChallangesDetails = [
-    {
-      // label: 'Farming Challenges',
-      value:
-        farmingChallenge && Array.isArray(farmingChallenge) && farmingChallenge.length > 0
-          ? farmingChallenge.map((item: any, index: number) => ` ${item.challenge || 'N/A'}`)
-          : ['N/A'],
-    },
-  ];
 
   const details = [
     { label: 'Name', value: name },
@@ -179,7 +150,7 @@ export default function FarmerDetails() {
                 <Scrollbar>
                   <TableContainer sx={{ minWidth: 800, boxShadow: 3, borderRadius: 2 }}>
                     <Table size="medium">
-                      <TableHeadCustom headLabel={TABLE_HEAD} />
+                      <TableHeadCustom headLabel={farmerLogsHeader} />
                       <TableBody>
                         {pits?.length > 0 ? (
                           pits?.map((row: any, index: number) => (
@@ -187,7 +158,7 @@ export default function FarmerDetails() {
                           ))
                         ) : (
                           <TableRow>
-                            <TableCell colSpan={TABLE_HEAD.length} align="center">
+                            <TableCell colSpan={farmerLogsHeader?.length} align="center">
                               No data available
                             </TableCell>
                           </TableRow>

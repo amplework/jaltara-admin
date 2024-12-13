@@ -26,15 +26,9 @@ import { deleteWells, getWillsList } from 'src/redux/slices/wells';
 import { useDispatch, useSelector } from 'src/redux/store';
 import WellsTableRow from 'src/sections/@dashboard/user/list/WellsTableRow';
 import { useSnackbar } from 'notistack';
+import { wellTableHeader } from 'src/mockUp/Well';
 
 // ----------------------------------------------------------------------
-const TABLE_HEAD = [
-  { id: 'village', label: 'Village name', align: 'left' },
-  { id: 'level', label: 'Level', align: 'left' },
-  { id: 'update by sevak', label: 'Update by sevak', align: 'left' },
-  { id: 'last update', label: 'Last update', align: 'left' },
-  { id: 'action', label: 'Action', align: 'left' },
-];
 
 export default function WellList() {
   const { page, order, orderBy, rowsPerPage, setPage, onChangePage, onChangeRowsPerPage } =
@@ -42,15 +36,11 @@ export default function WellList() {
 
   const navigate = useNavigate();
 
-  const [filterName, setFilterName] = useState('');
-
   const { enqueueSnackbar } = useSnackbar();
 
   const dispatch = useDispatch();
 
-  const [filterVillage, setFilterVillage] = useState('');
-
-  const [filterRole, setFilterRole] = useState('all');
+  const [state, setState] = useState({ name: '', village: '' });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -61,17 +51,16 @@ export default function WellList() {
   const { wellsListData } = useSelector((state) => state.wells);
 
   const onSearch = () => {
-    setPage(0)
-    getWillsList(filterName, filterVillage);
-  };
-  
-  const handleFilterName = (filterName: string) => {
-    setFilterName(filterName);
     setPage(0);
+    getWillsList(state?.name, state?.village);
+  };
+
+  const handleFilterName = (filterName: string) => {
+    setState((prev) => ({ ...prev, name: filterName }));
   };
 
   const handleFilterRole = (filterVillage: string) => {
-    setFilterVillage(filterVillage);
+    setState((prev) => ({ ...prev, village: filterVillage }));
   };
 
   const handleShowDetails = (id: string) => {
@@ -79,8 +68,8 @@ export default function WellList() {
   };
 
   const isNotFound =
-    (!wellsListData?.length && !!filterName) ||
-    (!wellsListData?.length && !!filterRole) ||
+    (!wellsListData?.length && !!state?.name) ||
+    (!wellsListData?.length && !!state?.village) ||
     (!wellsListData?.length && !!filterStatus);
 
   const onhandleDeleteRow = (id: string) => {
@@ -119,8 +108,8 @@ export default function WellList() {
 
         <Card>
           <UserTableToolbar
-            filterName={filterName}
-            filterVillage={filterVillage}
+            filterName={state?.name}
+            filterVillage={state?.village}
             onFilterVillage={handleFilterRole}
             onFilterName={handleFilterName}
             onSearch={onSearch}
@@ -134,7 +123,7 @@ export default function WellList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={wellTableHeader}
                   rowCount={wellsListData?.length}
                 />
 

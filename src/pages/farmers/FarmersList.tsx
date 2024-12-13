@@ -30,14 +30,7 @@ import { deleteFarmer, emptyFarmerDetails, getFarmerList } from 'src/redux/slice
 import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
 import { emptyStatesDetails } from 'src/redux/slices/user';
 import { useSnackbar } from 'notistack';
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'land', label: 'Land (acres)', align: 'left' },
-  { id: 'village', label: 'Village', align: 'left' },
-  { id: 'language', label: 'Language', align: 'left' },
-  { id: 'pits', label: `Total pit's`, align: 'left' },
-  { id: 'action', label: 'Action', align: 'left' },
-];
+import { farmerTableHeader } from 'src/mockUp/Farmer';
 
 export default function FarmersList() {
   const {
@@ -153,7 +146,7 @@ export default function FarmersList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={farmerTableHeader}
                   rowCount={farmerListData?.length}
                   numSelected={selected.length}
                 />

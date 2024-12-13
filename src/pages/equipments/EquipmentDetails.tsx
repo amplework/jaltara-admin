@@ -11,11 +11,9 @@ import {
   TableRow,
   TableCell,
   useTheme,
-  Paper,
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// hooks
 // redux
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'src/redux/store';
@@ -31,16 +29,12 @@ import { SkeletonProduct } from 'src/components/skeleton';
 import { getEquipmentsDetails } from 'src/redux/slices/equipment';
 import EquipmentLogsRow from 'src/sections/@dashboard/user/list/EquipmentLogsRow';
 import jcbPic from 'src/assets/images/jcbPic.jpeg';
-
-const TABLE_HEAD = [
-  { id: 'startTime ', label: 'Start Date & Time', align: 'left' },
-  { id: 'endTime ', label: 'End Date & Time', align: 'left' },
-  { id: 'timeRecord', label: 'Time Record', align: 'left' },
-];
+import { equipmentLogs } from 'src/mockUp/Equipment';
+import ImageCard from 'src/components/common/cards/imageCard';
+import DetailsList from 'src/components/common/detailsListing/listing';
 
 export default function EquipmentDetails() {
   const { id } = useParams();
-  const theme = useTheme();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,7 +45,7 @@ export default function EquipmentDetails() {
 
   const { equipmentDetails, isLoading } = useSelector((state) => state.equipments);
 
-  const { name, phone, equipment, created, modified, status, photo, logs } = equipmentDetails;
+  const { name, phone, equipment, status, logs } = equipmentDetails;
 
   const details = [
     { label: 'Name', value: name },
@@ -74,41 +68,10 @@ export default function EquipmentDetails() {
           {isLoading ? (
             <SkeletonProduct />
           ) : (
-            <Grid
-              container
-              spacing={4}
-              justifyContent="center"
-              direction={{ xs: 'row' }}
-            >
+            <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
               <Grid item xs={12} sm={6} lg={4} display="flex" justifyContent="center">
-                <Box
-                  sx={{
-                    width: 300,
-                    height: 300,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    boxShadow: 3,
-                    transition: 'box-shadow 0.3s ease-in-out',
-                    '&:hover': { boxShadow: 6 },
-                  }}
-                >
-                  <Image
-                    src={jcbPic || noImage}
-                    alt={jcbPic ? 'Uploaded Equipment Image' : 'No Image Available'}
-                    sx={{
-                      width: '90%',
-                      height: '90%',
-                      objectFit: 'cover',
-                      borderRadius: '10px',
-                      transition: 'transform 0.3s ease-in-out',
-                      '&:hover': { transform: 'scale(1.05)' },
-                    }}
-                  />
-                </Box>
+                <ImageCard src={jcbPic || noImage} />
               </Grid>
 
               {/* Details Section */}
@@ -116,27 +79,7 @@ export default function EquipmentDetails() {
                 <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
                   Equipment Information
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {details?.map(({ label, value }) => (
-                    <Box key={label} sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          fontWeight: 'bold',
-                          minWidth: 170,
-                          color: 'text.primary',
-                          textAlign: 'left',
-                          textTransform: 'capitalize',
-                        }}
-                      >
-                        {label} :
-                      </Typography>
-                      <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                        {value || 'N/A'}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
+                <DetailsList details={details} />
               </Grid>
             </Grid>
           )}
@@ -154,7 +97,7 @@ export default function EquipmentDetails() {
                     sx={{ minWidth: 800, boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}
                   >
                     <Table size="medium">
-                      <TableHeadCustom headLabel={TABLE_HEAD} />
+                      <TableHeadCustom headLabel={equipmentLogs} />
                       <TableBody>
                         {logs?.length > 0 ? (
                           logs?.map((row: any, index: number) => (
@@ -162,7 +105,7 @@ export default function EquipmentDetails() {
                           ))
                         ) : (
                           <TableRow>
-                            <TableCell colSpan={TABLE_HEAD.length} align="center">
+                            <TableCell colSpan={equipmentLogs?.length} align="center">
                               No data available
                             </TableCell>
                           </TableRow>

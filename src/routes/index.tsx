@@ -59,7 +59,6 @@ export default function Router() {
         // { path: 'register-unprotected', element: <Register /> },
         { path: 'reset-password', element: <ResetPassword /> },
         { path: 'new-password', element: <NewPassword /> },
-        { path: 'verify', element: <VerifyCode /> },
       ],
     },
 
@@ -209,7 +208,6 @@ export default function Router() {
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
-const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // Sevak
 const SevakList = Loadable(lazy(() => import('../pages/sevak/SevakList')));

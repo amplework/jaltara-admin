@@ -3,7 +3,6 @@ import { m, AnimatePresence } from 'framer-motion';
 import { alpha } from '@mui/material/styles';
 import { List, IconButton, ListItemText, ListItem } from '@mui/material';
 // utils
-import { fData } from '../../utils/formatNumber';
 import getFileData from '../../utils/getFileData';
 // type
 import { UploadMultiFileProps } from './type';
@@ -90,7 +89,7 @@ export default function MultiFilePreview({
 
               <ListItemText
                 primary={typeof file === 'string' ? file : name}
-                secondary={typeof file === 'string' ? '' : fData(size || 0)}
+                secondary={typeof file === 'string' ? '' : size || 0}
                 primaryTypographyProps={{ variant: 'subtitle2' }}
                 secondaryTypographyProps={{ variant: 'caption' }}
               />

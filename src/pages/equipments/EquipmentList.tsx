@@ -34,37 +34,27 @@ import { TableHeadCustom, TableNoData } from 'src/components/table';
 import { EquipmentItem } from 'src/@types/equipment';
 import EquipmentTableRow from 'src/sections/@dashboard/user/list/EquipmentTableRow';
 import { useSnackbar } from 'notistack';
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'equipment', label: 'Equipment', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'action', label: 'Action', align: 'left' },
-];
+import { equipmentTableHeader } from 'src/mockUp/Equipment';
 
 export default function EquipmentList() {
   const {
-    dense,
     page,
     order,
     orderBy,
     rowsPerPage,
     selected,
-    onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
-    setPage
+    setPage,
   } = useTable();
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const [filterName, setFilterName] = useState('');
-
   const { enqueueSnackbar } = useSnackbar();
 
-  const [filterVillage, setFilterVillage] = useState('');
+  const [state, setState] = useState({ name: '', village: '' });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -75,25 +65,21 @@ export default function EquipmentList() {
   }, []);
 
   const onSearch = () => {
-    setPage(0)
-    getEquipmentsList(filterName,filterVillage);
+    setPage(0);
+    getEquipmentsList(state?.name, state?.village);
   };
 
   const handleFilterName = (filterName: string) => {
-    setFilterName(filterName);
+    setState((prev) => ({ ...prev, name: filterName }));
   };
 
   const handleFilteRequipment = (filterVillage: string) => {
-    setFilterVillage(filterVillage);
-  };
-
-  const handleEditRow = () => {
-    // navigate(PATH_DASHBOARD.sevek.edit(paramCase(id)));
+    setState((prev) => ({ ...prev, village: filterVillage }));
   };
 
   const isNotFound =
-    (!equipmentListData?.length && !!filterName) ||
-    (!equipmentListData?.length && !!filterName) ||
+    (!equipmentListData?.length && !!state?.name) ||
+    (!equipmentListData?.length && !!state?.village) ||
     (!equipmentListData?.length && !!filterStatus);
 
   const onhandleEditDetails = (id: string) => {
@@ -113,7 +99,7 @@ export default function EquipmentList() {
           getEquipmentsList();
         }
       })
-      .catch((error) => {
+      .catch(() => {
         console.log('error');
       });
   };
@@ -126,6 +112,7 @@ export default function EquipmentList() {
     dispatch(emptyEquipmentsDetails(null));
     navigate(PATH_DASHBOARD.equipments.create);
   };
+  
   return (
     <Page title="equipments List">
       <Container maxWidth={'xl'}>
@@ -145,8 +132,8 @@ export default function EquipmentList() {
 
         <Card>
           <UserTableToolbar
-            filterName={filterName}
-            filterVillage={filterVillage}
+            filterName={state?.name}
+            filterVillage={state?.village}
             onFilterName={handleFilterName}
             onFilterVillage={handleFilteRequipment}
             onSearch={onSearch}
@@ -160,7 +147,7 @@ export default function EquipmentList() {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
+                  headLabel={equipmentTableHeader}
                   rowCount={equipmentListData?.length}
                   numSelected={selected.length}
                 />

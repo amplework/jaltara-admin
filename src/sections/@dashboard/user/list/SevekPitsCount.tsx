@@ -1,11 +1,7 @@
-import ReactApexChart from 'react-apexcharts';
 // @mui
-import { alpha, useTheme, styled } from '@mui/material/styles';
-import { Box, Card, Typography, Stack, CardProps } from '@mui/material';
-// utils
-import { fNumber, fPercent } from '../../../../utils/formatNumber';
+import { alpha, styled } from '@mui/material/styles';
+import { Box, Card, Typography, CardProps } from '@mui/material';
 // components
-import Iconify from '../../../../components/Iconify';
 import { SkeletonPostItem } from 'src/components/skeleton';
 
 // ----------------------------------------------------------------------
