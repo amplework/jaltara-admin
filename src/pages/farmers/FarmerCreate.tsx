@@ -11,7 +11,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -20,6 +20,7 @@ import {
   RHFSelectDropdown,
   RHFSwitch,
   RHFTextField,
+  RHFUploadSingleFile,
 } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
@@ -48,6 +49,8 @@ import RHFMultiSelectDropdown from 'src/components/hook-form/RHFMultiSelectDropd
 import { getCropsChallengesList } from 'src/redux/slices/challanges';
 import RHFMultiSelect from 'src/components/hook-form/RHFMultiSelect';
 import { getEntityName } from 'src/utils/common';
+import profilepic from 'src/assets/images/profile-background.jpg';
+import { getImageUploadUrl } from 'src/redux/slices/imageUpload';
 
 const languageList = [
   { id: 'hi', label: 'हिन्दी', name: 'हिन्दी' },
@@ -146,6 +149,7 @@ export default function FarmerCreate() {
     farmingChallenge: Yup.array()
       .of(Yup.string().required('Each crop challanges must be selected'))
       .min(1, 'At least one crop must be selected'),
+    photo: Yup.mixed(),
   });
 
   const defaultValues = useMemo(
@@ -164,6 +168,7 @@ export default function FarmerCreate() {
       isParticipate: '',
       crops: [],
       farmingChallenge: [],
+      photo: '',
     }),
     [usersDetails]
   );
@@ -215,7 +220,7 @@ export default function FarmerCreate() {
     setValue('language', farmersDetails?.language);
     setValue('farmAvailableDate', farmersDetails?.farmAvailableDate);
     setValue('isParticipate', farmersDetails?.isParticipate);
-
+    setValue('photo', farmersDetails?.photo);
     setValue('crops', farmersDetails?.crops?.map((item: any) => item?.id) || []);
 
     setValue(
@@ -269,12 +274,6 @@ export default function FarmerCreate() {
       }
     }
   };
-  console.log('farmersDetails --->>>>>>', farmersDetails);
-
-  console.log('state', statesList);
-  console.log('districtList', districtList?.childEntities);
-  console.log('----------->', watch('selectDistrict'));
-  // console.log('isParticipate --->>>>>>', watch('isParticipate'));
 
   const onSubmit = async (data: FarmerDetailsType) => {
     try {
@@ -303,6 +302,7 @@ export default function FarmerCreate() {
         farmingChallenge: state?.selectChallangesItems?.length
           ? state?.selectChallangesItems
           : state.selectCropChallangesItems,
+        photo: data?.photo,
       };
 
       Object.keys(payload).forEach((key) => {
@@ -392,6 +392,26 @@ export default function FarmerCreate() {
     }));
   };
 
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        let formData = new FormData();
+        formData.append('image', file);
+
+        dispatch(getImageUploadUrl(formData)).then((res) => {
+          if (res?.statusCode === 200) {
+            enqueueSnackbar(res?.message, {
+              variant: 'success',
+            });
+            setValue('photo', res?.data);
+          }
+        });
+      }
+    },
+    [setValue]
+  );
+
   return (
     <Page title="Create farmer">
       <Container maxWidth={'xl'}>
@@ -405,6 +425,52 @@ export default function FarmerCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
+              <Card
+                sx={{
+                  mb: 10,
+                  overflow: 'visible', // Allow the image to overflow outside the Card
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center', // Center content horizontally
+                  alignItems: 'center', // Center content vertically
+                  minHeight: '200px', // Adjust height based on content
+                  padding: 2,
+                  backgroundImage: `url(${profilepic})`,
+                  // backgroundImage: `url(${watch('photo')})`,
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <RHFUploadSingleFile
+                    name="photo"
+                    onDrop={handleDrop}
+                    sx={{
+                      zIndex: 9,
+                      mt: 5,
+                      position: 'absolute',
+                      bottom: '-60px',
+                      width: '200px',
+                      height: '200px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #e0e0e0',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </Box>
+              </Card>
+
               {isLoading ? (
                 <Card sx={{ p: 3 }}>
                   <SkeletonProduct />

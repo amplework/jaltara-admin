@@ -39,6 +39,8 @@ import {
 } from 'src/redux/slices/challanges';
 import { ChallangesItem } from 'src/@types/challanges';
 import ChallengesForm from '../form/ChallengesForm';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from 'src/pages/sevak/DeleteConfirmationContent';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +72,7 @@ export default function ChallangesList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
-    setPage
+    setPage,
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -82,6 +84,9 @@ export default function ChallangesList() {
     filterChallenge: '',
     filterStatus: '',
     id: '',
+    openDeleteModal: false,
+    cropsChallangesName: '',
+    
   });
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -97,7 +102,7 @@ export default function ChallangesList() {
   const { challengesListData, challengesDetails } = useSelector((state) => state.challenges);
 
   const onSearch = () => {
-    setPage(0)
+    setPage(0);
     getCropsChallengesList(state.filterChallenge, state.filterStatus);
   };
 
@@ -153,16 +158,39 @@ export default function ChallangesList() {
     setState((prev) => ({ ...prev, openModal: false, id: '' }));
   };
 
-  const onDeleteRow = (id: string) => {
-    dispatch(deleteCropsChallanges(id))
+  const onDeleteRow = (id: string, name: string) => {
+    setState((prev) => ({ ...prev, openDeleteModal: true, id: id, cropsChallangesName: name }));
+  };
+
+  const handleDeleteClose = () => {
+    setState((prev) => ({ ...prev, openDeleteModal: false, id: '', cropsChallangesName: '' }));
+  };
+
+  const handleDeleteCropsChallanges = () => {
+    dispatch(deleteCropsChallanges(state?.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
-          enqueueSnackbar(res?.data?.message, {
+          enqueueSnackbar(res?.data?.message||'Crops challanges delete successfully ', {
             variant: 'success',
           });
           handleCropListing();
+          setState((prev) => ({
+            ...prev,
+            openDeleteModal: false,
+            id: '',
+            cropsChallangesName: '',
+          }));
         } else {
+          enqueueSnackbar(res?.data?.message||'Crops challanges delete successfully ', {
+            variant: 'success',
+          });
           handleCropListing();
+          setState((prev) => ({
+            ...prev,
+            openDeleteModal: false,
+            id: '',
+            cropsChallangesName: '',
+          }));
         }
       })
       .catch((error) => {
@@ -233,7 +261,7 @@ export default function ChallangesList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddCrop}
             >
-            Add Challanges
+              Add Challanges
             </Button>
           }
         />
@@ -312,6 +340,16 @@ export default function ChallangesList() {
       >
         <ChallengesForm statusList={statusChallangesList} methods={methods} />
       </MasterDataForm>
+
+      <ConfirmationModal
+        openModal={state.openDeleteModal}
+        // isLoading={isLoading}
+        handleClose={handleDeleteClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteCropsChallanges}
+      >
+        <DeleteConfirmationContent userName={state?.cropsChallangesName} />
+      </ConfirmationModal>
     </Page>
   );
 }

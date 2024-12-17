@@ -13,7 +13,7 @@ import { TableMoreMenu } from 'src/components/table';
 type Props = {
   row: WellsItem | null;
   handleShowDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  onhandleDeleteRow?: (id: any,) => void;
 };
 
 export default function WellsTableRow({ row, handleShowDetails, onhandleDeleteRow }: Props) {

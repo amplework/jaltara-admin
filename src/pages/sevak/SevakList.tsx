@@ -34,6 +34,8 @@ import { dispatch, useSelector } from 'src/redux/store';
 import { useSnackbar } from 'notistack';
 import { sevekTableHeader } from 'src/mockUp/Sevak';
 import SevakTableRow from 'src/sections/@dashboard/user/list/SevakTableRow';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from './DeleteConfirmationContent';
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +56,13 @@ export default function UserList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [state, setState] = useState({ name: '', village: '' });
+  const [state, setState] = useState({
+    name: '',
+    village: '',
+    openModal: false,
+    id: '',
+    sevakName: '',
+  });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -100,25 +108,35 @@ export default function UserList() {
     navigate(PATH_DASHBOARD.sevak.edit(id));
   };
 
-  const onhandleDeleteRow = (id: string) => {
-    dispatch(deleteSevak(id))
+  const onhandleDeleteRow = (id: string, name: string) => {
+    setState((prev) => ({ ...prev, openModal: true, id: id, sevakName: name }));
+  };
+
+  const handleShowDetails = (id: string) => {
+    navigate(PATH_DASHBOARD.sevak.details(id));
+  };
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openModal: false, id: '', sevakName: '' }));
+  };
+
+  const handleSubmit = () => {
+    dispatch(deleteSevak(state.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
           getUsersList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', sevakName: '' }));
         } else {
           getUsersList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', sevakName: '' }));
         }
       })
       .catch((error) => {
         console.log('error');
       });
-  };
-
-  const handleShowDetails = (id: string) => {
-    navigate(PATH_DASHBOARD.sevak.details(id));
   };
 
   return (
@@ -195,6 +213,15 @@ export default function UserList() {
           </Box>
         </Card>
       </Container>
+      <ConfirmationModal
+        openModal={state.openModal}
+        // isLoading={isLoading}
+        handleClose={handleClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleSubmit}
+      >
+        <DeleteConfirmationContent userName={state?.sevakName}/>
+      </ConfirmationModal>
     </Page>
   );
 }

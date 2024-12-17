@@ -17,6 +17,7 @@ import {
   FormProvider,
   RHFSelectDropdown,
   RHFTextField,
+  RHFUploadSingleFile,
 } from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
@@ -37,6 +38,8 @@ import { Typography } from '@mui/material';
 import Iconify from 'src/components/Iconify';
 import { SkeletonProduct } from 'src/components/skeleton';
 import { getEntityName } from 'src/utils/common';
+import profilepic from 'src/assets/images/profile-background.jpg';
+import { getImageUploadUrl } from 'src/redux/slices/imageUpload';
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
   { id: 'inactive', label: 'Inactive', name: 'inactive' },
@@ -82,7 +85,7 @@ export default function SevekCreate() {
     selectDistrict: Yup.string(),
     selectTaluk: Yup.string(),
     selectVillage: Yup.string(),
-    // photo: Yup.mixed(),
+    photo: Yup.mixed(),
   });
 
   const defaultValues = useMemo(
@@ -113,12 +116,6 @@ export default function SevekCreate() {
     formState: { isSubmitting },
   } = methods;
 
-  const getAssignVillageData = (value: string) => {
-    return usersDetails?.checkUpperGeo?.parents?.find((item: any) => item?.entityType === value);
-  };
-
-  const values = watch();
-
   useEffect(() => {
     setVillageData();
   }, [
@@ -145,7 +142,7 @@ export default function SevekCreate() {
     setValue('status', usersDetails?.status);
     setValue('language', usersDetails?.language);
     setValue('selectStates', stateIdData?.id || '');
-    // setValue('photo', usersDetails?.photo || '');
+    setValue('photo', usersDetails?.photo || '');
 
     if (usersDetails && stateIdData?.id) {
       getDistrictList(stateIdData?.id);
@@ -184,6 +181,59 @@ export default function SevekCreate() {
     }
   };
 
+  const handleStatesSelect = (id: any) => {
+    setState((prev: any) => ({ ...prev, villageId: id }));
+    setValue('selectDistrict', '');
+    setValue('selectTaluk', '');
+    setValue('selectVillage', '');
+    dispatch(emptyDistrictList(null));
+    getDistrictList(id);
+  };
+
+  const handleDistrictSelect = (id: any) => {
+    setState((prev: any) => ({ ...prev, villageId: id }));
+    setValue('selectTaluk', '');
+    setValue('selectVillage', '');
+    // dispatch(emptyTalukList(null));
+    getTalukList(id);
+  };
+
+  const handleTalukSelect = (id: string) => {
+    setState((prev: any) => ({ ...prev, villageId: id }));
+    setValue('selectVillage', '');
+    getVillageList(id);
+  };
+
+  const handleVillageSelect = (id: string) => {
+    // setValue('selectVillage', '');
+    setState((prev: any) => ({ ...prev, villageId: id }));
+  };
+
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        let formData = new FormData();
+        formData.append('image', file);
+        // setValue(
+        //   'photo',
+        //   Object.assign(file, {
+        //     preview: URL.createObjectURL(file),
+        //   })
+        // );
+        dispatch(getImageUploadUrl(formData)).then((res) => {
+          if (res?.statusCode === 200) {
+            enqueueSnackbar(res?.message, {
+              variant: 'success',
+            });
+            setValue('photo', res?.data);
+          }
+        });
+      }
+    },
+    [setValue]
+  );
+
   const onSubmit = async (data: CreateUserType) => {
     try {
       let previousState: any = {
@@ -199,7 +249,7 @@ export default function SevekCreate() {
         language: data?.language,
         status: data?.status,
         villageId: state?.villageId,
-        photo:data?.photo
+        photo: data?.photo,
       };
 
       Object.keys(payload).forEach((key) => {
@@ -241,44 +291,7 @@ export default function SevekCreate() {
     }
   };
 
-  const handleStatesSelect = (id: any) => {
-    setState((prev: any) => ({ ...prev, villageId: id }));
-    setValue('selectDistrict', '');
-    setValue('selectTaluk', '');
-    setValue('selectVillage', '');
-    dispatch(emptyDistrictList(null));
-    getDistrictList(id);
-  };
-
-  const handleDistrictSelect = (id: any) => {
-    setState((prev: any) => ({ ...prev, villageId: id }));
-    setValue('selectTaluk', '');
-    setValue('selectVillage', '');
-    // dispatch(emptyTalukList(null));
-    getTalukList(id);
-  };
-
-  const handleTalukSelect = (id: string) => {
-    setState((prev: any) => ({ ...prev, villageId: id }));
-    setValue('selectVillage', '');
-    getVillageList(id);
-  };
-
-  const handleVillageSelect = (id: string) => {
-    // setValue('selectVillage', '');
-    setState((prev: any) => ({ ...prev, villageId: id }));
-  };
-
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      if (file) {
-        const preview = URL.createObjectURL(file);
-        setValue('photo', preview);
-      }
-    },
-    [setValue]
-  );
+  console.log('------>', watch('language')?.length);
 
   return (
     <Page title="Create sevak">
@@ -293,7 +306,7 @@ export default function SevekCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              {/* <Card
+              <Card
                 sx={{
                   mb: 10,
                   overflow: 'visible', // Allow the image to overflow outside the Card
@@ -337,7 +350,7 @@ export default function SevekCreate() {
                     }}
                   />
                 </Box>
-              </Card> */}
+              </Card>
 
               {isDetailsLoading ? (
                 <Card sx={{ p: 3 }}>
@@ -362,18 +375,19 @@ export default function SevekCreate() {
                       }}
                     />
                     <RHFSelectDropdown
+                      name="language"
+                      label={'Select Language'}
+                      placeholder={'Language'}
+                      value={watch('language')}
+                      disabled={usersDetails?.phone ? true : false}
+                      options={languageList}
+                    />
+                    <RHFSelectDropdown
                       name="status"
                       label={'Select Status'}
                       placeholder={'Status'}
                       value={watch('status')}
                       options={statusList}
-                    />
-                    <RHFSelectDropdown
-                      name="language"
-                      label={'Select Language'}
-                      placeholder={'Language'}
-                      value={watch('language')}
-                      options={languageList}
                     />
                   </Box>
                   <Typography variant="h4" py={2}>

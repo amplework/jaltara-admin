@@ -41,6 +41,8 @@ import CropAddEditForm from '../form/CropAddEditForm';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useSnackbar } from 'notistack';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from 'src/pages/sevak/DeleteConfirmationContent';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +68,7 @@ export default function CropList() {
     onSelectRow,
     onChangePage,
     onChangeRowsPerPage,
-    setPage
+    setPage,
   } = useTable();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -80,6 +82,8 @@ export default function CropList() {
     filterName: '',
     filterStatus: '',
     id: '',
+    openDeleteModal: false,
+    cropsName: '',
   });
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -92,10 +96,10 @@ export default function CropList() {
     getCropsList();
   };
 
-  const { cropListData, cropsDetails,isLoading } = useSelector((state) => state.crops);
+  const { cropListData, cropsDetails, isLoading } = useSelector((state) => state.crops);
 
   const onSearch = () => {
-    setPage(0)
+    setPage(0);
     getCropsList(state.filterName, state.filterStatus);
   };
 
@@ -153,21 +157,9 @@ export default function CropList() {
     setState((prev) => ({ ...prev, filterStatus: value }));
   };
 
-  const onDeleteRow = (id: string) => {
-    dispatch(deleteCrops(id))
-      .then((res) => {
-        if (res?.data?.statusCode === 200) {
-          enqueueSnackbar(res?.data?.message, {
-            variant: 'success',
-          });
-          handleCropListing();
-        } else {
-          handleCropListing();
-        }
-      })
-      .catch((error) => {
-        console.log('error');
-      });
+  const onDeleteRow = (id: string,name:string) => {
+    setState((prev) => ({ ...prev, openDeleteModal: true, id: id, cropsName: name }));
+
   };
 
   const onEditRow = (id: string) => {
@@ -175,6 +167,29 @@ export default function CropList() {
     setState((prev) => ({ ...prev, openModal: true, id: id }));
     // dispatch(emptyCropsDetails(null));
     // navigate(PATH_DASHBOARD.masterdata.edit(id));
+  };
+
+  const handleDeleteClose = () => {
+    setState((prev) => ({ ...prev, openDeleteModal: false, id: '', cropsName: '' }));
+  };
+
+  const handleDeleteCrops= () => {
+    dispatch(deleteCrops(state?.id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleCropListing();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', cropsName: '' }));
+        } else {
+          handleCropListing();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', cropsName: '' }));
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
   };
 
   const onSubmit = async (data: CropItem) => {
@@ -314,6 +329,16 @@ export default function CropList() {
       >
         <CropAddEditForm statusList={statusList} methods={methods} />
       </MasterDataForm>
+
+      <ConfirmationModal
+        openModal={state.openDeleteModal}
+        // isLoading={isLoading}
+        handleClose={handleDeleteClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteCrops}
+      >
+        <DeleteConfirmationContent userName={state?.cropsName} />
+      </ConfirmationModal>
     </Page>
   );
 }

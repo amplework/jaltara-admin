@@ -14,7 +14,7 @@ import Iconify from 'src/components/Iconify';
 
 type Props = {
   row: CropItem | null;
-  onDeleteRow?: (id: any) => void;
+  onDeleteRow?: (id: any,name:any) => void;
   onEditRow?: (id: any) => void;
   handleShowDetails?: (id: any) => void;
 };
@@ -67,7 +67,7 @@ export default function CropTableRow({ row, onDeleteRow, handleShowDetails, onEd
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow && onDeleteRow(id);
+                  onDeleteRow && onDeleteRow(id,name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

@@ -35,6 +35,8 @@ import { EquipmentItem } from 'src/@types/equipment';
 import EquipmentTableRow from 'src/sections/@dashboard/user/list/EquipmentTableRow';
 import { useSnackbar } from 'notistack';
 import { equipmentTableHeader } from 'src/mockUp/Equipment';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from '../sevak/DeleteConfirmationContent';
 
 export default function EquipmentList() {
   const {
@@ -54,7 +56,13 @@ export default function EquipmentList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [state, setState] = useState({ name: '', village: '' });
+  const [state, setState] = useState({
+    name: '',
+    village: '',
+    openModal: false,
+    id: '',
+    equipmentName: '',
+  });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -87,16 +95,26 @@ export default function EquipmentList() {
     navigate(PATH_DASHBOARD.equipments.edit(id));
   };
 
-  const onhandleDeleteRow = (id: string) => {
-    dispatch(deleteEquipment(id))
+  const onhandleDeleteRow = (id: string, name: string) => {
+    setState((prev) => ({ ...prev, openModal: true, id: id, equipmentName: name }));
+  };
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openModal: false, id: '', equipmentName: '' }));
+  };
+
+  const handleDeleteEquipment = () => {
+    dispatch(deleteEquipment(state?.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
           getEquipmentsList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', equipmentName: '' }));
         } else {
           getEquipmentsList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', equipmentName: '' }));
         }
       })
       .catch(() => {
@@ -112,7 +130,7 @@ export default function EquipmentList() {
     dispatch(emptyEquipmentsDetails(null));
     navigate(PATH_DASHBOARD.equipments.create);
   };
-  
+
   return (
     <Page title="equipments List">
       <Container maxWidth={'xl'}>
@@ -186,6 +204,16 @@ export default function EquipmentList() {
           </Box>
         </Card>
       </Container>
+
+      <ConfirmationModal
+        openModal={state.openModal}
+        // isLoading={isLoading}
+        handleClose={handleClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteEquipment}
+      >
+        <DeleteConfirmationContent userName={state?.equipmentName} />
+      </ConfirmationModal>
     </Page>
   );
 }

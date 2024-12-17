@@ -9,10 +9,15 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { useSnackbar } from 'notistack';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormProvider, RHFSelectDropdown, RHFTextField } from 'src/components/hook-form';
+import {
+  FormProvider,
+  RHFSelectDropdown,
+  RHFTextField,
+  RHFUploadSingleFile,
+} from 'src/components/hook-form';
 import { Box } from '@mui/material';
 import { Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
@@ -21,6 +26,8 @@ import Iconify from 'src/components/Iconify';
 import { EquipmentItem } from 'src/@types/equipment';
 import { addEditEquipment, getEquipmentsDetails, startLoading } from 'src/redux/slices/equipment';
 import { SkeletonProduct } from 'src/components/skeleton';
+import { getImageUploadUrl } from 'src/redux/slices/imageUpload';
+import profilepic from 'src/assets/images/profile-background.jpg';
 
 const statusList = [
   { id: 'active', label: 'Active', name: 'active' },
@@ -47,6 +54,7 @@ export default function EquipmentCreate() {
       status: '',
       equipment: '',
       phone: '',
+      photo: '',
     }),
     [equipmentDetails]
   );
@@ -58,6 +66,7 @@ export default function EquipmentCreate() {
     phone: Yup.string()
       .required('Phone number is required')
       .matches(/^\d{10}$/, 'Only numbers are allowed and limit is 10 digits'),
+    photo: Yup.mixed(),
   });
 
   useEffect(() => {
@@ -65,6 +74,7 @@ export default function EquipmentCreate() {
     setValue('status', equipmentDetails?.status);
     setValue('equipment', equipmentDetails?.equipment);
     setValue('phone', equipmentDetails?.phone);
+    setValue('photo', equipmentDetails?.photo);
   }, [equipmentDetails]);
 
   const methods = useForm<EquipmentItem>({
@@ -80,6 +90,24 @@ export default function EquipmentCreate() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        let formData = new FormData();
+        formData.append('image', file);
+        dispatch(getImageUploadUrl(formData)).then((res) => {
+          if (res?.statusCode === 200) {
+            enqueueSnackbar(res?.message, {
+              variant: 'success',
+            });
+            setValue('photo', res?.data);
+          }
+        });
+      }
+    },
+    [setValue]
+  );
   const onSubmit = async (data: EquipmentItem) => {
     try {
       let previousState: any = {
@@ -94,6 +122,7 @@ export default function EquipmentCreate() {
         status: data?.status,
         equipment: data?.equipment,
         phone: data?.phone,
+        photo: data?.photo,
       };
 
       Object.keys(payload).forEach((key) => {
@@ -143,6 +172,51 @@ export default function EquipmentCreate() {
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
+              <Card
+                sx={{
+                  mb: 10,
+                  overflow: 'visible', // Allow the image to overflow outside the Card
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center', // Center content horizontally
+                  alignItems: 'center', // Center content vertically
+                  minHeight: '200px', // Adjust height based on content
+                  padding: 2,
+                  backgroundImage: `url(${profilepic})`,
+                  // backgroundImage: `url(${watch('photo')})`,
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <RHFUploadSingleFile
+                    name="photo"
+                    onDrop={handleDrop}
+                    sx={{
+                      zIndex: 9,
+                      mt: 5,
+                      position: 'absolute',
+                      bottom: '-60px',
+                      width: '200px',
+                      height: '200px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '2px solid #e0e0e0',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </Box>
+              </Card>
               {isLoading ? (
                 <Card sx={{ p: 3 }}>
                   <SkeletonProduct />

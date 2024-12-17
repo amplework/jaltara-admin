@@ -48,7 +48,7 @@ export default function TutorialDetails() {
             p: 3,
             boxShadow: 4,
             borderRadius: 3,
-            backgroundColor: '#f9f9f9',
+            // backgroundColor: '#f9f9f9',
             overflow: 'hidden',
           }}
         >

@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Container, Grid, Typography, Box, Stack } from '@mui/material';
+import { Card, Container, Grid, Typography, Box, Stack, useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,10 +23,10 @@ const statusList = [
 const NewUserSchema = Yup.object().shape({
   subject: Yup.string()
     .required('Subject name is required')
-    .matches(/^[^\s].*$/, 'First Characters space not allowed.'),
+    .matches(/^[^\s].*$/, 'First characters space not allowed.'),
   description: Yup.string()
     .required('Description is required')
-    .matches(/^[^\s].*$/, 'First Characters space not allowed.'),
+    .matches(/^[^\s].*$/, 'First characters space not allowed.'),
   status: Yup.string(),
   videos: Yup.array()
     .of(
@@ -46,6 +46,7 @@ export default function LocationCreate() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { tutorialDetails } = useSelector((state) => state.tutorials);
   useEffect(() => {
@@ -144,7 +145,7 @@ export default function LocationCreate() {
     };
 
     Object.keys(payload).forEach((key) => {
-      const typedKey = key as keyof typeof payload; // Explicitly cast key as a valid key of payload
+      const typedKey = key as keyof typeof payload; 
       if (payload[typedKey] === previousState[typedKey]) {
         delete payload[typedKey];
       }
@@ -187,13 +188,13 @@ export default function LocationCreate() {
   };
 
   return (
-    <Page title="Add Tutorials">
+    <Page title="Add Training">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading={!id ? 'Add Tutorials' : 'Edit Tutorial details'}
+          heading={!id ? 'Add Training' : 'Edit Training details'}
           links={[
-            { name: 'Tutorial List', href: PATH_DASHBOARD.sevak.list },
-            { name: !id ? 'Add Tutorial' : 'Edit Tutorials' },
+            { name: 'Training List', href: PATH_DASHBOARD.sevak.list },
+            { name: !id ? 'Add Training' : 'Edit Training' },
           ]}
         />
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -208,8 +209,8 @@ export default function LocationCreate() {
                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
                   }}
                 >
-                  <RHFTextField name="subject" label="Subject Name" />
-                  <RHFTextField name="description" label="Description Name" />
+                  <RHFTextField name="subject" label="Subject name" />
+                  <RHFTextField name="description" label="Description name" />
                   {/* <RHFSelectDropdown
                     name="status"
                     label={'Select Status'}
@@ -227,7 +228,7 @@ export default function LocationCreate() {
                       py: 1,
                       width: '150px',
                       display: 'flex',
-                      bgcolor: '#aaa',
+                      bgcolor: handleDisabledVideos() ? '#aaa' : theme.palette.primary.light,
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRadius: '10px',
@@ -235,7 +236,7 @@ export default function LocationCreate() {
                       color: 'white',
                       mt: 2,
                       ':hover': {
-                        bgcolor: '#aaa',
+                        bgcolor: handleDisabledVideos() ? '#aaa' : theme.palette.primary.light,
                         color: 'white',
                       },
                       ':disabled': {
@@ -251,8 +252,6 @@ export default function LocationCreate() {
                     <Box
                       key={index}
                       sx={{
-                        // bgcolor: getRandomExtremelyLightColor(),
-                        // bgcolor: '#acc',
                         boxShadow: '1px 2px 12px rgba(0,0,0,0.18)',
                         p: 2,
                         borderRadius: '10px',
@@ -261,14 +260,15 @@ export default function LocationCreate() {
                     >
                       <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Typography variant="h5" py={2}>
-                          Tutorial Video {index + 1}
+                          Training Video {index + 1}
                         </Typography>
-
-                        <Iconify
-                          icon="uiw:delete"
-                          sx={{ color: '#d23838', cursor: 'pointer' }}
-                          onClick={() => handleDeleteVideos(index)}
-                        />
+                        {index !== 0 && (
+                          <Iconify
+                            icon="uiw:delete"
+                            sx={{ color: '#d23838', cursor: 'pointer' }}
+                            onClick={() => handleDeleteVideos(index)}
+                          />
+                        )}
                       </Box>
                       <Box
                         sx={{
@@ -280,7 +280,7 @@ export default function LocationCreate() {
                       >
                         <RHFTextField
                           name={`videos[${index}].name`}
-                          label="Video Name"
+                          label="Video title"
                           value={video.name}
                           onChange={(e) => handleVideoChange(index, 'name', e.target.value)}
                         />
@@ -292,14 +292,14 @@ export default function LocationCreate() {
                         />
                         <RHFTextField
                           name={`videos[${index}].thumbnail`}
-                          label="Thumbnail URL"
+                          label="Thumbnail url"
                           value={video.thumbnail}
                           onChange={(e) => handleVideoChange(index, 'thumbnail', e.target.value)}
                         />
                         <RHFSelectDropdown
                           name={`videos[${index}].status`}
                           label="Status"
-                          placeholder="Select Status"
+                          placeholder="Select status"
                           value={videos[index]?.status}
                           options={statusList}
                           onClick={(e: any) => handleVideoChange(index, 'status', e.target.value)}

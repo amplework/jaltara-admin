@@ -45,7 +45,7 @@ export default function EquipmentDetails() {
 
   const { equipmentDetails, isLoading } = useSelector((state) => state.equipments);
 
-  const { name, phone, equipment, status, logs } = equipmentDetails;
+  const { name, phone, equipment, status, logs,photo } = equipmentDetails;
 
   const details = [
     { label: 'Name', value: name },
@@ -71,7 +71,7 @@ export default function EquipmentDetails() {
             <Grid container spacing={4} justifyContent="center">
               {/* Image Section */}
               <Grid item xs={12} sm={6} lg={4} display="flex" justifyContent="center">
-                <ImageCard src={jcbPic || noImage} />
+                <ImageCard src={photo || noImage} />
               </Grid>
 
               {/* Details Section */}

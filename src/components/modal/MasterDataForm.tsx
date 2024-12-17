@@ -103,10 +103,14 @@ const MasterDataForm = ({
                 onClick={handleClose}
                 sx={{
                   minWidth: 0,
-                  padding: 0,
+                  padding: 0.2,
                   display: 'flex',
                   alignItems: 'center',
+                  borderRadius: '50%',
                   bgcolor: theme.palette.common.white,
+                  ':hover': {
+                    bgcolor: theme.palette.common.white,
+                  },
                 }}
               >
                 <Iconify

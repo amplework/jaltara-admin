@@ -14,7 +14,7 @@ import Iconify from 'src/components/Iconify';
 type Props = {
   row: EquipmentItem | null;
   onhandleEditDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  onhandleDeleteRow?: (id: any,name:any) => void;
   handleShowLogs?: (id: any) => void;
 };
 
@@ -70,7 +70,7 @@ export default function EquipmentTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onhandleDeleteRow && onhandleDeleteRow(id,name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

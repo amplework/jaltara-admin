@@ -79,18 +79,22 @@ export default function UploadSingleFile({
         {/* <BlockContent /> */}
 
         {file && (
-          <Image
-            alt="file preview"
-            src={typeof file === 'string' ? file : file.preview}
-            sx={{
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: 1,
-              position: 'absolute',
-            }}
-          />
+         <Image
+         alt="file preview"
+         src={typeof file === 'string' ? file : file.preview}
+         sx={{
+           top: 0,
+           left: 0,
+           right: 0,
+           bottom: 0,
+           borderRadius: 1,
+           position: 'absolute',
+           width: '100%',
+           height: '100%',
+           objectFit: 'contain',  // Ensures the entire image fits within the container
+         }}
+       />
+       
         )}
 
         {/* <PlaceholderStyle

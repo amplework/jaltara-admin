@@ -27,6 +27,8 @@ import { useDispatch, useSelector } from 'src/redux/store';
 import WellsTableRow from 'src/sections/@dashboard/user/list/WellsTableRow';
 import { useSnackbar } from 'notistack';
 import { wellTableHeader } from 'src/mockUp/Well';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from '../sevak/DeleteConfirmationContent';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +42,13 @@ export default function WellList() {
 
   const dispatch = useDispatch();
 
-  const [state, setState] = useState({ name: '', village: '' });
+  const [state, setState] = useState({
+    name: '',
+    village: '',
+    openModal: false,
+    id: '',
+    // farmerName: '',
+  });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -73,14 +81,38 @@ export default function WellList() {
     (!wellsListData?.length && !!filterStatus);
 
   const onhandleDeleteRow = (id: string) => {
-    dispatch(deleteWells(id))
+    setState((prev) => ({ ...prev, openModal: true, id: id }));
+    // dispatch(deleteWells(id))
+    //   .then((res) => {
+    //     if (res?.data?.statusCode === 200) {
+    //       enqueueSnackbar(res?.data?.message, {
+    //         variant: 'success',
+    //       });
+    //       getWillsList();
+    //     } else {
+    //       getWillsList();
+    //     }
+    //   })
+    //   .catch(() => {
+    //     console.log('error');
+    //   });
+  };
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openModal: false, id: '' }));
+  };
+
+  const handleDeleteFarmer = () => {
+    dispatch(deleteWells(state?.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
+          setState((prev) => ({ ...prev, openModal: false, id: '' }));
           getWillsList();
         } else {
+          setState((prev) => ({ ...prev, openModal: false, id: '' }));
           getWillsList();
         }
       })
@@ -159,6 +191,16 @@ export default function WellList() {
           </Box>
         </Card>
       </Container>
+
+      <ConfirmationModal
+        openModal={state.openModal}
+        // isLoading={isLoading}
+        handleClose={handleClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteFarmer}
+      >
+        <DeleteConfirmationContent userName={'village'} />
+      </ConfirmationModal>
     </Page>
   );
 }

@@ -31,6 +31,8 @@ import FarmerTableRow from 'src/sections/@dashboard/user/list/FarmerTableRow';
 import { emptyStatesDetails } from 'src/redux/slices/user';
 import { useSnackbar } from 'notistack';
 import { farmerTableHeader } from 'src/mockUp/Farmer';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from '../sevak/DeleteConfirmationContent';
 
 export default function FarmersList() {
   const {
@@ -51,7 +53,13 @@ export default function FarmersList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [state, setState] = useState({ name: '', village: '' });
+  const [state, setState] = useState({
+    name: '',
+    village: '',
+    openModal: false,
+    id: '',
+    farmerName: '',
+  });
 
   const { currentTab: filterStatus } = useTabs('all');
 
@@ -66,8 +74,15 @@ export default function FarmersList() {
     getFarmerList(state?.name, state?.village);
   };
 
+  const handleEmptySerachBox = (name: string) => {
+    if (state?.name?.length === 1 && name === '') {
+      getFarmerList();
+    }
+  };
+
   const handleFilterName = (filterName: string) => {
     setState((prev) => ({ ...prev, name: filterName }));
+    handleEmptySerachBox(filterName);
   };
 
   const handleFilterRole = (filterVillage: string) => {
@@ -95,23 +110,33 @@ export default function FarmersList() {
     navigate(PATH_DASHBOARD.farmers.details(id));
   };
 
-  const onhandleDeleteRow = (id: string) => {
-    dispatch(deleteFarmer(id))
+  const onhandleDeleteRow = (id: string, name: string) => {
+    setState((prev) => ({ ...prev, openModal: true, id: id, farmerName: name }));
+  };
+
+  const handleClose = () => {
+    setState((prev) => ({ ...prev, openModal: false, id: '', farmerName: '' }));
+  };
+
+  const handleDeleteFarmer = () => {
+    dispatch(deleteFarmer(state?.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {
           enqueueSnackbar(res?.data?.message, {
             variant: 'success',
           });
           getFarmerList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', farmerName: '' }));
         } else {
           getFarmerList();
+          setState((prev) => ({ ...prev, openModal: false, id: '', farmerName: '' }));
         }
       })
       .catch((error) => {
         console.log('error');
       });
   };
-
+  
   return (
     <Page title="Farmer List">
       <Container maxWidth={'xl'}>
@@ -185,6 +210,15 @@ export default function FarmersList() {
           </Box>
         </Card>
       </Container>
+      <ConfirmationModal
+        openModal={state.openModal}
+        // isLoading={isLoading}
+        handleClose={handleClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteFarmer}
+      >
+        <DeleteConfirmationContent userName={state?.farmerName} />
+      </ConfirmationModal>
     </Page>
   );
 }

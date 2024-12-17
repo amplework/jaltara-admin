@@ -125,18 +125,18 @@ export function editLocationsDetails(payload?:any, id?: string) {
   };
 }
 
-// export function getCropsDetails(id?: any) {
-//   return async () => {
-//     dispatch(slice.actions.startLoading());
-//     try {
-//       return await axios.get(`/crops/${id}`).then((res) => {
-//         dispatch(slice.actions.getCropsInfo(res?.data?.data));
-//         return res;
-//       });
-//     } catch (error) {
-//       if (error?.statusCode === 403) {
-//         return error;
-//       }
-//     }
-//   };
-// }
+// delete delete Village
+export function deleteVillage(id?: any) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      return await axios.delete(`/geographic-entities/${id}`).then((res) => {
+        return res;
+      });
+    } catch (error) {
+      if (error?.statusCode === 403) {
+        return error;
+      }
+    }
+  };
+}

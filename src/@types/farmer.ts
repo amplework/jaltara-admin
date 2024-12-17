@@ -34,6 +34,7 @@ export type FarmerList = {
 export type FarmerDetailsType = {
   name: string;
   phone: string;
+  photo:any;
   status: string;
   language: string;
   selectStates: string;

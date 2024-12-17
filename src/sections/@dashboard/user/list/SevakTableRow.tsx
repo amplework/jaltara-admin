@@ -17,7 +17,7 @@ type Props = {
   onSelectRow: VoidFunction;
   onDeleteRow?: VoidFunction;
   onhandleEditDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  onhandleDeleteRow?: (id: any, name: any) => void;
   handleShowDetails?: (id: any) => void;
 };
 
@@ -30,7 +30,7 @@ export default function SevakTableRow({
   const theme = useTheme();
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
-  const { name, village, phone, status, id,language } = row || {};
+  const { name, village, phone, status, id, language } = row || {};
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
@@ -61,25 +61,25 @@ export default function SevakTableRow({
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell sx={{ cursor: 'default' }}>
         <Typography variant="subtitle2" noWrap>
           {phone || '--'}
         </Typography>
       </TableCell>
 
-      <TableCell >
+      <TableCell sx={{ cursor: 'default' }}>
         <Typography variant="subtitle2" noWrap>
-        {language ? languageList.find((item) => item?.id === language)?.label || '--' : '--'}
+          {language ? languageList.find((item) => item?.id === language)?.label || '--' : '--'}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell sx={{ cursor: 'default' }}>
         <Typography variant="subtitle2" noWrap>
           {village?.name || '--'}
         </Typography>
       </TableCell>
 
-      <TableCell onClick={() => handleShowDetails && handleShowDetails(id)}>
+      <TableCell sx={{ cursor: 'default' }}>
         <Typography
           variant="subtitle2"
           noWrap
@@ -108,7 +108,7 @@ export default function SevakTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onhandleDeleteRow && onhandleDeleteRow(id, name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

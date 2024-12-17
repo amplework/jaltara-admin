@@ -3,7 +3,7 @@ export const sevekTableHeader = [
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'lan', label: 'Language', align: 'left' },
   { id: 'village', label: 'Village', align: 'left' },
-  { id: 'status', label: 'status', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 

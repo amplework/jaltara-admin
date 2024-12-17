@@ -26,6 +26,9 @@ import Scrollbar from 'src/components/Scrollbar';
 import { TableHeadCustom, TableNoData } from 'src/components/table';
 import TutorialTableRow from 'src/sections/@dashboard/user/list/TutorialTableRow';
 import { deleteTutorial, emptyTutorialDetails, getTutorialList } from 'src/redux/slices/tutorial';
+import LoadingScreen from 'src/components/LoadingScreen';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from 'src/pages/sevak/DeleteConfirmationContent';
 
 // ----------------------------------------------------------------------
 
@@ -35,9 +38,9 @@ export const statusList = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'tutorial', label: 'Tutorial Subject Name', align: 'left' },
+  { id: 'tutorial', label: 'Training Subject Name', align: 'left' },
   { id: 'video', label: 'Video Count', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
+  // { id: 'status', label: 'Status', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
@@ -64,6 +67,8 @@ export default function TutorialsList() {
     filterName: '',
     filterStatus: '',
     id: '',
+    openDeleteModal: false,
+    TutorialName: '',
   });
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -76,7 +81,7 @@ export default function TutorialsList() {
     getTutorialList();
   };
 
-  const { tutorialList } = useSelector((state) => state.tutorials);
+  const { tutorialList, isLoading } = useSelector((state) => state.tutorials);
 
   const onSearch = () => {
     getCropsList(state.filterName, state.filterStatus);
@@ -102,21 +107,8 @@ export default function TutorialsList() {
     navigate(PATH_DASHBOARD.masterdata.tutorialCreate);
   };
 
-  const onDeleteRow = (id: string) => {
-    dispatch(deleteTutorial(id))
-      .then((res) => {
-        if (res?.data?.statusCode === 200) {
-          enqueueSnackbar(res?.data?.message, {
-            variant: 'success',
-          });
-          handleTutorialListing();
-        } else {
-          handleTutorialListing();
-        }
-      })
-      .catch((error) => {
-        console.log('error');
-      });
+  const onDeleteRow = (id: string,name:string) => {
+    setState((prev) => ({ ...prev, openDeleteModal: true, id: id, TutorialName: name }));
   };
 
   const onEditRow = (id: string) => {
@@ -124,11 +116,36 @@ export default function TutorialsList() {
     navigate(PATH_DASHBOARD.masterdata.tutorialEdit(id));
   };
 
+  const handleDeleteClose = () => {
+    setState((prev) => ({ ...prev, openDeleteModal: false, id: '', TutorialName: '' }));
+  };
+
+   const handleDeleteTutorial = () => {
+    dispatch(deleteTutorial(state?.id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          handleTutorialListing();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', TutorialName: '' }));
+
+        } else {
+          handleTutorialListing();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', TutorialName: '' }));
+
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
+    };
+
   return (
-    <Page title="Tutorial List">
+    <Page title="Training List">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading="Tutorial List"
+          heading="Training List"
           links={[{ href: PATH_DASHBOARD.masterdata.create }]}
           action={
             <Button
@@ -136,7 +153,7 @@ export default function TutorialsList() {
               startIcon={<Iconify icon={'eva:plus-fill'} />}
               onClick={handleAddCrop}
             >
-              Add Tutorial
+              Add Training
             </Button>
           }
         />
@@ -180,7 +197,11 @@ export default function TutorialsList() {
                         ))
                     : null}
 
-                  <TableNoData isNotFound={isNotFound} />
+                  {isLoading ? (
+                    <LoadingScreen isDashboard={true} />
+                  ) : (
+                    <TableNoData isNotFound={isNotFound && !isLoading} />
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -199,6 +220,16 @@ export default function TutorialsList() {
           </Box>
         </Card>
       </Container>
+
+      <ConfirmationModal
+        openModal={state.openDeleteModal}
+        // isLoading={isLoading}
+        handleClose={handleDeleteClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteTutorial}
+      >
+        <DeleteConfirmationContent userName={state?.TutorialName} />
+      </ConfirmationModal>
     </Page>
   );
 }

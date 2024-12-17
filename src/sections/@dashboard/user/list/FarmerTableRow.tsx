@@ -12,7 +12,7 @@ import { languageList } from 'src/mockUp/Sevak';
 type Props = {
   row: FarmerListData | null;
   onhandleEditDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  onhandleDeleteRow?: (id: any,name:any) => void;
   handleShowDetails?: (id: any) => void;
 };
 
@@ -89,7 +89,7 @@ export default function FarmerTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onhandleDeleteRow && onhandleDeleteRow(id,name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

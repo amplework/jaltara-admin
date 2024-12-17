@@ -34,14 +34,14 @@ const RootStyle = styled(AppBar, {
     duration: theme.transitions.duration.shorter,
   }),
   [theme.breakpoints.up('lg')]: {
-    height: HEADER.DASHBOARD_DESKTOP_HEIGHT,
+    // height: HEADER.DASHBOARD_DESKTOP_HEIGHT,
     width: `calc(100% - ${NAVBAR.DASHBOARD_WIDTH + 1}px)`,
     ...(isCollapse && {
       width: `calc(100% - ${NAVBAR.DASHBOARD_COLLAPSE_WIDTH}px)`,
     }),
-    ...(isOffset && {
-      height: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,
-    }),
+    // ...(isOffset && {
+    //   height: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,
+    // }),
     ...(verticalLayout && {
       width: '100%',
       height: HEADER.DASHBOARD_DESKTOP_OFFSET_HEIGHT,

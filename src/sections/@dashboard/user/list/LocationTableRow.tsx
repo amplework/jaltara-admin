@@ -15,7 +15,7 @@ import { getEntityName } from 'src/utils/common';
 type Props = {
   row: LocationListing | null;
   handleShowDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any) => void;
+  onhandleDeleteRow?: (id: any,name:any) => void;
   onhandleEditDetails?: (id: any) => void;
 };
 
@@ -94,7 +94,7 @@ export default function LocationTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id);
+                  onhandleDeleteRow && onhandleDeleteRow(id,name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

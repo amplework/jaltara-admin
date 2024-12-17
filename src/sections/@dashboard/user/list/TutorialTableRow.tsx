@@ -14,7 +14,7 @@ import Iconify from 'src/components/Iconify';
 
 type Props = {
   row: any | null;
-  onDeleteRow?: (id: any) => void;
+  onDeleteRow?: (id: any,name:any) => void;
   onEditRow?: (id: any) => void;
   handleShowDetails?: (id: any) => void;
 };
@@ -49,11 +49,11 @@ export default function TutorialTableRow({
           {_.capitalize(videos?.length) || 'N/A'}
         </Typography>
       </TableCell>
-      <TableCell>
+      {/* <TableCell>
         <Typography variant="subtitle2" noWrap>
           {_.capitalize(status) || 'N/A'}
         </Typography>
-      </TableCell>
+      </TableCell> */}
       <TableCell align="left">
         <TableMoreMenu
           open={openMenu}
@@ -72,7 +72,7 @@ export default function TutorialTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow && onDeleteRow(id);
+                  onDeleteRow && onDeleteRow(id,subject);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

@@ -19,7 +19,7 @@ import { ChallangesItem } from 'src/@types/challanges';
 type Props = {
   row: ChallangesItem | null;
   onEditRow: (id: any) => void;
-  onDeleteRow?: (id: any) => void;
+  onDeleteRow?: (id: any,name:any) => void;
   handleShowDetails?: (id: any) => void;
 };
 
@@ -69,7 +69,7 @@ export default function ChallangesTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow && onDeleteRow(id);
+                  onDeleteRow && onDeleteRow(id,challenge);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

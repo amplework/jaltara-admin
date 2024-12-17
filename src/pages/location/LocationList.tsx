@@ -24,6 +24,7 @@ import { TableHeadCustom, TableNoData } from 'src/components/table';
 import LocationTableRow from 'src/sections/@dashboard/user/list/LocationTableRow';
 import {
   addLocationsDetails,
+  deleteVillage,
   editLocationsDetails,
   getLocationDetails,
   getLocationList,
@@ -43,6 +44,8 @@ import { useSnackbar } from 'notistack';
 import Iconify from 'src/components/Iconify';
 import GeoLocationAdd from './GeoLocationAdd';
 import { getEntityName } from 'src/utils/common';
+import ConfirmationModal from 'src/components/modal/Confirmation';
+import { DeleteConfirmationContent } from '../sevak/DeleteConfirmationContent';
 
 const TABLE_HEAD = [
   { id: 'village', label: 'Village Name', align: 'left' },
@@ -54,8 +57,16 @@ const TABLE_HEAD = [
 ];
 
 export default function LocationList() {
-  const { page, order, orderBy, rowsPerPage, selected, onChangePage, onChangeRowsPerPage,setPage } =
-    useTable();
+  const {
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    selected,
+    onChangePage,
+    onChangeRowsPerPage,
+    setPage,
+  } = useTable();
 
   const [filterName, setFilterName] = useState('');
 
@@ -75,6 +86,8 @@ export default function LocationList() {
     districtId: '',
     talukId: '',
     isLoading: false,
+    openDeleteModal: false,
+    VillageName: '',
   });
 
   const { currentTab: filterStatus } = useTabs('all');
@@ -198,7 +211,7 @@ export default function LocationList() {
   const fieldsToClear = ['location', 'name', 'selectDistrict', 'selectStates', 'selectTaluk'];
 
   const onSearch = () => {
-    setPage(0)
+    setPage(0);
     const statgesSearch = state.selectStages;
     getPitsList(filterName, filterVillage, statgesSearch);
   };
@@ -217,16 +230,12 @@ export default function LocationList() {
     (!locationList?.length && !!filterName) ||
     (!locationList?.length && !!filterStatus);
 
-  const onhandleDeleteRow = () => {
-    console.log('delete');
-  };
-
   const handleLocationChange = () => {
     getStatesList();
-      setValue('selectStates', '');
-      setValue('selectDistrict', '');
-      setValue('selectTaluk', '');
-      setValue('name', '');
+    setValue('selectStates', '');
+    setValue('selectDistrict', '');
+    setValue('selectTaluk', '');
+    setValue('name', '');
   };
 
   const onhandleEditDetails = (id: string) => {
@@ -322,6 +331,33 @@ export default function LocationList() {
     }
   };
 
+  const onhandleDeleteRow = (id: string, name: string) => {
+    setState((prev) => ({ ...prev, openDeleteModal: true, id: id, VillageName: name }));
+  };
+
+  const handleDeleteClose = () => {
+    setState((prev) => ({ ...prev, openDeleteModal: false, id: '', VillageName: '' }));
+  };
+
+  const handleDeleteFarmer = () => {
+    dispatch(deleteVillage(state?.id))
+      .then((res) => {
+        if (res?.data?.statusCode === 200) {
+          enqueueSnackbar(res?.data?.message, {
+            variant: 'success',
+          });
+          getLocationList();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', VillageName: '' }));
+        } else {
+          getLocationList();
+          setState((prev) => ({ ...prev, openDeleteModal: false, id: '', VillageName: '' }));
+        }
+      })
+      .catch((error) => {
+        console.log('error');
+      });
+  };
+
   return (
     <Page title="location">
       <Container maxWidth={'xl'}>
@@ -415,6 +451,16 @@ export default function LocationList() {
           isLoading={state.isLoading}
         />
       </MasterDataForm>
+
+      <ConfirmationModal
+        openModal={state.openDeleteModal}
+        // isLoading={isLoading}
+        handleClose={handleDeleteClose}
+        title={'Delete Confirmation!'}
+        handleSubmit={handleDeleteFarmer}
+      >
+        <DeleteConfirmationContent userName={state?.VillageName} />
+      </ConfirmationModal>
     </Page>
   );
 }
