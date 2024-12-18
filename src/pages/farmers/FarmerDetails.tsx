@@ -69,10 +69,10 @@ export default function FarmerDetails() {
 
   const details = [
     { label: 'Name', value: name },
-    { label: 'Language', value: language },
+    // { label: 'Language', value: language },
     { label: 'Phone', value: phone },
     { label: 'Land', value: land },
-    { label: 'Family member count', value: familyMemberNumber },
+    { label: 'Family member', value: familyMemberNumber },
     { label: 'Farmer available date', value: formatedDate(farmAvailableDate) },
     { label: 'Is participate', value: isParticipate ? 'Yes' : 'No' },
     {
@@ -80,7 +80,7 @@ export default function FarmerDetails() {
       value: `${
         checkUpperGeo?.name
           ? `${checkUpperGeo?.name} ${reverseGeoLocations
-              ?.map((item: any, index: number) => `${index === 0 ? ',' : ''}${item?.name}`)
+              ?.map((item: any, index: number) => `${index === 0 ? `${','}` : ','}${item?.name}`)
               .join(' ')}`
           : 'N/A'
       }`,

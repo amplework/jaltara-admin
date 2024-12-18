@@ -25,7 +25,6 @@ const ChallengesForm = ({ statusList, methods }: CropAddEditFormProp) => {
         value={watch('status')}
         options={statusList}
       />
-      {/* <RHFTextField name="equipment" label="Equipment Name" /> */}
     </Box>
   );
 };

@@ -130,8 +130,20 @@ export default function Router() {
           path: 'location',
           children: [
             {
-              path: 'list',
-              element: <LocationList />,
+              path: 'village-list',
+              element: <VillageLocationList />,
+            },
+            {
+              path: 'taluk-list',
+              element: <TalukList />,
+            },
+            {
+              path: 'district-list',
+              element: <DistrictList />,
+            },
+            {
+              path: 'state-list',
+              element: <StateList />,
             },
           ],
         },
@@ -235,7 +247,11 @@ const FarmersDetails = Loadable(lazy(() => import('../pages/farmers/FarmerDetail
 const WellList = Loadable(lazy(() => import('../pages/wells/WellList')));
 const WellsDetails = Loadable(lazy(() => import('../pages/wells/WellsDetails')));
 // location
-const LocationList = Loadable(lazy(() => import('../pages/location/LocationList')));
+const VillageLocationList = Loadable(lazy(() => import('../pages/location/village/VillageLocationList')));
+const StateList = Loadable(lazy(() => import('../pages/location/state/StateList')));
+const DistrictList = Loadable(lazy(() => import('../pages/location/district/DistrictList')));
+const TalukList = Loadable(lazy(() => import('../pages/location/taluk/TalukList')));
+
 // equipent
 const EquipmentList = Loadable(lazy(() => import('../pages/equipments/EquipmentList')));
 const EquipmentCreate = Loadable(lazy(() => import('../pages/equipments/EquipmentCreate')));
@@ -243,7 +259,9 @@ const EquipmentDetails = Loadable(lazy(() => import('../pages/equipments/Equipme
 // tutorial
 const Tutorial = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialList')));
 const TutorialCreate = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialCreate')));
-const TutorialDetails = Loadable(lazy(() => import('../pages/masterData/tutorials/TutorialDetails')));
+const TutorialDetails = Loadable(
+  lazy(() => import('../pages/masterData/tutorials/TutorialDetails'))
+);
 
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));

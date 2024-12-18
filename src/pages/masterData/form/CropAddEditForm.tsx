@@ -6,6 +6,7 @@ interface CropAddEditFormProp {
   methods?:any
 }
 const CropAddEditForm = ({ statusList,methods }: CropAddEditFormProp) => {
+  const {watch}=methods
   return (
     <Box
       sx={{
@@ -20,6 +21,7 @@ const CropAddEditForm = ({ statusList,methods }: CropAddEditFormProp) => {
       <RHFSelectDropdown
         name="status"
         label={'Status'}
+        value={watch('status')}
         placeholder={'Status'}
         options={statusList}
       />

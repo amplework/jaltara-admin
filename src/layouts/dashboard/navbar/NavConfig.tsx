@@ -46,10 +46,21 @@ const navConfig = [
         path: PATH_DASHBOARD.wells.list,
         icon: ICONS.well,
       },
+      // {
+      //   title: 'location',
+      //   path: PATH_DASHBOARD.location.list,
+      //   icon: ICONS.location,
+      // },
       {
         title: 'location',
-        path: PATH_DASHBOARD.location.list,
+        path: PATH_DASHBOARD.location.root,
         icon: ICONS.location,
+        children: [
+          { title: 'state', path: PATH_DASHBOARD.location.stateList },
+          { title: 'district', path: PATH_DASHBOARD.location.districtList },
+          { title: 'taluk', path: PATH_DASHBOARD.location.talukList },
+          { title: 'village', path: PATH_DASHBOARD.location.villageList },
+        ],
       },
       {
         title: 'equipment',
@@ -61,7 +72,7 @@ const navConfig = [
         path: PATH_DASHBOARD.masterdata.root,
         icon: ICONS.masterdata,
         children: [
-          { title: 'crops', path:PATH_DASHBOARD.masterdata.cropList},
+          { title: 'crops', path: PATH_DASHBOARD.masterdata.cropList },
           { title: 'farmer challanges', path: PATH_DASHBOARD.masterdata.challangesList },
           { title: 'Tutorial', path: PATH_DASHBOARD.masterdata.tutorial },
         ],

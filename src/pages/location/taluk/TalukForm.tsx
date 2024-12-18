@@ -20,7 +20,7 @@ interface LocationFormProp {
   state?: any;
   isLoading?: boolean;
 }
-const GeoLocationAdd = ({
+const TalukForm = ({
   statusList,
   handleTalukSelect,
   handleDistrictSelect,
@@ -50,7 +50,7 @@ const GeoLocationAdd = ({
         value={watch('location')}
         options={LocationList}
         onChange={handleLocationChange}
-        disabled={state?.id ? true : false}
+        disabled={true}
       />
 
       {['district', 'taluk', 'village']?.includes(watch('location')) && (
@@ -81,24 +81,9 @@ const GeoLocationAdd = ({
           />
         )}
 
-      {['village']?.includes(watch('location')) &&
-        watch('selectStates') &&
-        watch('selectDistrict') && (
-          <RHFSelectDropdown
-            name="selectTaluk"
-            label={'Select Taluk'}
-            placeholder={'Taluk'}
-            value={watch('selectTaluk')}
-            options={talukList?.childEntities || []}
-            defaultMessage="Please Select District"
-            onChange={handleTalukSelect}
-            disabled={state?.id ? true : false}
-          />
-        )}
-
       <RHFTextField name="name" label={'Name'} placeholder={'Name'} />
     </Box>
   );
 };
 
-export default GeoLocationAdd;
+export default TalukForm;

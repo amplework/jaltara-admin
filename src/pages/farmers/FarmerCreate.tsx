@@ -128,7 +128,7 @@ export default function FarmerCreate() {
         /^\d{1,2}$/, // Matches up to 2 digits
         'Only numbers are allowed, and the maximum number is 2 digits.'
       ),
-    language: Yup.string().required('Language is required'),
+    language: Yup.string(),
     farmAvailableDate: Yup.string().required('date is required').nullable(),
     selectStates: Yup.string().required('States is required'),
     selectDistrict: Yup.string().required('District is required'),
@@ -146,9 +146,12 @@ export default function FarmerCreate() {
     crops: Yup.array()
       .of(Yup.string().required('Each crop must be selected'))
       .min(1, 'At least one crop must be selected'),
+    // farmingChallenge: Yup.array()
+    //   .of(Yup.string().required('Each crop challanges must be selected'))
+    //   .min(1, 'At least one crop must be selected'),
     farmingChallenge: Yup.array()
-      .of(Yup.string().required('Each crop challanges must be selected'))
-      .min(1, 'At least one crop must be selected'),
+      .of(Yup.string().required('Each farming challenge must be selected'))
+      .notRequired(),
     photo: Yup.mixed(),
   });
 
@@ -495,22 +498,22 @@ export default function FarmerCreate() {
                     />
 
                     <RHFTextField name="land" label="Land (arces)" />
-                    <RHFTextField name="familyMemberNumber" label="Family Count" />
+                    <RHFTextField name="familyMemberNumber" label="Family Members (including farmer)" />
                     <RHFDatePicker
                       name="farmAvailableDate"
                       label="Farm Available Date"
                       minDate={new Date()}
                     />
-                    <RHFSelectDropdown
+                    {/* <RHFSelectDropdown
                       name="language"
                       label={'Select Language'}
                       value={watch('language')}
                       placeholder={'Language'}
                       options={languageList}
-                    />
+                    /> */}
                     <RHFMultiSelectDropdown
                       name="crops"
-                      label={'Select Crops'}
+                      label={'Crops'}
                       placeholder={'Crops'}
                       options={cropListData}
                       onChange={handleChange}
@@ -518,8 +521,8 @@ export default function FarmerCreate() {
                     />
                     <RHFMultiSelect
                       name="farmingChallenge"
-                      label={'Select Crops Challanges'}
-                      placeholder={'Crops Challanges'}
+                      label={'Farming Challenge'}
+                      placeholder={'Farming Challenge'}
                       options={challengesListData}
                       onChange={handleCropChallangesChange}
                       selectedValues={state.selectChallangesValue}

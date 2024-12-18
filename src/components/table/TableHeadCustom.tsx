@@ -48,26 +48,14 @@ export default function TableHeadCustom({
   sx,
 }: Props) {
   return (
-    <TableHead sx={sx}>
-      <TableRow>
-        {onSelectAllRows && (
-          <TableCell padding="checkbox">
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                onSelectAllRows(event.target.checked)
-              }
-            />
-          </TableCell>
-        )}
-
-        {headLabel.map((headCell) => (
+    <TableHead sx={{width: '100%' }}>
+      <TableRow sx={{ width: '100%'}}>
+        {headLabel?.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.align || 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+            // sortDirection={orderBy === headCell.id ? order : false}
+            sx={{mx:0 ,gap:0}}
           >
             {onSort ? (
               <TableSortLabel
@@ -75,7 +63,7 @@ export default function TableHeadCustom({
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={() => onSort(headCell.id)}
-                sx={{ textTransform: 'capitalize' }}
+                sx={{ textTransform: 'capitalize'}}
               >
                 {headCell.label}
 

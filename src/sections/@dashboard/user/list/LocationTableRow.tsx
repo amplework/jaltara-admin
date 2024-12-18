@@ -44,7 +44,7 @@ export default function LocationTableRow({
     <TableRow
       hover
       onClick={() => handleShowDetails && handleShowDetails(id)}
-      sx={{ cursor: 'pointer' }}
+      sx={{ textTransform: 'capitalize' }}
     >
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="subtitle2" noWrap>

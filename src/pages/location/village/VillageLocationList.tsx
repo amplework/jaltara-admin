@@ -20,7 +20,7 @@ import HeaderBreadcrumbs from 'src/components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from 'src/routes/paths';
 import { UserTableToolbar } from 'src/sections/@dashboard/user/list';
 import Scrollbar from 'src/components/Scrollbar';
-import { TableHeadCustom, TableNoData } from 'src/components/table';
+import { TableHeadCustom, TableNoData, TableSkeleton } from 'src/components/table';
 import LocationTableRow from 'src/sections/@dashboard/user/list/LocationTableRow';
 import {
   addLocationsDetails,
@@ -28,6 +28,8 @@ import {
   editLocationsDetails,
   getLocationDetails,
   getLocationList,
+  getVillageLocationList,
+  setEmptyLocationData,
 } from 'src/redux/slices/locations';
 import { LocationAdd, LocationListing } from 'src/@types/location';
 import MasterDataForm from 'src/components/modal/MasterDataForm';
@@ -35,6 +37,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   emptyDistrictList,
+  emptyTalukList,
   getDistrictList,
   getStatesList,
   getTalukList,
@@ -45,7 +48,7 @@ import Iconify from 'src/components/Iconify';
 import GeoLocationAdd from './GeoLocationAdd';
 import { getEntityName } from 'src/utils/common';
 import ConfirmationModal from 'src/components/modal/Confirmation';
-import { DeleteConfirmationContent } from '../sevak/DeleteConfirmationContent';
+import { DeleteConfirmationContent } from '../../sevak/DeleteConfirmationContent';
 
 const TABLE_HEAD = [
   { id: 'village', label: 'Village Name', align: 'left' },
@@ -56,7 +59,7 @@ const TABLE_HEAD = [
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
-export default function LocationList() {
+export default function VillageLocationList() {
   const {
     page,
     order,
@@ -98,7 +101,7 @@ export default function LocationList() {
   }, []);
 
   const handleLocationList = () => {
-    getLocationList();
+    getVillageLocationList('', '', 'village');
   };
 
   const handleLocationDetails = () => {
@@ -106,7 +109,7 @@ export default function LocationList() {
     getLocationDetails(state?.id);
   };
 
-  const { locationList, locationData } = useSelector((state) => state.locations);
+  const { locationList, locationData, isLoading } = useSelector((state) => state.locations);
   const { districtList, talukList } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -251,7 +254,7 @@ export default function LocationList() {
 
   const handleAddUser = () => {
     setState((prev) => ({ ...prev, openModal: true, id: '' }));
-    setValue('location', '');
+    setValue('location', 'village');
     handleLocationChange();
   };
 
@@ -291,10 +294,16 @@ export default function LocationList() {
           setState((prev: any) => ({ ...prev, isLoading: false }));
           handleLocationList();
           handleClose();
-          dispatch(emptyDistrictList(null));
+          dispatch(emptyTalukList(null));
+          dispatch(setEmptyLocationData(null));
         } else if (res?.data?.statusCode === 409) {
           enqueueSnackbar(res?.data?.message, {
-            variant: 'success',
+            variant: 'error',
+          });
+          setState((prev: any) => ({ ...prev, isLoading: false }));
+        } else if (res?.statusCode === 404) {
+          enqueueSnackbar(res?.message, {
+            variant: 'error',
           });
           setState((prev: any) => ({ ...prev, isLoading: false }));
         } else if (res?.data?.statusCode === 422) {
@@ -320,7 +329,7 @@ export default function LocationList() {
           handleClose();
         } else if (res?.data?.statusCode === 409) {
           enqueueSnackbar(res?.data?.message, {
-            variant: 'success',
+            variant: 'error',
           });
         } else if (res?.data?.statusCode === 422) {
           enqueueSnackbar(res?.data?.message, {
@@ -358,12 +367,25 @@ export default function LocationList() {
       });
   };
 
+  const handleVillageDisabled = () => {
+    if (
+      locationData?.checkUpperGeo?.name === watch('name') ||
+      !watch('name')?.length ||
+      !watch('selectStates')?.length ||
+      !watch('selectDistrict')?.length
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
-    <Page title="location">
+    <Page title="Village">
       <Container maxWidth={'xl'}>
         <HeaderBreadcrumbs
-          heading="Location List"
-          links={[{ href: PATH_DASHBOARD.location.list }]}
+          heading="Village List"
+          links={[{ href: PATH_DASHBOARD.location.root }]}
           action={
             <Button
               variant="contained"
@@ -375,8 +397,8 @@ export default function LocationList() {
           }
         />
 
-        <Card>
-          <UserTableToolbar
+        <Card sx={{ pt: 2 }}>
+          {/* <UserTableToolbar
             filterName={filterName}
             filterVillage={filterVillage}
             onFilterName={handleFilterName}
@@ -384,7 +406,7 @@ export default function LocationList() {
             onSearch={onSearch}
             placeholderText={'Search by state name'}
             placeholderTextSecond={'Search by village name'}
-          />
+          /> */}
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
@@ -398,20 +420,22 @@ export default function LocationList() {
                 />
 
                 <TableBody>
-                  {locationList?.length
-                    ? locationList
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row: LocationListing) => (
-                          <LocationTableRow
-                            key={row.id}
-                            row={row}
-                            onhandleDeleteRow={onhandleDeleteRow}
-                            onhandleEditDetails={onhandleEditDetails}
-                          />
-                        ))
-                    : null}
-
-                  <TableNoData isNotFound={isNotFound} />
+                  {isLoading && !locationList?.length ? (
+                    <TableSkeleton />
+                  ) : locationList?.length ? (
+                    locationList
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row: LocationListing) => (
+                        <LocationTableRow
+                          key={row.id}
+                          row={row}
+                          onhandleDeleteRow={onhandleDeleteRow}
+                          onhandleEditDetails={onhandleEditDetails}
+                        />
+                      ))
+                  ) : (
+                    <TableNoData isNotFound={isNotFound} />
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -439,7 +463,8 @@ export default function LocationList() {
         methods={methods}
         id={state?.id}
         handleCropDetails={handleLocationDetails}
-        title={state.id ? 'Edit village location' : 'Add Geo Location'}
+        title={state.id ? 'Edit village location' : 'Add Village Geo Location'}
+        disabled={handleVillageDisabled()}
       >
         <GeoLocationAdd
           state={state}

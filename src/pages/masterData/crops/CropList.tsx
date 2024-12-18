@@ -47,8 +47,8 @@ import { DeleteConfirmationContent } from 'src/pages/sevak/DeleteConfirmationCon
 // ----------------------------------------------------------------------
 
 export const statusList = [
-  { id: 'active', label: 'Active', name: 'active' },
-  { id: 'inactive', label: 'Inactive', name: 'inactive' },
+  { id: 'active', label: 'Active', name: 'Active' },
+  { id: 'inactive', label: 'Inactive', name: 'Inactive' },
 ];
 
 const TABLE_HEAD = [
@@ -108,7 +108,7 @@ export default function CropList() {
   };
 
   const handleCropDetails = () => {
-    dispatch(getCropsDetails(state.id));
+    dispatch(getCropsDetails(state?.id));
   };
 
   const defaultValues = useMemo(
@@ -132,8 +132,12 @@ export default function CropList() {
   const { watch, setValue } = methods;
 
   useEffect(() => {
+    console.log('crops details --->', cropsDetails);
+
     setValue('name', cropsDetails?.name);
+    console.log('status --->',cropsDetails?.status);
     setValue('status', cropsDetails?.status);
+    
   }, [cropsDetails]);
 
   const isNotFound =
@@ -157,9 +161,8 @@ export default function CropList() {
     setState((prev) => ({ ...prev, filterStatus: value }));
   };
 
-  const onDeleteRow = (id: string,name:string) => {
+  const onDeleteRow = (id: string, name: string) => {
     setState((prev) => ({ ...prev, openDeleteModal: true, id: id, cropsName: name }));
-
   };
 
   const onEditRow = (id: string) => {
@@ -173,7 +176,7 @@ export default function CropList() {
     setState((prev) => ({ ...prev, openDeleteModal: false, id: '', cropsName: '' }));
   };
 
-  const handleDeleteCrops= () => {
+  const handleDeleteCrops = () => {
     dispatch(deleteCrops(state?.id))
       .then((res) => {
         if (res?.data?.statusCode === 200) {

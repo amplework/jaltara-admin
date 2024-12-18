@@ -1,27 +1,31 @@
 import { useState } from 'react';
 // @mui
+import { useTheme } from '@mui/material/styles';
 import { TableRow, TableCell, Typography, MenuItem } from '@mui/material';
 // components
 import Iconify from '../../../../components/Iconify';
 import { TableMoreMenu } from '../../../../components/table';
-import { FarmerListData } from 'src/@types/farmer';
-import { languageList } from 'src/mockUp/Sevak';
+import { PitItem } from 'src/@types/pits';
+import { formatedDate } from 'src/utils/formateDate';
+import { LocationListing } from 'src/@types/location';
+import { getEntityName } from 'src/utils/common';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: FarmerListData | null;
-  onhandleEditDetails?: (id: any) => void;
-  onhandleDeleteRow?: (id: any,name:any) => void;
+  row: LocationListing | null;
   handleShowDetails?: (id: any) => void;
+  onhandleDeleteRow?: (id: any, name: any) => void;
+  onhandleEditDetails?: (id: any) => void;
 };
 
-export default function FarmerTableRow({
+export default function DistrictTableRow({
   row,
-  onhandleEditDetails,
-  onhandleDeleteRow,
   handleShowDetails,
+  onhandleDeleteRow,
+  onhandleEditDetails,
 }: Props) {
+  const theme = useTheme();
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
@@ -30,47 +34,36 @@ export default function FarmerTableRow({
     setOpenMenuActions(null);
   };
 
-  const { name, id, land, village, language, totalPits } = row || {};
+  const { id, name, farmerCount, checkUpperGeo } = row || {};
+
+  const stateName = getEntityName('state', checkUpperGeo);
+  const districtName = getEntityName('district', checkUpperGeo);
+  const talukName = getEntityName('taluk', checkUpperGeo);
 
   return (
-    <TableRow hover>
-      <TableCell
-        sx={{ display: 'flex', alignItems: 'center',cursor:'pointer' }}
-        onClick={() => handleShowDetails && handleShowDetails(id)}
-      >
-        {/* {photo ? (
-          <Image alt="cover" src={photo} ratio="16/9" />
-        ) : (
-          <Avatar alt={name} src={''} sx={{ mr: 2 }} />
-        )} */}
-
-        <Typography variant="subtitle2" noWrap sx={{ cursor:'default' }}>
+    <TableRow
+      hover
+      onClick={() => handleShowDetails && handleShowDetails(id)}
+      sx={{  textTransform: 'capitalize' }}
+    >
+      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography variant="subtitle2" noWrap>
           {name}
         </Typography>
       </TableCell>
 
       <TableCell>
-        <Typography variant="subtitle2" noWrap sx={{ cursor:'default' }}>
-          {land ? land : '--'}
+        <Typography variant="subtitle2" noWrap>
+          {stateName?.id ? stateName?.name : '--'}
         </Typography>
       </TableCell>
 
       <TableCell>
-        <Typography variant="subtitle2" noWrap sx={{ cursor:'default' }}>
-          {village ? village?.name : '--'}
+        <Typography variant="subtitle2" noWrap>
+          {farmerCount || '--'}
         </Typography>
       </TableCell>
 
-      <TableCell sx={{ cursor:'default' }}>
-        <Typography variant="subtitle2" noWrap sx={{ textTransform: 'capitalize' }}>
-          {language ? languageList.find((item) => item?.id === language)?.label || '--' : '--'}
-        </Typography>
-      </TableCell>
-      <TableCell sx={{ cursor:'default' }}>
-        <Typography variant="subtitle2" noWrap>
-          {totalPits ? totalPits : '--'}
-        </Typography>
-      </TableCell>
       <TableCell align="left">
         <TableMoreMenu
           open={openMenu}
@@ -89,7 +82,7 @@ export default function FarmerTableRow({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  onhandleDeleteRow && onhandleDeleteRow(id,name);
+                  onhandleDeleteRow && onhandleDeleteRow(id, name);
                   handleCloseMenu();
                 }}
                 sx={{ color: 'error.main' }}

@@ -66,7 +66,12 @@ export const PATH_DASHBOARD = {
     list: path('/crop/list'),
   },
   location: {
-    list: path('/location/list'),
+    // list: path('/location/list'),
+    root: path('/location'),
+    villageList:path('/location/village-list'),
+    talukList:path('/location/taluk-list'),
+    districtList:path('/location/district-list'),
+    stateList:path('/location/state-list')
   },
   equipments: {
     list: path('/equipment/list'),
@@ -80,12 +85,11 @@ export const PATH_DASHBOARD = {
     create: path('/masterdata/create'),
     edit: (id: string) => path(`/masterdata/edit/${id}`),
     challangesList: path('/masterdata/challanges'),
-    tutorial:path('/masterdata/tutorial'),
-    tutorialCreate:path('/masterdata/tutorial-create'),
-    tutorialEdit:(id:string)=>path(`/masterdata/tutorial-edit/${id}`),
-    tutorialDetails:(id:string)=>path(`/masterdata/tutorial-details/${id}`)
+    tutorial: path('/masterdata/tutorial'),
+    tutorialCreate: path('/masterdata/tutorial-create'),
+    tutorialEdit: (id: string) => path(`/masterdata/tutorial-edit/${id}`),
+    tutorialDetails: (id: string) => path(`/masterdata/tutorial-details/${id}`),
   },
-
 };
 
 export const PATH_DOCS = 'https://docs-minimals.vercel.app/introduction';

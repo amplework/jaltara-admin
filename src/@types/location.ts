@@ -20,14 +20,24 @@ export type LocationListing = {
   parentId: string;
   checkUpperGeo: checkUpperGeo;
   farmerCount?: number;
+  code?:String
 };
-
+export type VillageEntity = {
+  id: string;
+  name: string;
+  entityType: string;
+  code: string;
+};
 export type LocationList = {
   isLoading: boolean;
   isDetailsLoading:boolean;
   error: string | null;
   locationList: LocationListing[] | null;
   locationData:LocationListing
+  villageList:LocationListing[];
+  // villageList:VillageEntity[];
+  districtLoactionList:LocationListing[];
+  talukLocationList:LocationListing[]
 };
 
 export type LocationDetails = {
