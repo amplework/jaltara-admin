@@ -1,6 +1,6 @@
 export const equipmentTableHeader = [
     { id: 'name', label: 'Name', align: 'left' },
-    { id: 'equipment', label: 'Equipment', align: 'left' },
+    { id: 'equipment', label: 'Number Plate', align: 'left' },
     { id: 'status', label: 'Status', align: 'left' },
     { id: 'action', label: 'Action', align: 'left' },
   ];

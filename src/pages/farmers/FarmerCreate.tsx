@@ -117,20 +117,20 @@ export default function FarmerCreate() {
       .required('Phone number is required')
       .matches(/^\d{10}$/, 'Only numbers are allowed and limit is 10 digits'), // status: Yup.string().required('Status is required'),
     land: Yup.string()
-      .required('This field is required')
+      .required('Land field is required')
       .matches(
         /^\d{1,6}(\.\d{0,6})?$/,
         'Only numbers are allowed, with a maximum of 6 digits and an optional decimal point.'
       ),
     familyMemberNumber: Yup.string()
-      .required('Family count is required')
+      .required('Family member is required')
       .matches(
         /^\d{1,2}$/, // Matches up to 2 digits
         'Only numbers are allowed, and the maximum number is 2 digits.'
       ),
     language: Yup.string(),
     farmAvailableDate: Yup.string().required('date is required').nullable(),
-    selectStates: Yup.string().required('States is required'),
+    selectStates: Yup.string().required('State is required'),
     selectDistrict: Yup.string().required('District is required'),
     selectTaluk: Yup.string().when([], {
       is: () => talukList?.childEntities && talukList?.childEntities?.length > 0,
@@ -533,7 +533,7 @@ export default function FarmerCreate() {
                           {content2?.map((text, index) => (
                             <Typography
                               key={index}
-                              variant="subtitle2"
+                              variant="body2"
                               sx={{
                                 mb: 0.5,
                                 width: '100%',
@@ -597,8 +597,8 @@ export default function FarmerCreate() {
                   >
                     <RHFSelectDropdown
                       name="selectStates"
-                      label={'Select States'}
-                      placeholder={'States'}
+                      label={'Select State'}
+                      placeholder={'State'}
                       options={statesList}
                       value={watch('selectStates')}
                       onChange={handleStatesSelect}

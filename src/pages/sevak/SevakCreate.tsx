@@ -366,7 +366,7 @@ export default function SevekCreate() {
                       gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
                     }}
                   >
-                    <RHFTextField name="name" label="Full Name" />
+                    <RHFTextField name="name" label="Sevak Name" />
                     <RHFTextField
                       name="phoneNumber"
                       label="Phone Number"

@@ -56,7 +56,7 @@ export default function SevakTableRow({
         sx={{ display: 'flex', alignItems: 'center' }}
         onClick={() => handleShowDetails && handleShowDetails(id)}
       >
-        <Typography variant="subtitle2" noWrap>
+        <Typography variant="subtitle2" noWrap sx={{ textTransform:"capitalize" }}>
           {name || '--'}
         </Typography>
       </TableCell>

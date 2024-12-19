@@ -155,8 +155,8 @@ export default function EquipmentList() {
             onFilterName={handleFilterName}
             onFilterVillage={handleFilteRequipment}
             onSearch={onSearch}
-            placeholderText={'Search by names'}
-            placeholderTextSecond={'Search by equipment'}
+            placeholderText={'Search by name'}
+            placeholderTextSecond={'Search by number plate'}
           />
 
           <Scrollbar>
