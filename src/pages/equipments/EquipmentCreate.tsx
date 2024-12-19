@@ -257,7 +257,8 @@ export default function EquipmentCreate() {
                         equipmentDetails?.name === watch('name') &&
                         equipmentDetails?.status === watch('status') &&
                         equipmentDetails?.equipment === watch('equipment') &&
-                        equipmentDetails?.phone === watch('phone')
+                        equipmentDetails?.phone === watch('phone') &&
+                        equipmentDetails?.photo === watch('photo')
                       }
                       startIcon={
                         <Iconify icon={!id ? 'mingcute:user-add-fill' : 'fa-solid:user-edit'} />

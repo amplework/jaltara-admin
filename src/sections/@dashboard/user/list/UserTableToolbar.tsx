@@ -118,7 +118,7 @@ export default function UserTableToolbar({
         fullWidth
         startIcon={<Iconify icon={'mdi:search'} />}
         onClick={onSearch}
-        sx={{ width: '20%' }}
+        // sx={{ width: '20%' }}
       >
         Search
       </Button>
